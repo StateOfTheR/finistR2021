@@ -24,7 +24,7 @@ Il s'agit de la cinquième édition de l'atelier Finist'R. Cet atelier réunit a
 
 La restitution se fait sous forme de site web. Le site de l'édition 2021 [sera disponible ici](https://stateofther.github.io/finistR2021/index.html)
 
-# Participants
+## Participants
 Eric Adjakossa,  Julie Aubert,  Pierre Barbillon, Saint-Clair Chabert, Julien Chiquet, Sophie Donnet, Nicolas Enjalbert Courrech, Marie-Pierre Etienne, José Garcia-Gomez, Pierre Gloaguen,  Gabriel Lang, Tam Le Minh, Gaspar Massiot, Pierre Navaro, Rémi Patin, Isabelle Sanchez.
 
 
