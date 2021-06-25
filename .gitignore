@@ -1,0 +1,15 @@
+.DS_Store
+.Rproj.user
+.Rhistory
+.Rapp.history
+.RData
+*.swp
+finistR2020.Rproj
+Manifest.toml
+build
+index_cache/
+tidymodels_cache/
+*.html
+*_cache/
+*_files/
+site_libs

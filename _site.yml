@@ -1,0 +1,13 @@
+name: "Finist'R, édition 2021"
+output_dir: "./build"
+navbar:
+ title: "Finist'R 2021"
+ left:
+  - text: ""
+    icon: fa-github
+    href: https://github.com/StateOfTheR/finistR2021
+    
+output:
+  html_document:
+    theme: flatly
+    highlight: tango
