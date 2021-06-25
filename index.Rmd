@@ -22,7 +22,7 @@ L'atelier Finist'R 2021 -- ou *bootcamp R* du groupe  [State Of The R](https://s
 
 Il s'agit de la cinquième édition de l'atelier Finist'R. Cet atelier réunit annuellement un groupe de chercheurs, ingénieurs, doctorants, tous utilisateurs avancés de `R` et dévelopeurs de paquets pour explorer les dernières fonctionalités du logiciel et les nouvelles pratiques de développement. A l'issu de l'atelier le collectif produit une synthèse de cette veille logiciel de manière à progresser collectivement dans l'utilisation du logiciel mais surtout dans la production d'outils statistiques à destination de la communauté.
 
-La restitution se fait sous forme de site web. Le site de l'édition 2021 [sera disponible ici](https://stateofther.github.io/finistR2021/index.html)
+Le résultat de cette semaine sera posté au fur et à mesure  [sur cette page](https://stateofther.github.io/finistR2021/index.html)
 
 ## Participants
 Eric Adjakossa,  Julie Aubert,  Pierre Barbillon, Saint-Clair Chabert, Julien Chiquet, Sophie Donnet, Nicolas Enjalbert Courrech, Marie-Pierre Etienne, José Garcia-Gomez, Pierre Gloaguen,  Gabriel Lang, Tam Le Minh, Gaspar Massiot, Pierre Navaro, Rémi Patin, Isabelle Sanchez.
