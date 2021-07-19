@@ -14,74 +14,56 @@ Eric Adjakossa,  Julie Aubert,  Pierre Barbillon, Saint-Clair Chabert, Julien Ch
 
 
 
+# Idees à explorer
 
-<!-- ![Team FinistR2020](img/groupe2020.jpeg) -->
+ ## Interopérabilité et utilisation autres langages
+  -  Atelier Python for Rusers et comment utiliser les 2 -> depuis R ou depuis Python  https://paulvanderlaken.com/2019/07/29/python-for-r-users/  d'après un workshop d'une durée de 3 heures.
 
-<!-- - 1er rang: Pierre Navaro, Pierre Gloaguen, Julie Aubert, Julien Chiquet, Baptiste Alglave, Gaspar Massiot, Tam Le Mihn -->
-<!-- - 2ème rang: Pierre Neuvial, Pierre Barbillon, Saint-Clair Chabert Liddell, Antoine Bichat, Mahendra Mariadassou, Marie-Pierre Étienne, Sophie Donnet -->
+  - R and Rcpp https://www.r-bloggers.com/2020/02/rcppdeepstate/
 
+## Développement de packages et contributions
 
+  - Création de packages, tests etc... plus cosmétique  https://github.com/forwards/rdevguide
 
+  - A Guide to Contributing to R Core  https://github.com/ropensci-review-tools/autotest 
+  - https://cran.r-project.org/web/packages/tinytest/index.html
 
-<!-- # Programme  -->
+## Présentation
+  - Faire ses présentations en xarigan
+  - Créer un template pour les HappyR
+  - flipbookr avec xaringan
 
-<!-- Le programme sera défini collectivement par les participants lors de la semaine d'ateliers. -->
+## Application web, shiny etc.
+ package plumber
 
-<!-- ## Idées d'ateliers -->
+## Gestion de grosses données - passage à l'échelle
+ - bonnes pratiques
+ - https://docs.microsoft.com/fr-fr/sql/machine-learning/r/ref-r-revoscaler?view=sql-server-ver15
+ - https://docs.microsoft.com/en-us/machine-learning-server/r/tutorial-large-data-tips
+ 
 
-<!--   - Enseignement -->
-<!--     - Enseignement distanciel de R -->
-<!--     - Github et Gestion de projets étudiants [section 39](https://happygitwithr.com/classroom-overview.html) -->
+  - Compiler ses fonctions ?
+      library(compiler)
+      http://www.noamross.net/archives/2013-04-25-faster-talk/
+  - packages dédiés
+     data.table package
+  
+  - gestion de la mémoire
 
-<!--   - Intégration continue and Co -->
-<!--     - github action (faciliter la génération finale du siteweb)   -->
-<!--     - développement R avec git/github -->
-<!--     - Rhub, usethis, publication de package -->
-<!--     - docker -->
+  - parallélisation
 
-<!--   - Langage R avancé, tidyverse -->
-<!--     - curly bracket, gestion des noms de variable dynamique -->
-<!--     - rlang, c'est quoi ? -->
-<!--     - deuxième édition de Advanced R (https://adv-r.hadley.nz/) -->
-<!--     - Classes R6  -->
-<!--     - RcppParallel -->
-<!--     - application shiny sur https://plmshift.math.cnrs.fr/ -->
+## Graphiques - visualisation
+  -  https://www.stat.auckland.ac.nz/~paul/Talks/useR2021/index.html   {riverplot}, {ggpattern}, {ggtextures},   {ragg}
 
-<!--   - Communication, interface  -->
-<!--     - Représentations/visualisation de graphes -->
-<!--     - markdown avancé  ([distill](https://rstudio.github.io/distill/), [thesisdown](https://github.com/ismayc/thesisdown), ...) -->
-<!--     - intégration R/Python https://rstudio.com/solutions/r-and-python/, https://solutions.rstudio.com/python/overview/ -->
+  - Packages à explorer ?
 
-<!--   - Outils Statistiques et computationnel   -->
-<!--     - autograd, tmb, pytorch -->
-<!--     - [séries temporelles](https://github.com/tidyverts) -->
-<!--     - [personalisation de tidymodels](https://www.tidymodels.org/learn/develop/) -->
-<!--     - modèles de survie -->
-<!--     - modele mixte, GAM -->
-<!--     - intégration en R -->
-<!--     -  [Equations différentielles et autres EDPs](https://pure.knaw.nl/ws/portalfiles/portal/462308/Soetaert_ea_4748.pdf) -->
+  -  startR is an R package developed at the Earth Science Department in Barcelona Supercomputing Center (BSC-CNS) that allows to retrieve, arrange, and process large multi-dimensional datasets automatically with a concise workflow.
+>
 
-<!-- ## Idées de projet à mettre en place sur la semaine -->
+## Autour des outils des collaboratifs
 
-<!-- - Package interfaçant R à [optimLib](https://github.com/kthohr/optim) -->
-<!-- - Classes R6 pour [GroßBM](https://github.com/GrossSBM) -->
-<!-- - Templates d'articles et gestion des actions de relcture pour [Computo](https://github.com/journal-french-statistical-society/) -->
-<!-- - Réalisation du [site web de Finist'R 2020](https://stateofther.github.io/finistR2020/) -->
+  - Github-classroom pour setup des devoirs à rendre
+
+  - Une mise au point sur l'utilisation de Git
 
 
-<!-- ## Installation des dépendances et génération du site -->
-
-<!-- - Installer [Miniconda](https://docs.conda.io/en/latest/miniconda.html) ou Anaconda (plus lourd) sur votre poste. -->
-<!-- - Installer [Julia](https://julialang.org/downloads/) avec les packages nécessaires. -->
-
-<!-- ```bash -->
-<!-- julia -e 'using Pkg; Pkg.add("DifferentialEquations")' -->
-<!-- ``` -->
-<!-- - Créer l'environemment conda, installer les packages R et générer le site web: -->
-
-<!-- ```bash -->
-<!-- conda env create -f binder/environment.yml -->
-<!-- conda activate finistR2020 -->
-<!-- Rscript binder/install.R -->
-<!-- Rscript -e "rmarkdown::render_site()' -->
-<!-- ``` -->
