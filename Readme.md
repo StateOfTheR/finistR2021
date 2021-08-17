@@ -28,6 +28,12 @@ Eric Adjakossa,  Julie Aubert,  Pierre Barbillon, Saint-Clair Chabert, Julien Ch
   - A Guide to Contributing to R Core  https://github.com/ropensci-review-tools/autotest 
   - https://cran.r-project.org/web/packages/tinytest/index.html
 
+## Reproductibilité
+
+  - https://quarto.org/: A scientific and technical publishing system built on Pandoc
+  - docker via binder
+  - pagedown
+
 ## Présentation
   - Faire ses présentations en xarigan
   - Créer un template pour les HappyR
