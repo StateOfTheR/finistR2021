@@ -56,7 +56,7 @@ Eric Adjakossa,  Julie Aubert,  Pierre Barbillon, Saint-Clair Chabert, Julien Ch
   
   - gestion de la mémoire
 
-  - parallélisation
+  - parallélisation https://mfasiolo.github.io/sc2-2019/rcpp_advanced_iii/1_openmp/
 
 ## Graphiques - visualisation
   -  https://www.stat.auckland.ac.nz/~paul/Talks/useR2021/index.html   {riverplot}, {ggpattern}, {ggtextures},   {ragg}
