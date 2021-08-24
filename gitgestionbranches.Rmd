@@ -49,11 +49,11 @@ Depuis Git 2.23, il est aussi possible d'utiliser `git switch -c nouvelle-branch
 ### Basculer entre les branches
 Pour basculer sur une branche existante, il suffit de lancer la commande `git checkout` suivie du nom de la branche.
 
-`git checkout branche-a`
+`git checkout branche2`
 
-Cela déplace HEAD pour le faire pointer vers la branche branche_a.
+Cela déplace HEAD pour le faire pointer vers la branche branche2.
 
-Depuis Git 2.23, il est aussi possible d'utiliser `git switch branche-a`
+Depuis Git 2.23, il est aussi possible d'utiliser `git switch branche2`
 
 
 ## References
