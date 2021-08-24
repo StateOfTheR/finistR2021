@@ -1,0 +1,6 @@
+---
+title: "Test unitaire et bonnes pratiques de développement de package"
+author: "State of the R"
+date: "23-27/08/2020"
+output: html_document
+---
