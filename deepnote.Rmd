@@ -6,17 +6,17 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,eval=FALSE)
+knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
 ```
 
 ## Deepnote
 
-[deepnote](https://deepnote.com/)
+Deepnote est un outil de partage collaboratif de notebooks, typiquement utile pour partager des tutoriels avec des étudiants. 
+Initialement prévu pour Python, il comprend une fonctionnalité `R` que l'on décrit ici.
+
+Cette explication peut être complétée par la page web de [deepnote](https://deepnote.com/).
 
 ### Principes
-
-
-
 
 Il est possible d'avoir un compte gratuit, la connexion est possible via un compte github.
 Deepnote est un outil pour travailler de manière collaborative sur un notebook (format **.ipynb**).
@@ -27,9 +27,6 @@ Il est pensé à la base pour utiliser python mais peut également faire appel �
 
 Il faut choisir dans environnement la version de R souhaitée, ensuite des packages peuvent être installés via le terminal. 
 Ces packages sont sauvegardés de manière pérenne dans le projet.
-Par contre, il n'est pas certain que les librairies linux additionnelles soient sauvegardées.
-Il semble possible d'utiliser des fichiers docker mais leur utilisation avec R ne semble pas aller de soi.
-
 
 ### Création et partage du notebook
 
@@ -39,7 +36,34 @@ Le partage peut se faire avec différents niveaux de droits (vue, éxécution, �
 
 ### Création d'un docker local
 
-PG c'est à toi
+On a vu plus haut que l'on pouvait installer des packages en local sans souci, car ces packages seront stockés de manière permanentes. Cependant, certains packages demandent des librairies Linux dédiées qu'il faut installer au préalable.
+
+Pour que cette installation soit faite, il faut le spécifier dans un fichier `Dockerfile` qui contiendra des instructions en Linux.
+
+Illustrions cette démarche par l'exemple de l'installation de la suite de packages `tidyverse`. Ce package nécessite d'installer les librairies Linux `libcurl4-openssl-dev`,  `libxml2-dev` et `libssl-dev`.
+
+Dans l'onglet `Environnement` de `deepnote`, choisisser `Local ./Dockerfile`.
+Ensuite, on édite le docker par défaut (qui ne contient que le chargement de Python 3.7).
+
+```
+# Noyau utilisé (ici R 4.0.4)
+FROM deepnote/ir:4.0.4
+
+# Instructions linux pour installer les librairies nécessaires
+RUN apt-get update -y && apt-get install -y libcurl4-openssl-dev libxml2-dev libssl-dev
+```
+
+Une fois ce Docker écrit, il faut le construire, grâce à l'onglet `Build` sur `deepnote`.
+
+Vous remarquerez que l'on n'a pas encore installé tidyverse.
+Une manière simple d'installer tidyverse est ensuite d'ouvrir un terminal directement sur `deepnote` (onglet `Terminals`), d'y lancer `R` et d'installer tidyverse. 
+
+```{r deepnote_install_tidyverse}
+# A lancer dans le terminal de deepnote
+install.packages("tidyverse")
+```
+
+A présent, votre projet aura tidyverse d'instaler correctement et pourra être partagé.
 
 ## Visual Studio Code
 
@@ -56,9 +80,7 @@ Le principe est de pouvoir partager du code en direct avec des étudiants via un
 
 #### Installer le package
 
-
-
-```{r}
+```{r install_livecode}
 remotes::install_github("rundel/livecode")
 ```
 
@@ -71,7 +93,8 @@ Il faut se créer un compte sur (ngrok.com) (identification possible via github)
 #### Commencer le partage
 
 Sous Rstudio pour un script ou un fichier rmd préalablement enregistré, éxécuter :
-```{r}
+
+```{r serve_file_livecode}
 s <- livecode::serve_file()
 ```
 
