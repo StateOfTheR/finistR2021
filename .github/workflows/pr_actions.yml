@@ -1,0 +1,16 @@
+name: pr_website
+on:
+  pull_request:
+    branches: [ master ]
+    
+jobs:   
+  build:
+    name: Build website with rmarkdown
+    runs-on: ubuntu-latest
+    container: rocker/verse
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Generate slides
+        run: Rscript -e "rmarkdown::render_site(encoding = 'UTF-8')"
