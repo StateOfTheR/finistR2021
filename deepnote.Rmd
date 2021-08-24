@@ -1,0 +1,107 @@
+---
+title: "Outils collaboratifs de notebook"
+author: "Pierre {Barbillon, Gloaguen, Navarro}"
+date: "23/08/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
+```
+
+## Deepnote
+
+Deepnote est un outil de partage collaboratif de notebooks de type Jupyter (format `.ipynb`), typiquement utile pour partager des tutoriels avec des étudiants. 
+Initialement prévu pour Python, il comprend une fonctionnalité `R` que l'on décrit ici.
+
+Cette explication peut être complétée par la page web de [deepnote](https://deepnote.com/).
+
+
+### Préparation de l'environnement
+
+Il faut choisir dans environnement la version de R souhaitée, ensuite des packages peuvent être installés via le terminal. 
+Ces packages sont sauvegardés de manière pérenne dans le projet.
+
+### Création d'un docker local
+
+On a vu plus haut que l'on pouvait installer des packages en local sans souci, car ces packages seront stockés de manière permanentes. Cependant, certains packages demandent des librairies Linux dédiées qu'il faut installer au préalable.
+
+Pour que cette installation soit faite, il faut le spécifier dans un fichier `Dockerfile` qui contiendra des instructions en Linux.
+
+Illustrions cette démarche par l'exemple de l'installation de la suite de packages `tidyverse`. Ce package nécessite d'installer les librairies Linux `libcurl4-openssl-dev`,  `libxml2-dev` et `libssl-dev`.
+
+Dans l'onglet `Environnement` de `deepnote`, choisisser `Local ./Dockerfile`.
+Ensuite, on édite le docker par défaut (qui ne contient que le chargement de Python 3.7).
+
+```
+# Noyau utilisé (ici R 4.0.4)
+FROM deepnote/ir:4.0.4
+
+# Instructions linux pour installer les librairies nécessaires
+RUN apt-get update -y && apt-get install -y libcurl4-openssl-dev libxml2-dev libssl-dev
+```
+
+Une fois ce Docker écrit, il faut le construire, grâce à l'onglet `Build` sur `deepnote`.
+
+Vous remarquerez que l'on n'a pas encore installé tidyverse.
+Une manière simple d'installer tidyverse est ensuite d'ouvrir un terminal directement sur `deepnote` (onglet `Terminals`), d'y lancer `R` et d'installer tidyverse. 
+
+```{r deepnote_install_tidyverse}
+# A lancer dans le terminal de deepnote
+install.packages("tidyverse")
+```
+
+A présent, votre projet aura tidyverse d'instaler correctement et pourra être partagé.
+
+### Création et partage du notebook
+
+La création du notebook est assez intuitive et permet de mélanger blocs de textes ou de code.
+On peut également importer des TP existants. 
+Si ceux-ci étaient écrit en `.Rmd`, il est possible de les transformer en `.ipynb` grâce à [jupytext](https://github.com/mwouts/jupytext), un outil de conversion. 
+
+La conversion se fait globalement bien (mais ne gère pas les parties en `yaml`).
+
+Le partage du notebook aux étudiants se fait via deepnote.
+Le partage peut se faire avec différents niveaux de droits (vue, éxécution, édition).
+
+## Visual Studio Code
+
+Cette solution a assez vide été abandonnée car sa compatibilité avec R n'est pas assurée pour l'instant.
+
+## Livecoding sous Rstudio
+
+Le package `livecode` est développé sur la [page github](https://github.com/rundel/livecode) de Colin Rundel.
+Un tutoriel est disponible [ici](https://bitsandbricks.github.io/post/code-live-from-rstudio-and-share-it-with-the-world-in-real-time/).
+Le principe est de pouvoir partager du code en direct avec des étudiants via une adresse web.
+
+
+### Mise en place
+
+#### Installer le package
+
+```{r install_livecode}
+remotes::install_github("rundel/livecode")
+```
+
+
+#### Configurer un ngrok
+
+`ngrok` permet de diffuser une adresse locale via un site web.
+Il faut se créer un compte sur (ngrok.com) (identification possible via github), télécharger le client (sous linux `snap install ngrok`) et donner le jeton d'identification donné sur le compte ngrok (taper dans un terminal `ngrok authtoken .....`, attention ne pas taper `./ngrok` comme indiqué sur le site).
+
+#### Commencer le partage
+
+Sous Rstudio pour un script ou un fichier rmd préalablement enregistré, éxécuter :
+
+```{r serve_file_livecode}
+s <- livecode::serve_file()
+```
+
+Cela ouvre dans le navigateur une adresse locale que l'on peut partager avec les personnes connectées au même réseau que nous.
+Pour le partager via ngrok `ngrok http http://adresselocale` et partager le lien fourni dans le terminal sur la ligne *forwarding*.
+
+
+### Limites
+
+Les réseaux sécurisés type universitaire bloquent ngrok...
+
