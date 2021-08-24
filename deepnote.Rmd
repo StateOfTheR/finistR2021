@@ -1,6 +1,6 @@
 ---
 title: "Outils collaboratifs de notebook"
-author: "Pierre {Barbillon, Gloaguen, Navarro}"
+author: "Pierre {Barbillon, Gloaguen, Navaro}"
 date: "23/08/2021"
 output: html_document
 ---
