@@ -14,6 +14,9 @@ navbar:
   - text: "Nouvelles Fonctions Graphiques"
     icon: fa-gear
     href: datavizu.html
+  - text: "Enseignement"
+    icon: fa-user-graduate
+    href: deepnote.html
 
 
 output:
