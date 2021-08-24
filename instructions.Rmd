@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
 ## Processus de mise en commun des ateliers
 
 * Créer une branche propre à l'atelier nommée explicitement
