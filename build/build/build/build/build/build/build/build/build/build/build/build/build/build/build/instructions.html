@@ -281,17 +281,19 @@ $(document).ready(function () {
 <div id="processus-de-mise-en-commun-des-ateliers" class="section level2">
 <h2>Processus de mise en commun des ateliers</h2>
 <ul>
-<li>Créer une branche propre à l’atelier nommée explicitement</li>
+<li>Créer une branche propre à l’atelier nommée explicitement <code>mon_nom_parlant</code> et basculer dessus</li>
 </ul>
 <p><code>git checkout -b mon_nom_parlant</code></p>
 <ul>
-<li>Créer un fichier Rmarkdown de restitution de votre atelier</li>
+<li>Créer un fichier Rmarkdown de restitution de votre atelier <code>fichier.Rmd</code> dans votre branche</li>
 </ul>
-<p><code>git add fichier.Rmd</code> <code>git commit -m "restitution atelier"</code></p>
+<p><code>git add fichier.Rmd</code></p>
+<p><code>git commit -m "restitution atelier"</code></p>
 <ul>
-<li>Pousser vos modifications sur le serveur</li>
+<li>Pousser vos modifications sur le serveur distant</li>
 </ul>
-<p><code>git  push --set-upstream origin mon_nom_parlant</code> ou <code>git  push</code></p>
+<p><code>git  push --set-upstream origin mon_nom_parlant</code> ou</p>
+<p><code>git  push</code></p>
 <ul>
 <li><p>Faire une pull request (PR) sur github</p></li>
 <li><p>indiquer dans le message de la PR la liste des packages ou autres besoins</p></li>
@@ -304,6 +306,7 @@ $(document).ready(function () {
 <h2>Détails du fonctionnement</h2>
 <div id="le-docker" class="section level3">
 <h3>Le docker</h3>
+<p>Lien vers la fiche pense-bête : [<a href="https://www.docker.com/sites/default/files/d8/2019-09/docker-cheat-sheet.pdf" class="uri">https://www.docker.com/sites/default/files/d8/2019-09/docker-cheat-sheet.pdf</a>]</p>
 </div>
 <div id="les-actions" class="section level3">
 <h3>Les actions</h3>
