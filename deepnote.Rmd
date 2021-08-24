@@ -1,0 +1,84 @@
+---
+title: "Outils collaboratifs de notebook"
+author: "Pierre {Barbillon, Gloaguen, Navarro}"
+date: "23/08/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,eval=FALSE)
+```
+
+## Deepnote
+
+[deepnote](https://deepnote.com/)
+
+### Principes
+
+
+
+
+Il est possible d'avoir un compte gratuit, la connexion est possible via un compte github.
+Deepnote est un outil pour travailler de manière collaborative sur un notebook (format **.ipynb**).
+Il est pensé à la base pour utiliser python mais peut également faire appel à un environnement R.
+
+
+### Préparation de l'environnement
+
+Il faut choisir dans environnement la version de R souhaitée, ensuite des packages peuvent être installés via le terminal. 
+Ces packages sont sauvegardés de manière pérenne dans le projet.
+Par contre, il n'est pas certain que les librairies linux additionnelles soient sauvegardées.
+Il semble possible d'utiliser des fichiers docker mais leur utilisation avec R ne semble pas aller de soi.
+
+
+### Création et partage du notebook
+
+La création du notebook est assez intuitive et permet de mélanger blocs de textes ou de code.
+Le partage peut se faire avec différents niveaux de droits (vue, éxécution, édition).
+
+
+### Création d'un docker local
+
+
+## Visual Studio Code
+
+Cette solution a assez vide été abandonnée car sa compatibilité avec R n'est pas assurée pour l'instant.
+
+## Livecoding sous Rstudio
+
+Le package `livecode` est développé sur la [page github](https://github.com/rundel/livecode) de Colin Rundel.
+Un tutoriel est disponible [ici](https://bitsandbricks.github.io/post/code-live-from-rstudio-and-share-it-with-the-world-in-real-time/).
+Le principe est de pouvoir partager du code en direct avec des étudiants via une adresse web.
+
+
+### Mise en place
+
+#### Installer le package
+
+
+
+```{r}
+remotes::install_github("rundel/livecode")
+```
+
+
+#### Configurer un ngrok
+
+`ngrok` permet de diffuser une adresse locale via un site web.
+Il faut se créer un compte sur (ngrok.com) (identification possible via github), télécharger le client (sous linux `snap install ngrok`) et donner le jeton d'identification donné sur le compte ngrok (taper dans un terminal `ngrok authtoken .....`, attention ne pas taper `./ngrok` comme indiqué sur le site).
+
+#### Commencer le partage
+
+Sous Rstudio pour un script ou un fichier rmd préalablement enregistré, éxécuter :
+```{r}
+s <- livecode::serve_file()
+```
+
+Cela ouvre dans le navigateur une adresse locale que l'on peut partager avec les personnes connectées au même réseau que nous.
+Pour le partager via ngrok `ngrok http http://adresselocale` et partager le lien fourni dans le terminal sur la ligne *forwarding*.
+
+
+### Limites
+
+Les réseaux sécurisés type universitaire bloquent ngrok...
+
