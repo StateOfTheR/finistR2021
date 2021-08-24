@@ -12,7 +12,7 @@ navbar:
     icon: fa-gear
     href: instructions.html
   - text: "Nouvelles Fonctions Graphiques"
-    icon: fa-gear
+    icon: fa-desktop
     href: datavizu.html
 
 
