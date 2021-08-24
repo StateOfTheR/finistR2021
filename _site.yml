@@ -10,7 +10,7 @@ navbar:
  right:
   - text: "Workflow"
     icon: fa-gear
-    href: instruction.html
+    href: instructions.html
 
 
 output:

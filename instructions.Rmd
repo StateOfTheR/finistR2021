@@ -29,7 +29,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 * Depuis Github, demander une pull request (PR) et indiquer dans le message de la PR la liste des packages
 
-* Dès que la PR passe les tests (c'est à dire quand les admins ont mis les packages nécessaires à jour), demander le merge (rebase and merge)
+* Dès que la PR passe les tests (c'est à dire quand les admins ont mis les packages nécessaires à jour), demander le merge.
 
 ## Comment ce proscessus a été mis en place
 
