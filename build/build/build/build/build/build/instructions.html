@@ -241,7 +241,13 @@ $(document).ready(function () {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="instruction.html">
+    <span class="fa fa-gear"></span>
+     
+    Workflow
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -260,6 +266,31 @@ $(document).ready(function () {
 
 <div id="processus-de-mise-en-commun-des-ateliers" class="section level2">
 <h2>Processus de mise en commun des ateliers</h2>
+<ul>
+<li>Créer une branche propre à l’atelier nommée explicitement</li>
+</ul>
+<p><code>git checkout -b mon_nom_parlant</code></p>
+<ul>
+<li>Créer un Rmarkdown de compte rendu de votre atelier dans votre branche</li>
+</ul>
+<p><code>git  add fichier.Rmd</code> <code>git  commit -m "restitution atelier"</code></p>
+<ul>
+<li>Pousser votre fichier sur votre branche sur le serveur</li>
+</ul>
+<p><code>git  push --set-upstream origin mon_nom_parlant</code> ou <code>git  push</code></p>
+<ul>
+<li><p>Depuis Github, demander une pull request (PR) et indiquer dans le message de la PR la liste des packages</p></li>
+<li><p>Dès que la PR passe les tests (c’est à dire quand les admins ont mis les packages nécessaires à jour), demander le merge (rebase and merge)</p></li>
+</ul>
+</div>
+<div id="comment-ce-proscessus-a-été-mis-en-place" class="section level2">
+<h2>Comment ce proscessus a été mis en place</h2>
+<div id="le-docker" class="section level3">
+<h3>Le docker</h3>
+</div>
+<div id="dans-les-actions" class="section level3">
+<h3>Dans les actions</h3>
+</div>
 </div>
 
 
