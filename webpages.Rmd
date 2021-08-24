@@ -157,11 +157,28 @@ La ligne `before_body: extlogo.html` permet d'ajouter le logo en haut à droite 
 <div class="logos"><img src="img/Logotype-INRAE.jpg" width="180px" align="right"></div>
 ```` 
 
-## Etape 5 : `build` and `git`
+### Etape 5 : `build` and `git`
 
 On `knit` chaque Rmd.  On `build` le site (bouton sous Rtudio).  Ce bouton apparaît grâce au fichier `Rproj`. Si le bouton n'apparaît pas,  fermer le projet et le réouvrir.  
 
 Ensuite on `git` (`commit` + `push`)  et c'est en ligne! 
 
+## Utilisation d'autres générateurs (ex : Jekyll)
 
- 
+D'autres générateurs de sites reposant sur d'autres langages de programmation existent : Jekyll (Ruby), Pelican (Python), Hugo (Go). GitHub Pages utilise et recommande Jekyll. 
+
+L'utilisation de Jekyll nécessite d'installer Ruby et quelques packages supplémentaires, notamment Bundler, afin de gérer les projets en Ruby (cf. [site web de Jekyll](https://jekyllrb.com)).
+
+Il existe de très nombreux thèmes développés par la communauté Jekyll, qui peuvent servir de point de départ pour construire son propre site internet (rechercher "jekyll themes" sur Google). Pour commencer, on peut fork le dépôt GitHub du thème choisi. À titre d'exemple, on pourra s'intéresser au thème [al-folio](https://github.com/alshedivat/al-folio).
+
+Le rôle de certains fichiers est notable. Le fichier [_config.yml](https://jekyllrb.com/docs/configuration/) contient de nombreuses options sur la manière dont Jekyll génère le site. Le fichier [Gemfile](https://jekyllrb.com/docs/ruby-101/) spécifie les packages Ruby qui sont requis pour que Jekyll compile le site.
+
+Les différents dossiers commençant par "_" contiennent les fichiers "sources" utilisés par Jekyll pour générer le site. Par exemple, le dossier _pages contient des fichiers Markdown pour le texte de chaque page du site. Les dossiers _news, _projects et _posts permettent de pousser du contenu sous différentes formes de rubriques. Le thème est défini par l'HTML du dossier _layout et le CSS du dossier _sass. C'est dans ces derniers qu'il faut regarder pour personnaliser le thème.
+
+Il est à noter que Jekyll prend en charge (dans une certaine mesure) les fichiers BibTex pour les publications.
+
+Pour s'inspirer
+
+- Exemples de sites utilisant le même thème : [d'un chercheur](https://jchiquet.github.io/), [d'un labo](https://decisionlab.ucsf.edu/), [d'un cours d'université](https://sailinglab.github.io/pgm-spring-2019/).
+
+- Le rendu de quelques thèmes Jekyll : [al-folio](https://alshedivat.github.io/al-folio/), [academicpages](https://academicpages.github.io), [academic-portfolio](https://ys1998.github.io/academic-portfolio/), [beautifuljekyll](https://beautifuljekyll.com/), etc.
