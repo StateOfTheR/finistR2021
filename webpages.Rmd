@@ -15,22 +15,153 @@ Nous avons trouvé 2 solutions : utiliser Rstudio et générer les pages avec Rm
 D'autres méthodes de construction de site plus avancées existent. 
 
 
-## R Markdown
+## 1. Méthode basique de construction de site. 
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+### Etape 1 : sous github 
 
-```{r cars}
-summary(cars)
-```
+L'idée est de définir une page web correspondant à son identifiant github. 
+Cette page web sera accessible à l'adresse `monidentifiant.github.io`. 
 
-## Including Plots
+Pour cela, la première chose à faire à de créer un repo sous github appelé 
+`monidentifiant.github.io`
+On clone ensuite ce repo sur sa propre machine et on éditera les fichiers sous R studio (Rmd, .yml etc...)
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+### Etape 2: sous R studio
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Créer un 'Rproj' dans le répertoire. Ceci permettra de voir apparaître le bouton `Build` à l'oouvertude du repo dans R studio. 
+
+### Etape 3 : fichier essentiel 1 : `_site.yml`
+
+- les caractéristiques de la page doivent être définies dans le fichier `_site.yml`  (exactement ce nom de fichier)
+
+Ce fichier est construit comme suit: 
+
+````markdown
+name: "Sophie Donnet"
+output_dir: "."
+navbar:
+  logo: img/Logotype-INRAE.jpg
+  title: 'Sophie Donnet'
+  left:
+  - text: "Biography"
+    icon: fa-child
+    href: biography.html
+  - text: "Research "
+    icon: fa-chart-area
+    menu:
+      - text: "Research interests"
+        icon: fa-flask
+        href: research.html
+      - text: "Publications"
+        href: publications.html
+        icon: fa-file-text-o
+      - text: "Talks"
+        href: talks.html
+        icon: fa-comment-o 
+      - text: "Students"
+        href: students.html
+        icon: fa-graduation-cap 
+      
+        
+  - text: "Teaching"
+    icon: fa-laptop
+    menu:
+      - text: "Bayesian Statistics"
+        href: bayesian_stat.html
+      - text: "Master MathSV"
+        href: master_math_SV.html
+             
+  right:
+  - text: "Github"
+    icon: fab fa-github
+    href: https://github.com/Sophiedonnet
+
+output:
+  html_document:
+    theme: cosmo
+    highlight: haddock
+    
+````
+
+On définit ainsi la structure de la page. 
+
+  - Le style est choisi dans output. Ici `cosmo`, on peut aussi utiliser `lumen`. La liste des styles est disponible [ici](https://www.datadreaming.org/post/r-markdown-theme-gallery/) 
+  
+  - `navbar` définit la barre de navigation. On définit ce qu'on met à gauche et à droite. On peut insérer  des icônes `fa-github` par exemple (voir liste [ici](https://fontawesome.com/v4.7/icons/))
+  
+  - `menu` permet de créer des menus déroulants: on spécifie le `text`, l'`icon` et le lien `href`. 
+  
+  - `href` permet de faire références aux pages dédiées à l'enseignement, la recherche etc... créee par ailleurs à partir de fichiers Rmd par exemple. 
+  
+Attention à l'écriture de ce fichier. Les *indentations sont importantes*.
+
+
+
+### Etape 4 : fichier essentiel 2 : `index.Rmd`
+
+Il faut définir le fichier Rmd `index.Rmd` qui va contenir les premières infos. 
+
+````markdown
+---
+title: "Sophie Donnet"
+output: 
+  html_document:
+   logo: img/Logotype-INRAE.jpg
+   number_sections: false
+   highlight: tango
+   css: style.css
+   includes:
+     before_body: extlogo.html
+---
+
+
+<img src="img/sophie_donnet_profile.jpg" alt="mpe" width = "280px" align="right"> </img>
+  
+  
+
+  
+
+  
+I am a researcher at  [INRAE](https://www.inrae.fr/) in the unity [MIA Paris](https://www6.inrae.fr/mia-paris). I am the head of the team [SOLsTIS](https://www6.inrae.fr/mia-paris/Equipes/SOLsTIS) (Statistical mOdelling and Learning for environnemenT and lIfe Sciences).  Our unity is located at [AgroParisTech](https://www.agroparistech.fr) in Paris for yet a few months. 
+
+
+I am specialized in the development of statistical earning methods for ecology and life sciences in general. I work with people from different background: statisticians, ecologists ...
+You will find more details on the Research section.
+  
+  
+ 
+  
+  
+## Contact information
+
+
+
+- <i class="fas fa-map-marker"></i> UMR MIA-Paris, AgroParisTech, INRAE, </br>
+  16 rue Claude Bernard, </br>
+  75005 Paris Cedex</br>
+  
+- <i class="fa fa-phone"></i> +33 (0)1 44 08 37 19
+
+- <i class="fa fa-at"></i> <a href="mailto:sophie.donnet@inrae.fr
+">sophie [dot] donnet  [at] inrae [dot] fr</a>
+
+````
+
+En utilisant la fonction `knit` on va créer un `index.html`. 
+
+La ligne `before_body: extlogo.html` permet d'ajouter le logo en haut à droite de la page. Ce fichier contient la ligne suivante : 
+
+````
+<div class="logos"><img src="img/Logotype-INRAE.jpg" width="180px" align="right"></div>
+```` 
+
+## Etape 5 : `build` and `git`
+
+On `knit` chaque Rmd.  On `build` le site (bouton sous Rtudio).  Ce bouton apparaît grâce au fichier `Rproj`. Si le bouton n'apparaît pas,  fermer le projet et le réouvrir.  
+
+Ensuite on `git` (`commit` + `push`)  et c'est en ligne! 
+
+
+ 
