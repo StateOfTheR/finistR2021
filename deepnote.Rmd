@@ -11,28 +11,16 @@ knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
 
 ## Deepnote
 
-Deepnote est un outil de partage collaboratif de notebooks, typiquement utile pour partager des tutoriels avec des étudiants. 
+Deepnote est un outil de partage collaboratif de notebooks de type Jupyter (format `.ipynb`), typiquement utile pour partager des tutoriels avec des étudiants. 
 Initialement prévu pour Python, il comprend une fonctionnalité `R` que l'on décrit ici.
 
 Cette explication peut être complétée par la page web de [deepnote](https://deepnote.com/).
-
-### Principes
-
-Il est possible d'avoir un compte gratuit, la connexion est possible via un compte github.
-Deepnote est un outil pour travailler de manière collaborative sur un notebook (format **.ipynb**).
-Il est pensé à la base pour utiliser python mais peut également faire appel à un environnement R.
 
 
 ### Préparation de l'environnement
 
 Il faut choisir dans environnement la version de R souhaitée, ensuite des packages peuvent être installés via le terminal. 
 Ces packages sont sauvegardés de manière pérenne dans le projet.
-
-### Création et partage du notebook
-
-La création du notebook est assez intuitive et permet de mélanger blocs de textes ou de code.
-Le partage peut se faire avec différents niveaux de droits (vue, éxécution, édition).
-
 
 ### Création d'un docker local
 
@@ -64,6 +52,17 @@ install.packages("tidyverse")
 ```
 
 A présent, votre projet aura tidyverse d'instaler correctement et pourra être partagé.
+
+### Création et partage du notebook
+
+La création du notebook est assez intuitive et permet de mélanger blocs de textes ou de code.
+On peut également importer des TP existants. 
+Si ceux-ci étaient écrit en `.Rmd`, il est possible de les transformer en `.ipynb` grâce à [jupytext](https://github.com/mwouts/jupytext), un outil de conversion. 
+
+La conversion se fait globalement bien (mais ne gère pas les parties en `yaml`).
+
+Le partage du notebook aux étudiants se fait via deepnote.
+Le partage peut se faire avec différents niveaux de droits (vue, éxécution, édition).
 
 ## Visual Studio Code
 
