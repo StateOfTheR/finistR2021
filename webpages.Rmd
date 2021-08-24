@@ -9,10 +9,15 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Cet atelier consistait à comprendre comment créer sa page web personnelle. 
+Cet atelier consistait à comprendre comment créer sa page web personnelle en utilisant l'outil de déploiement de sites disponible sous github et dans gitlab par intégration continue (CI) et les options des `pages`. 
 
-Nous avons trouvé 2 solutions : utiliser Rstudio et générer les pages avec Rmd. Cette méthode très simple a l'avantage de ne nécéssiter aucun package. 
-D'autres méthodes de construction de site plus avancées existent. 
+* https://pages.github.com/
+* https://about.gitlab.com/blog/2016/04/07/gitlab-pages-setup/
+
+Nous avons trouvé 2 solutions : 
+
+* utiliser Rstudio et générer les pages avec Rmd. Cette méthode très simple a l'avantage de ne nécessiter aucun package. 
+* utiliser des générateurs de construction de site plus avancées comme Jekyll ou Hugo etc... 
 
 
 ## 1. Méthode basique de construction de site. 
@@ -30,7 +35,7 @@ On clone ensuite ce repo sur sa propre machine et on éditera les fichiers sous 
 
 ### Etape 2: sous R studio
 
-Créer un 'Rproj' dans le répertoire. Ceci permettra de voir apparaître le bouton `Build` à l'oouvertude du repo dans R studio. 
+Créer un 'Rproj' dans le répertoire. Ceci permettra de voir apparaître le bouton `Build` à l'ouvertude du repo dans R studio. 
 
 ### Etape 3 : fichier essentiel 1 : `_site.yml`
 
@@ -89,11 +94,11 @@ On définit ainsi la structure de la page.
 
   - Le style est choisi dans output. Ici `cosmo`, on peut aussi utiliser `lumen`. La liste des styles est disponible [ici](https://www.datadreaming.org/post/r-markdown-theme-gallery/) 
   
-  - `navbar` définit la barre de navigation. On définit ce qu'on met à gauche et à droite. On peut insérer  des icônes `fa-github` par exemple (voir liste [ici](https://fontawesome.com/v4.7/icons/))
+  - `navbar` définit la barre de navigation. On définit ce qu'on met à gauche et à droite. On peut insérer des icônes `fa-github` par exemple (voir liste [ici](https://fontawesome.com/v4.7/icons/))
   
   - `menu` permet de créer des menus déroulants: on spécifie le `text`, l'`icon` et le lien `href`. 
   
-  - `href` permet de faire références aux pages dédiées à l'enseignement, la recherche etc... créee par ailleurs à partir de fichiers Rmd par exemple. 
+  - `href` permet de faire références aux pages dédiées à l'enseignement, la recherche etc... créées par ailleurs à partir de fichiers Rmd par exemple. 
   
 Attention à l'écriture de ce fichier. Les *indentations sont importantes*.
 
@@ -119,10 +124,6 @@ output:
 
 <img src="img/sophie_donnet_profile.jpg" alt="mpe" width = "280px" align="right"> </img>
   
-  
-
-  
-
   
 I am a researcher at  [INRAE](https://www.inrae.fr/) in the unity [MIA Paris](https://www6.inrae.fr/mia-paris). I am the head of the team [SOLsTIS](https://www6.inrae.fr/mia-paris/Equipes/SOLsTIS) (Statistical mOdelling and Learning for environnemenT and lIfe Sciences).  Our unity is located at [AgroParisTech](https://www.agroparistech.fr) in Paris for yet a few months. 
 
@@ -159,11 +160,13 @@ La ligne `before_body: extlogo.html` permet d'ajouter le logo en haut à droite 
 
 ### Etape 5 : `build` and `git`
 
-On `knit` chaque Rmd.  On `build` le site (bouton sous Rtudio).  Ce bouton apparaît grâce au fichier `Rproj`. Si le bouton n'apparaît pas,  fermer le projet et le réouvrir.  
+On `knit` chaque Rmd.  On `build` le site (bouton sous Rtudio).  Ce bouton apparaît grâce au fichier `Rproj`. Si le bouton n'apparaît pas,  fermer le projet et le réouvrir. 
 
-Ensuite on `git` (`commit` + `push`)  et c'est en ligne! 
+On peut aussi utiliser directement la ligne de commande: `rmarkdown::render_site(encoding = 'UTF-8')`.
 
-## Utilisation d'autres générateurs (ex : Jekyll)
+Ensuite on envoie les fichiers sur **github** (`commit` + `push`)  et c'est en ligne! 
+
+## 2. Utilisation d'autres générateurs de site (ex : Jekyll)
 
 D'autres générateurs de sites reposant sur d'autres langages de programmation existent : Jekyll (Ruby), Pelican (Python), Hugo (Go). GitHub Pages utilise et recommande Jekyll. 
 
