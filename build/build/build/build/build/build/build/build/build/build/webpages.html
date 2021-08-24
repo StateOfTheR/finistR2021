@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Sophie, Isabelle, Tam, Eric, José, Nicolas" />
+
+
+<title>Construire sa page web</title>
+
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Finist'R 2021</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://github.com/StateOfTheR/finistR2021">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="instructions.html">
+    <span class="fa fa-gear"></span>
+     
+    Workflow
+  </a>
+</li>
+<li>
+  <a href="datavizu.html">
+    <span class="fa fa-gear"></span>
+     
+    Nouvelles Fonctions Graphiques
+  </a>
+</li>
+<li>
+  <a href="deepnote.html">
+    <span class="fa fa-user-graduate"></span>
+     
+    Enseignement
+  </a>
+</li>
+<li>
+  <a href="webpages.html">
+    <span class="fa fa-address-book-o"></span>
+     
+    Site Web
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Construire sa page web</h1>
+<h4 class="author">Sophie, Isabelle, Tam, Eric, José, Nicolas</h4>
+<h4 class="date">24/08/2021</h4>
+
+</div>
+
+
+<p>Cet atelier consistait à comprendre comment créer sa page web personnelle en utilisant l’outil de déploiement de sites disponible sous github et dans gitlab par intégration continue (CI) et les options des <code>pages</code>.</p>
+<ul>
+<li><a href="https://pages.github.com/" class="uri">https://pages.github.com/</a></li>
+<li><a href="https://about.gitlab.com/blog/2016/04/07/gitlab-pages-setup/" class="uri">https://about.gitlab.com/blog/2016/04/07/gitlab-pages-setup/</a></li>
+</ul>
+<p>Nous avons trouvé 2 solutions :</p>
+<ul>
+<li>utiliser Rstudio et générer les pages avec Rmd. Cette méthode très simple a l’avantage de ne nécessiter aucun package.</li>
+<li>utiliser des générateurs de construction de site plus avancées comme Jekyll ou Hugo etc…</li>
+</ul>
+<div id="méthode-basique-de-construction-de-site." class="section level2">
+<h2>1. Méthode basique de construction de site.</h2>
+<div id="etape-1-sous-github" class="section level3">
+<h3>Etape 1 : sous github</h3>
+<p>L’idée est de définir une page web correspondant à son identifiant github. Cette page web sera accessible à l’adresse <code>monidentifiant.github.io</code>.</p>
+<p>Pour cela, la première chose à faire à de créer un repo sous github appelé <code>monidentifiant.github.io</code> On clone ensuite ce repo sur sa propre machine et on éditera les fichiers sous R studio (Rmd, .yml etc…)</p>
+</div>
+<div id="etape-2-sous-r-studio" class="section level3">
+<h3>Etape 2: sous R studio</h3>
+<p>Créer un ‘Rproj’ dans le répertoire. Ceci permettra de voir apparaître le bouton <code>Build</code> à l’ouvertude du repo dans R studio.</p>
+</div>
+<div id="etape-3-fichier-essentiel-1-_site.yml" class="section level3">
+<h3>Etape 3 : fichier essentiel 1 : <code>_site.yml</code></h3>
+<ul>
+<li>les caractéristiques de la page doivent être définies dans le fichier <code>_site.yml</code> (exactement ce nom de fichier)</li>
+</ul>
+<p>Ce fichier est construit comme suit:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="an">name:</span><span class="co"> &quot;Sophie Donnet&quot;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">output_dir:</span><span class="co"> &quot;.&quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">navbar:</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  logo: img/Logotype-INRAE.jpg</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  title: &#39;Sophie Donnet&#39;</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  left:</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>text: &quot;Biography&quot;</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    icon: fa-child</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    href: biography.html</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>text: &quot;Research &quot;</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    icon: fa-chart-area</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    menu:</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ss">      - </span>text: &quot;Research interests&quot;</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        icon: fa-flask</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        href: research.html</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="ss">      - </span>text: &quot;Publications&quot;</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        href: publications.html</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        icon: fa-file-text-o</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="ss">      - </span>text: &quot;Talks&quot;</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        href: talks.html</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        icon: fa-comment-o </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ss">      - </span>text: &quot;Students&quot;</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        href: students.html</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        icon: fa-graduation-cap </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>text: &quot;Teaching&quot;</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    icon: fa-laptop</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    menu:</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="ss">      - </span>text: &quot;Bayesian Statistics&quot;</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        href: bayesian_stat.html</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">      - </span>text: &quot;Master MathSV&quot;</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        href: master_math_SV.html</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>             </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  right:</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>text: &quot;Github&quot;</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    icon: fab fa-github</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    href: https://github.com/Sophiedonnet</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>output:</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  html_document:</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    theme: cosmo</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    highlight: haddock</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    </span></code></pre></div>
+<p>On définit ainsi la structure de la page.</p>
+<ul>
+<li><p>Le style est choisi dans output. Ici <code>cosmo</code>, on peut aussi utiliser <code>lumen</code>. La liste des styles est disponible <a href="https://www.datadreaming.org/post/r-markdown-theme-gallery/">ici</a></p></li>
+<li><p><code>navbar</code> définit la barre de navigation. On définit ce qu’on met à gauche et à droite. On peut insérer des icônes <code>fa-github</code> par exemple (voir liste <a href="https://fontawesome.com/v4.7/icons/">ici</a>)</p></li>
+<li><p><code>menu</code> permet de créer des menus déroulants: on spécifie le <code>text</code>, l’<code>icon</code> et le lien <code>href</code>.</p></li>
+<li><p><code>href</code> permet de faire références aux pages dédiées à l’enseignement, la recherche etc… créées par ailleurs à partir de fichiers Rmd par exemple.</p></li>
+</ul>
+<p>Attention à l’écriture de ce fichier. Les <em>indentations sont importantes</em>.</p>
+</div>
+<div id="etape-4-fichier-essentiel-2-index.rmd" class="section level3">
+<h3>Etape 4 : fichier essentiel 2 : <code>index.Rmd</code></h3>
+<p>Il faut définir le fichier Rmd <code>index.Rmd</code> qui va contenir les premières infos.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> &quot;Sophie Donnet&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">output:</span><span class="co"> </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html_document:</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">   logo: img/Logotype-INRAE.jpg</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">   number_sections: false</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">   highlight: tango</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">   css: style.css</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">   includes:</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">     before_body: extlogo.html</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;img</span><span class="ot"> src=</span><span class="st">&quot;img/sophie_donnet_profile.jpg&quot;</span><span class="ot"> alt=</span><span class="st">&quot;mpe&quot;</span><span class="ot"> width</span> <span class="ot">=</span> <span class="st">&quot;280px&quot;</span><span class="ot"> align=</span><span class="st">&quot;right&quot;</span><span class="kw">&gt;</span> <span class="kw">&lt;/img&gt;</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>I am a researcher at  <span class="co">[</span><span class="ot">INRAE</span><span class="co">](https://www.inrae.fr/)</span> in the unity <span class="co">[</span><span class="ot">MIA Paris</span><span class="co">](https://www6.inrae.fr/mia-paris)</span>. I am the head of the team <span class="co">[</span><span class="ot">SOLsTIS</span><span class="co">](https://www6.inrae.fr/mia-paris/Equipes/SOLsTIS)</span> (Statistical mOdelling and Learning for environnemenT and lIfe Sciences).  Our unity is located at <span class="co">[</span><span class="ot">AgroParisTech</span><span class="co">](https://www.agroparistech.fr)</span> in Paris for yet a few months. </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>I am specialized in the development of statistical earning methods for ecology and life sciences in general. I work with people from different background: statisticians, ecologists ...</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>You will find more details on the Research section.</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## Contact information</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="kw">&lt;i</span><span class="ot"> class=</span><span class="st">&quot;fas fa-map-marker&quot;</span><span class="kw">&gt;&lt;/i&gt;</span> UMR MIA-Paris, AgroParisTech, INRAE, <span class="kw">&lt;/br&gt;</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  16 rue Claude Bernard, <span class="kw">&lt;/br&gt;</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  75005 Paris Cedex<span class="kw">&lt;/br&gt;</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="kw">&lt;i</span><span class="ot"> class=</span><span class="st">&quot;fa fa-phone&quot;</span><span class="kw">&gt;&lt;/i&gt;</span> +33 (0)1 44 08 37 19</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="kw">&lt;i</span><span class="ot"> class=</span><span class="st">&quot;fa fa-at&quot;</span><span class="kw">&gt;&lt;/i&gt;</span> <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;mailto:sophie.donnet@inrae.fr</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;</span><span class="kw">&gt;</span>sophie <span class="co">[</span><span class="ot">dot</span><span class="co">]</span> donnet  <span class="co">[</span><span class="ot">at</span><span class="co">]</span> inrae <span class="co">[</span><span class="ot">dot</span><span class="co">]</span> fr<span class="kw">&lt;/a&gt;</span></span></code></pre></div>
+<p>En utilisant la fonction <code>knit</code> on va créer un <code>index.html</code>.</p>
+<p>La ligne <code>before_body: extlogo.html</code> permet d’ajouter le logo en haut à droite de la page. Ce fichier contient la ligne suivante :</p>
+<pre><code>&lt;div class=&quot;logos&quot;&gt;&lt;img src=&quot;img/Logotype-INRAE.jpg&quot; width=&quot;180px&quot; align=&quot;right&quot;&gt;&lt;/div&gt;</code></pre>
+</div>
+<div id="etape-5-build-and-git" class="section level3">
+<h3>Etape 5 : <code>build</code> and <code>git</code></h3>
+<p>On <code>knit</code> chaque Rmd. On <code>build</code> le site (bouton sous Rtudio). Ce bouton apparaît grâce au fichier <code>Rproj</code>. Si le bouton n’apparaît pas, fermer le projet et le réouvrir.</p>
+<p>On peut aussi utiliser directement la ligne de commande: <code>rmarkdown::render_site(encoding = 'UTF-8')</code>.</p>
+<p>Ensuite on envoie les fichiers sur <strong>github</strong> (<code>commit</code> + <code>push</code>) et c’est en ligne!</p>
+</div>
+</div>
+<div id="utilisation-dautres-générateurs-de-site-ex-jekyll" class="section level2">
+<h2>2. Utilisation d’autres générateurs de site (ex : Jekyll)</h2>
+<p>D’autres générateurs de sites reposant sur d’autres langages de programmation existent : Jekyll (Ruby), Pelican (Python), Hugo (Go). GitHub Pages utilise et recommande Jekyll.</p>
+<p>L’utilisation de Jekyll nécessite d’installer Ruby et quelques packages supplémentaires, notamment Bundler, afin de gérer les projets en Ruby (cf. <a href="https://jekyllrb.com">site web de Jekyll</a>).</p>
+<p>Il existe de très nombreux thèmes développés par la communauté Jekyll, qui peuvent servir de point de départ pour construire son propre site internet (rechercher “jekyll themes” sur Google). Pour commencer, on peut fork le dépôt GitHub du thème choisi. À titre d’exemple, on pourra s’intéresser au thème <a href="https://github.com/alshedivat/al-folio">al-folio</a>.</p>
+<p>Le rôle de certains fichiers est notable. Le fichier <a href="https://jekyllrb.com/docs/configuration/">_config.yml</a> contient de nombreuses options sur la manière dont Jekyll génère le site. Le fichier <a href="https://jekyllrb.com/docs/ruby-101/">Gemfile</a> spécifie les packages Ruby qui sont requis pour que Jekyll compile le site.</p>
+<p>Les différents dossiers commençant par "_" contiennent les fichiers “sources” utilisés par Jekyll pour générer le site. Par exemple, le dossier _pages contient des fichiers Markdown pour le texte de chaque page du site. Les dossiers _news, _projects et _posts permettent de pousser du contenu sous différentes formes de rubriques. Le thème est défini par l’HTML du dossier _layout et le CSS du dossier _sass. C’est dans ces derniers qu’il faut regarder pour personnaliser le thème.</p>
+<p>Il est à noter que Jekyll prend en charge (dans une certaine mesure) les fichiers BibTex pour les publications.</p>
+<p>Pour s’inspirer</p>
+<ul>
+<li><p>Exemples de sites utilisant le même thème : <a href="https://jchiquet.github.io/">d’un chercheur</a>, <a href="https://decisionlab.ucsf.edu/">d’un labo</a>, <a href="https://sailinglab.github.io/pgm-spring-2019/">d’un cours d’université</a>.</p></li>
+<li><p>Le rendu de quelques thèmes Jekyll : <a href="https://alshedivat.github.io/al-folio/">al-folio</a>, <a href="https://academicpages.github.io">academicpages</a>, <a href="https://ys1998.github.io/academic-portfolio/">academic-portfolio</a>, <a href="https://beautifuljekyll.com/">beautifuljekyll</a>, etc.</p></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
