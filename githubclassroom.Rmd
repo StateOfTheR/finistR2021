@@ -1,0 +1,40 @@
+---
+title: "Github classroom"
+author: "Pierre Barbillon, Marie-Pierre Etienne, Rémi Patin"
+date: "8/24/2021"
+output: html_document
+---
+
+
+### Objectifs
+
+Il est possible d'utiliser les fonctionnalités de git pour suivre les travaux des étudiants sur des projets. Github classroom permet de rationnaliser l'utilisation dans ce cadre :
+  - réunir les dépôts des étudiants au même endroit,
+  - conserver la même organisation au sein du dépôt,
+  - unifier la nomenclature, 
+  - gérer les droits des étudiants sur les différents dépôts (possibilité de mettre les dépôts en privé, limiter le nombre de contributeurs par projet, organiser des groupes, donner ou non les droits d'administration du dépôt).
+
+Classroom offre un cadre pour gérer l'ensemble des dépôts liés à un devoir. Par exemple, en modifiant le caractère privé/public du devoir on modifie ce caractère sur tous les dépôts étudiants en découlant. De même, supprimer le devoir permet de supprimer d'un coup tous les dépôts étudiants.
+
+### En pratique
+
+Il faut commencer par créer un compte sur (https://classroom.github.com/classrooms) puis on crée une organisation et une classe dans l'organisation.
+
+Dans la classe, on crée un devoir à partir d'un template github qui est un dépôt pour lequel on aura coché l'option template dans les réglages. Il est également possible de partager un dépôt vide.
+
+On partage le devoir (assignement) par un lien web ce qui crée dans l'organisation un dépôt par étudiant ou par groupe d'étudiants auxquels le ou les enseignant(s) peuvent contribuer. 
+
+Chaque dépôt a par défaut une branche une master et on peut choisir l'option (enable feedback branch) afin d'avoir une branche feedback .
+
+Cette branche feedback permet au professeur de faire des commentaires ou des modifications sur le code de l'étudiant. Après avoir poussé ses modifications, l'enseignant peut faire un "pull request" pour que l'étudiant voit les changements proposés par l'enseignant.
+
+
+### Autres fonctionnalités
+
+Il est possible de lier github classroom à un environnement type moodle pour récupérer une liste d'étudiants.
+
+Des tests automatiques peuvent être lancés et ainsi permettre une notation automatique.
+Un test peut consister à lancer un script R et vérifier qu'il compile. Afin que cette option soit pertinente il faut sans doute avoir recours à un docker....
+
+
+
