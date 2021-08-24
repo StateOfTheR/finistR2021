@@ -11,10 +11,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## OpenMP
 
-- OpenMP (Open Multi-Processing) est un ensemble d'instructions permettant de paralléliser des programmes écrits C++, C, and Fortran on Linux, MacOS, and Windows.
-- Le code est parallélisé à l'aide d'instruction qui seront interprétées comme des commentaires si la bibliothèque OpenMP n'est pas installée ou si le flag -fopenmp n'est pas présent lors de la compilation.
-- Les instructions OpenMP
-
+- OpenMP (Open Multi-Processing) est une bibliothèque permettant de paralléliser des programmes écrits en C++, C, ou Fortran pour Linux, MacOS, et Windows.
+- Le code est parallélisé à l'aide d'instructions qui seront interprétées comme des commentaires si la bibliothèque OpenMP n'est pas installée ou si l'option n'est pas présente lors de la compilation.
+- OpenMP est utilisable avec R lorsque l'on utilise des fonctions Rcpp. Cette parallélisation peut se révéler particulièrement efficace sur les machines parallèles à mémoire partagée avec des processeurs contenant un grand nombre de coeurs.
 
 ## Premier exemple
 
@@ -55,8 +54,6 @@ system.time(print(slow_add(a, b, 1)))[3]
 ```
 
 ## Parallélisation avec OpenMP
-
-
 
 ```{Rcpp omp_add}
 #include <unistd.h>
@@ -106,10 +103,152 @@ system.time(print(omp_add(a, b, 1, 1)))[3]
 system.time(print(omp_add(a, b, 1, 8)))[3]
 ```
 
+## Calcul d'un histogramme
+
+
+```{Rcpp serial_historgram}
+#include <Rcpp.h>
+using namespace Rcpp;
+using namespace std;
+
+// [[Rcpp::export]]
+NumericVector serial_histogram(NumericVector xp) {
+  
+    double xmin = -7;
+    double xmax = 7;
+    int nx = 64;
+    int np = xp.length();
+    int ip;
+    
+    NumericVector rho(nx);
+    
+    for( int i=0; i < np; ++i) {
+        double x_norm = (xp[i]-xmin) / (xmax - xmin);
+        ip = floor(x_norm * nx);
+        rho[ip] += 1.0 / np;
+    }
+        
+    return rho;
+        
+}
+```
+
+```{R tests_histogram_1}
+sample = rnorm(10^6)
+rho_serial = serial_histogram(sample)
+plot(seq(-7,7,length.out=64), rho_serial, type = "l", col="blue")
+```
+
+```{Rcpp parallel_histogram_1}
+#include <Rcpp.h>
+#include <omp.h>
+using namespace Rcpp;
+// [[Rcpp::plugins(openmp)]]
+// [[Rcpp::export]]
+NumericVector parallel_histogram_1( NumericVector xp) {
+  
+    double xmin = -7;
+    double xmax = 7;
+    int nx = 64;
+    int np = xp.length();
+    int ip;
+
+    NumericVector rho(nx);
+    
+    #pragma omp parallel 
+    {
+      int tid = omp_get_thread_num();
+      int ntid = omp_get_num_threads();
+      
+      printf("Hello from thread  %d of %d \n", tid, ntid);
+        
+      #pragma omp for
+      for(int i=0; i < np; ++i){
+          double x_norm = (xp[i]-xmin) / (xmax - xmin);
+          int ip = floor(x_norm * nx);
+          rho(ip) += 1.0 / np;
+      }
+    }
+
+    return rho;
+
+}
+```
+
+```{R tests_histogram_2}
+sample = rnorm(10^6)
+rho_serial = serial_histogram(sample)
+rho_parallel_1 = parallel_histogram_1(sample)
+plot(seq(-7,7,length.out=64), rho_serial, type = "l", col="blue")
+lines(seq(-7,7,length.out=64), rho_parallel_1, col="red")
+```
+
+
+```{Rcpp parallel_histogram_2}
+#include <Rcpp.h>
+#include <omp.h>
+using namespace Rcpp;
+// [[Rcpp::plugins(openmp)]]
+// [[Rcpp::export]]
+NumericVector parallel_histogram_2( NumericVector xp) {
+  
+  double xmin = -7;
+  double xmax = 7;
+  int nx = 64;
+  int np = xp.length();
+  int ip;
+  
+  NumericVector rho(nx);
+  
+#pragma omp parallel 
+{
+  int tid = omp_get_thread_num();
+  int ntid = omp_get_num_threads();
+  
+  NumericMatrix rho_local(ntid,nx);
+  
+  printf("Hello from thread  %d of %d \n", tid, ntid);
+  
+  #pragma omp for
+  for(int i=0; i < np; ++i){
+    double x_norm = (xp[i]-xmin) / (xmax - xmin);
+    int ip = floor(x_norm * nx);
+    rho_local(tid,ip) +=  1.0 / np;
+  }
+
+  for (int i = 0; i < nx; ++i) {
+    double rowSum = 0.0;
+    for (int j = 0; j < ntid; ++j) {
+      rowSum +=  rho_local(j,i);
+    }
+    rho(i) += rowSum; 
+  }
+}
+
+return rho;
+
+}
+```
+
+```{R tests_histogram_3}
+sample = rnorm(10^6)
+rho_serial = serial_histogram(sample)
+rho_parallel_1 = parallel_histogram_1(sample)
+rho_parallel_2 = parallel_histogram_2(sample)
+
+plot(seq(-7,7,length.out=64), rho_serial, type = "l", col="blue")
+lines(seq(-7,7,length.out=64), rho_parallel_1, col="red")
+points(seq(-7,7,length.out=64), rho_parallel_2, col="green")
+```
+
+## Avantages et inconvénients
+
 ## Références
 
 - [Parallel Execution with OpenMP](https://scholar.princeton.edu/sites/default/files/q-aps/files/slides_day4_pm.pdf)
 - [Using OpenMP in Rcpp](https://mfasiolo.github.io/sc2-2019/rcpp_advanced_iii/1_openmp/)
 - [OpenMP par Cédric Bastoul](http://icps.u-strasbg.fr/people/bastoul/public_html/teaching/openmp/bastoul_cours_openmp.pdf)
+- [Programming with OpenMP](https://cw.fel.cvut.cz/old/_media/courses/b4m35pag/lab5_slides-openmp.pdf)
+- [OpenMP reference card](https://www.openmp.org/wp-content/uploads/OpenMP-4.0-C.pdf)
 
 
