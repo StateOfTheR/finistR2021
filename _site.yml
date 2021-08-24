@@ -17,6 +17,9 @@ navbar:
   - text: "Enseignement"
     icon: fa-user-graduate
     href: deepnote.html
+  - text: "Site Web"
+    icon: fa-address-book-o
+    href: webpages.html
 
 
 output:
