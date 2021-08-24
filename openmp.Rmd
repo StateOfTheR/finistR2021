@@ -1,0 +1,115 @@
+---
+title: "OpenMP avec Rcpp"
+author: "Pierre Navaro"
+date: "8/24/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## OpenMP
+
+- OpenMP (Open Multi-Processing) est un ensemble d'instructions permettant de paralléliser des programmes écrits C++, C, and Fortran on Linux, MacOS, and Windows.
+- Le code est parallélisé à l'aide d'instruction qui seront interprétées comme des commentaires si la bibliothèque OpenMP n'est pas installée ou si le flag -fopenmp n'est pas présent lors de la compilation.
+- Les instructions OpenMP
+
+
+## Premier exemple
+
+```{Rcpp slow_add}
+#include <unistd.h>
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export(slow_add)]]
+int slow_add(NumericVector a, NumericVector b,  int sec)
+{
+
+int n = a.size();
+
+if(n != b.size()) {
+        throw std::invalid_argument("Two vectors are not of the same length!");
+}
+
+NumericVector c(n);
+
+for(size_t i = 0; i < n; i++)
+  { 
+    sleep(sec);
+    c(i) = a(i) + b(i);
+  }
+
+return sum(c);
+  
+}
+```
+
+Exécution :
+
+```{R test_slow_add}
+a = 1:8
+b = 1:8
+system.time(print(slow_add(a, b, 1)))[3]
+```
+
+## Parallélisation avec OpenMP
+
+
+
+```{Rcpp omp_add}
+#include <unistd.h>
+#include <Rcpp.h>
+#include <omp.h>
+using namespace Rcpp;
+
+// [[Rcpp::plugins(openmp)]]
+// [[Rcpp::export(omp_add)]]
+int omp_add(NumericVector a, NumericVector b, int sec, int ncores)
+{
+  
+int n = a.size();
+
+if(n != b.size()) {
+        throw std::invalid_argument("Two vectors are not of the same length!");
+}
+
+NumericVector c(n);
+  
+#pragma omp parallel num_threads(ncores)
+{
+
+printf("Hello from thread  %d of %d \n", omp_get_thread_num(), omp_get_num_threads());
+
+#pragma omp for
+for(size_t i = 0; i < n; i++)
+  { 
+    sleep(sec);
+    c(i) = a(i) + b(i);
+  }
+}
+
+  return sum(c);
+  
+
+}
+```
+
+- Test avec 1 thread:
+```{R test_omp_function_1}
+system.time(print(omp_add(a, b, 1, 1)))[3]
+```
+
+- Test avec 4 threads:
+```{R test_omp_function_2}
+system.time(print(omp_add(a, b, 1, 8)))[3]
+```
+
+## Références
+
+- [Parallel Execution with OpenMP](https://scholar.princeton.edu/sites/default/files/q-aps/files/slides_day4_pm.pdf)
+- [Using OpenMP in Rcpp](https://mfasiolo.github.io/sc2-2019/rcpp_advanced_iii/1_openmp/)
+- [OpenMP par Cédric Bastoul](http://icps.u-strasbg.fr/people/bastoul/public_html/teaching/openmp/bastoul_cours_openmp.pdf)
+
+
