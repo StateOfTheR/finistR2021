@@ -39,6 +39,7 @@ Le partage peut se faire avec différents niveaux de droits (vue, éxécution, �
 
 ### Création d'un docker local
 
+PG c'est à toi
 
 ## Visual Studio Code
 
