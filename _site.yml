@@ -7,6 +7,12 @@ navbar:
     icon: fa-github
     href: https://github.com/StateOfTheR/finistR2021
     
+ right:
+  - text: "Workflow"
+    icon: fa-gear
+    href: instruction.html
+
+
 output:
   html_document:
     theme: flatly

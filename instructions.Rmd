@@ -9,4 +9,33 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
 ## Processus de mise en commun des ateliers
+
+* Créer une branche propre à l'atelier nommée explicitement
+
+` git checkout -b mon_nom_parlant` 
+
+*  Créer un Rmarkdown de compte rendu de votre atelier dans votre branche
+
+` git  add fichier.Rmd `
+` git  commit -m "restitution atelier" `
+
+* Pousser votre fichier sur votre branche sur le serveur
+ 
+` git  push --set-upstream origin mon_nom_parlant` ou
+` git  push ` 
+
+
+* Depuis Github, demander une pull request (PR) et indiquer dans le message de la PR la liste des packages
+
+* Dès que la PR passe les tests (c'est à dire quand les admins ont mis les packages nécessaires à jour), demander le merge (rebase and merge)
+
+## Comment ce proscessus a été mis en place
+
+
+### Le docker 
+
+### Dans les actions
+
+
