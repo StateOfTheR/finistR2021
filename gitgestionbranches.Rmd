@@ -1,0 +1,62 @@
+---
+title: "Gestion des branches sous git"
+author: "Julie Aubert"
+date: "8/24/2021"
+output: html_document
+---
+
+
+## Qu'est-ce qu'une branche dans Git ?
+
+Créer une branche signifie diverger de la ligne principale de développement et continuer à travailler sans impacter cette ligne. 
+
+Une branche dans Git est un pointeur léger et déplaçable vers un commit (créé par un `git commit`).
+
+La branche par défaut dans Git s’appelle master. Au fur et à mesure des validations, la branche master pointe vers le dernier des commits réalisés. À chaque validation, le pointeur de la branche master avance automatiquement.
+
+La commande `git init` crée par défaut la branche master. Elle n'est donc pas spéciale, elle est identique à toutes les autres branches mais la plupart des personnes gardent ce nom.
+
+Git encourage des méthodes qui privilégient la création et la fusion fréquentes de branches.
+
+Git ne stocke pas ses données comme une série de modifications ou de différences successives mais plutôt comme une série d’instantanés (appelés snapshots).
+
+Lorsque vous faites un commit, Git stocke un objet commit qui contient un pointeur vers l’instantané (*snapshot*) du contenu indexé. 
+
+### Comment Git connaît-il alors la branche sur laquelle on se trouve ?
+
+Il conserve à cet effet un pointeur spécial appelé *HEAD*. Dans ce cas, vous vous trouvez toujours sur master. En effet, la commande `git branch` n’a fait que créer une nouvelle branche — elle n’a pas fait basculer la copie de travail vers cette branche.
+
+
+## Gestion des branches
+
+
+### Comment créer une branche ?
+
+* La commande git branch crée une nouvelle branche sans basculer la copie de travail vers la branche.
+
+* Pour créer une branche et basculer directement sur cette branche
+
+`git checkout -b mabranche`
+
+Depuis Git 2.23, il est aussi possible d'utiliser `git switch -c nouvelle-branche`
+
+-c peut aussi signifie créer et peut s'écrire -create
+
+### Comment voir la liste des branches ?
+
+`git branch -a`
+
+### Basculer entre les branches
+Pour basculer sur une branche existante, il suffit de lancer la commande `git checkout` suivie du nom de la branche.
+
+`git checkout branche-a`
+
+Cela déplace HEAD pour le faire pointer vers la branche branche_a.
+
+Depuis Git 2.23, il est aussi possible d'utiliser `git switch branche-a`
+
+
+## References
+
+https://git-scm.com/book/fr/v2/Les-branches-avec-Git-Les-branches-en-bref
+
