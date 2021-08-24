@@ -1,6 +1,6 @@
 ---
-title: "Instruction pour le dépot sur le site web"
-author: "Julie Aubert, Julien Chiquet, Marie-Pierre etienne"
+title: "Instructions pour le dépot sur le site web"
+author: "Julie Aubert, Julien Chiquet, Marie-Pierre Étienne"
 date: "8/24/2021"
 output: html_document
 ---
@@ -16,26 +16,30 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ` git checkout -b mon_nom_parlant` 
 
-*  Créer un Rmarkdown de compte rendu de votre atelier dans votre branche
+*  Créer un fichier Rmarkdown de restitution de votre atelier
 
-` git  add fichier.Rmd `
-` git  commit -m "restitution atelier" `
+` git add fichier.Rmd `
+` git commit -m "restitution atelier" `
 
-* Pousser votre fichier sur votre branche sur le serveur
+* Pousser vos modifications sur le serveur
  
-` git  push --set-upstream origin mon_nom_parlant` ou
-` git  push ` 
+` git  push --set-upstream origin mon_nom_parlant` ou ` git  push ` 
+
+* Faire une pull request (PR) sur github
+
+- indiquer dans le message de la PR la liste des packages ou autres besoins
+
+* Quand la PR passe les tests, demander le merge.
+
+- corriger les erreurs éventuelles dans la compilation du Rmarkdown
+- les admins peuvent avoir à mettre à jour l'image docker
 
 
-* Depuis Github, demander une pull request (PR) et indiquer dans le message de la PR la liste des packages
-
-* Dès que la PR passe les tests (c'est à dire quand les admins ont mis les packages nécessaires à jour), demander le merge.
-
-## Comment ce proscessus a été mis en place
+## Détails du fonctionnement
 
 
 ### Le docker 
 
-### Dans les actions
+### Les actions
 
 
