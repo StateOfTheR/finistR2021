@@ -1,0 +1,12 @@
+---
+title: "Instruction pour le dépot sur le site web"
+author: "Julie Aubert, Julien Chiquet, Marie-Pierre etienne"
+date: "8/24/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Processus de mise en commun des ateliers
