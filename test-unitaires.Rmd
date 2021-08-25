@@ -12,16 +12,70 @@ library(magrittr)
 library(dplyr)
 ```
 
-# Ref générale bonne pratique
+## Ref générale bonne pratique
 
-# Quelques package utiles
+[{goodpractice}](https://github.com/MangoTheCat/goodpractice)
 
-## Pour réaliser des tests
+[{covr}](https://github.com/r-lib/covr)
 
-### tinytest, une alternative à testthat 
+[{usethis}](https://github.com/r-lib/usethis)
 
-Le package [{tinytest}](https://github.com/markvanderloo/tinytest) est un package relativement récent (~2ans pour les premières versions) visant à proposer une alternative à `testthat`
+`usethis::use_spell_check()`
 
+[{spelling}](https://github.com/ropensci/spelling)
+
+
+## Quelques package utiles pour réaliser des tests
+
+### Rappel sur les tests unitaires et présentation de `tinytest`, une alternative à `testthat` 
+
+Le package [{tinytest}](https://github.com/markvanderloo/tinytest) est un package relativement récent (~2 ans pour les premières versions) visant à proposer une alternative à `testthat`. Pour rappel [{testthat}](https://testthat.r-lib.org/) et donc `tinytest` permettent de réaliser facilement un certains nombre de tests unitaires à l'aide de fonctions sous la forme `expect_xxx` pour vérifier si le résultat d'une fonction :
+
+* est égal à l'attendu, ce qui prends en compte les attributs (`expect_equal`)
+* est équivalent à l'attendu, ce qui ignore les attributs (`expect_equivalent`)
+* est strictement identique à l'attendy, byte par byte, ce qui peux prendre en compte des différences d'environnements (`expect_identical`)
+* est une valeur nulle (`expect_null`)
+* est une valeur vrai ou fausse (`expect_true` ou `expect_false`)
+* renvoie un message (`expect_message`)
+* renvoie un warning (`expect_warning`)
+* renvoie une erreur (`expect_error`)
+* tourne sans problème ni message (`expect_silent`)
+
+L'ensemble de ces tests doit permettre de vérifier que la fonction réagit correctement à toutes les possibilités d'appels de la fonction, si les erreurs possibles sont correctement gérées et si le fonctionnement attendu est correct.
+
+Ces différents types de tests étaient déjà posssible avec le package `testthat`, mais le développement récent de `tinytest` permet une alternative avec quelques avantages en plus :
+
+* `tinytest` dépend d'un nombre de package plus réduit (2 vs 12), ce qui rend plus simple son utilisation dans le cadre d'une intégration continue.
+* Les fonctions de `tinytest` ne renvoient pas d'erreur lors de l'échec d'un test, ce qui permet de finir l'évaluation de l'ensemble des tests malgré l'échec d'un test, sans avoir à utiliser `testthat::test_that`.
+* Les fonctions de `tinytest` donnent plus de détail sur l'échec d'un test et sont capables de prendre en compte potentiellement plus de changements dans l'environnement.
+
+Exemple de test avec `testthat`. Noter l'utilisation de `testthat::test_that` pour ne pas bloquer l'éxecution du code.
+
+```{r exemple de test avec testthat}
+testthat::test_that("Test A", {
+  testthat::expect_equal(object = 2+1, expected = 2)
+})
+```
+
+Exemple de test avec `tinytest`. 
+
+```{r exemple de test avec tinytest}
+tinytest::expect_equal(current = 2+1, target = 2, info = "Test A")
+```
+
+Il y a 3 résultats possible pour un test avec `tinytest` : PASSED, FAILED et SIDEFX.
+
+Les tests FAILED peuvent l'être à cause :
+
+* d'un résultat différent de l'attendu (`data`, comme dans l'exemple précédent)
+* d'une différence dans les attributs (`attr`) 
+* d'une exception si le code n'a pas fonctionné (`excp` : erreur ou warning). 
+
+Les tests SIDEFX révèlent des effets de bords qui peuvent être causés :
+
+* par un changement de variable environnementale (`env`)
+* un changement de répertoire de travail (`wdir`)
+* la création de fichiers non attendus dans les répertoires (`file`).
 
 ### autotest, pour générer automatiquement des tests
 
@@ -52,7 +106,12 @@ autotest::autotest_types(notest = "vector_to_list_col") %>%
   head(n = 8)
 ```
 
-Les test générés sont très exigeants sur la documentations des arguments, des objets retours et de l'adéquation des exemples avec leur description dans la documentation.
+Les test générés sont très exigeants sur la documentations des arguments, des objets retours et de l'adéquation des exemples avec leur description dans la documentation. Il y a trois possibilités de sortie dans un test :
+
+1. `error` si le test a déclenché une erreur
+2. `warning` si le test a déclenche un warning
+3. `diagnostic` si le test a fonctionné mais qu'il a détecté une incohérence dans la documentation (le test peut être dû à une erreur/warning aussi, mais dans ce cas il concerne uniquement la documentation).
+4. `message` si le test a renvoyé un message.
 
 Exemple avec le package `aricode` :
 
@@ -65,7 +124,7 @@ dplyr::select(x_ari, -yaml_hash) %>%
   head(n = 6)
 ```
 
-Ici, `r nrow(x_ari)` tests sont identifiés (seulement 6 sont montrés ci dessous). Si on fait tourner la même fonction en activant les tests, `autotest_package` renvoie uniquement les tests qui ont échoués avec une description plus ou moins précise de la raison.
+Ici, `r nrow(x_ari)` tests sont identifiés (seulement 6 sont montrés ci dessus). Si on fait tourner la même fonction en activant les tests, `autotest_package` renvoie uniquement les tests qui ont échoués avec une description plus ou moins précise de la raison.
 
 ```{r test aricode}
 library(aricode)
@@ -73,9 +132,20 @@ x_ari <- autotest::autotest_package("aricode",functions = c("AMI","entropy"), te
 dplyr::select(x_ari, -yaml_hash)
 ```
 
-Sur les deux fonctions testées , deux types de problèmes sont mis en avant. 1. Les fonctions n'excluent pas la possibilité que c2 soit une liste, mais elles ne le permettent pas pour autant. Rigoureusement, il faudrait probablement rajouter une vérification ou une transformation pour gérer les listes. 2. La documentation montre juste des *integer* dans les exemples, mais la fonction permet d'utiliser des *double* et ce avec des résultats différents.
+Sur les deux fonctions testées, il n'y a eu aucune erreurs ni warnings, mais deux problèmes de type `diagnostic` :
 
-`autotest` ne permet pas pour l'instant de générer automatiquement des fichiers de tests pour un package, mais peut être mobilisé comme ensemble de test à effectuer sur un package. Une série de fonction `expect_xxx` permet ainsi de gérer la sortie de la fonction `autotest_package` afin d'échouer selon la présence d'erreur, de warnings, ... L'inconvénient étant un traçage probablement limité de l'origine des erreurs. L'idée de générer automatiquement les tests individuels est cependant un objectif probable du package.
+1. Les fonctions n'excluent pas la possibilité que c2 soit une liste, mais elles ne le permettent pas pour autant. La documentation devrait mentionner l'impossibilité d'utiliser des listes pour l'argument `c2`
+2. La documentation montre juste des *integer* dans les exemples, mais la fonction permet d'utiliser des *double* et ce avec des résultats différents (d'après le test).
 
-En résumé, `autotest` permet de mettre en place automatiquement une quantité importante de test, basé sur la rigueur de la documentation et son adéquation avec le fonctionnement des différentes fonctions. Le niveau d'exigence est cependant très élevés et peut être parfois un peu trop fort. Le package ne s'utilise pas encore de manière très stable et fluide pour des packages plus complexes, avec des dépendances nombreuses ou des fonctions avec des classes de paramètres plus compliquées. La fonction `autotest_package` peut ainsi renvoyer des erreurs avant d'arriver au moment des tests sans être très explicite sur le problème rencontré.
+`autotest` ne permet pas pour l'instant de générer automatiquement des fichiers de tests pour un package, mais peut être mobilisé comme ensemble de test à effectuer sur un package. Une série de fonction `expect_xxx` permet ainsi de gérer la sortie de la fonction `autotest_package` afin d'échouer selon la présence d'erreur, de warnings dans la colonne `type`. Les `diagnostic` ne sont ici pas pris en compte. Pour vérifier leur absences il faudrait utiliser une estimation du nombre de ligne (voir plus bas). L'inconvénient étant un traçage probablement limité de l'origine des erreurs. L'idée de générer automatiquement les tests individuels est cependant un objectif probable du package.
+
+```{r}
+tinytest::expect_equal(
+  nrow(autotest::autotest_package("aricode",functions = c("AMI","entropy"), test = TRUE)),
+  0
+)
+```
+
+
+En résumé, `autotest` permet de mettre en place automatiquement une quantité importante de test, basé sur la rigueur de la documentation et son adéquation avec le fonctionnement des différentes fonctions. Il propose aussi des tests de diagnostic très poussé. Le package ne s'utilise pas encore de manière très stable et fluide pour des packages plus complexes, avec des dépendances nombreuses ou des fonctions avec des classes de paramètres plus compliquées. La fonction `autotest_package` peut ainsi renvoyer des erreurs avant d'arriver au moment des tests sans être très explicite sur le problème rencontré.
 
