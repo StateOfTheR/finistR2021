@@ -102,7 +102,11 @@ output:
 ```` 
 Il faut maintenant ajouter un chunk pour définir les font etc... 
 
-```{r xaringan-themer, include=FALSE, warning=FALSE}
+
+````
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}`r ''`
+
 library(xaringanthemer)
 style_mono_accent(
   base_color = "#1c5253",
@@ -110,7 +114,9 @@ style_mono_accent(
   text_font_google   = google_font("Montserrat", "300", "300i"),
   code_font_google   = google_font("Fira Mono")
 )
+
 ```
+````
 
 On peut alors utiliser des font ou des couleurs institutionalles.  
 
@@ -124,7 +130,24 @@ La fonction `chunk_reveal()` définit le partitionnement du code R et l'affichag
 
 **flipbookr** peut être installé directement par le CRAN ou à partir du repository de l'auteur sur github.
 
-Pour le moment, les possibilités sont:
+Rajouter un chunk spécifique css:
+
+````
+
+```{css, eval = TRUE, echo = FALSE}`r ''`
+.remark-code{line-height: 1.5; font-size: 80%}
+@media print {
+  .has-continuation {
+    display: block;
+  }
+}
+```
+
+````
+
+
+
+Pour le moment, les possibilités avec la fonction `chunk_reveal()` sont:
 
 * `break_type`: le créateur choisit la vitesse d'affichage en ajoutant les mots clés #BREAK, #BREAK2 # BREAK3
 * `lang`: le code est par défaut du R, mais python est disponible également même si en version expérimental pour le moment
@@ -132,7 +155,7 @@ Pour le moment, les possibilités sont:
 * `code_seq`: une suite d'options définissant la séquentialité du code
 * `widths`: définition des largeurs de fenêtres pour le code et l'output
 
-Le code R est inclus dans un chunk classique devant porter un nom dans le fichier Rmd d'une présentation xaringan. Puis la fonction `chunk_reveal` est utilisé en ligne dans le Rmd:
+Le code R est inclus dans un chunk classique, devant porter un nom, dans le fichier Rmd d'une présentation xaringan. Puis la fonction `chunk_reveal` est utilisé en ligne dans le Rmd:
 
 ```{bash,eval=FALSE}
 `r chunk_reveal(chunk_name = "my_cars2", break_type="user", title = "### graph")`
@@ -140,4 +163,16 @@ Le code R est inclus dans un chunk classique devant porter un nom dans le fichie
 
 
 https://evamaerey.github.io/flipbookr/minimal_flipbook_double_crochet.html#1
+
+Un résumé des différentes étapes de mise en place d'un flipbook, extrait d'un tuto de l'auteur:
+
+https://evamaerey.github.io/flipbooks/flipbook_recipes#1
+
+Now your are cooking with {flipbookr} and {xaringan}. We went through these steps:
+
+- Step 0: Install {flipbookr} and {xaringan}
+- Step 1: Set up .Rmd (a. YAML, b. setup code chunk, c. css code chunk)
+- Step 2: Write a source code to be flipbooked
+- Step 3: Use {flipbookr}'s chunk_reveal to build flipbook (upon knit)
+
 
