@@ -132,6 +132,9 @@ style_mono_accent(
 )
 ```
 ````
+<center>
+![Présentation cssINRAE](figs/presentation_inrae.png){width=50%}
+</center>
 
 ## 3. Flipbookr
 
