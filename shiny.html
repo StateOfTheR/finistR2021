@@ -586,15 +586,41 @@ $(document).ready(function () {
 <span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Bravo, tu as cliqué sur l&#39;origine.&quot;</span></span>
 <span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>  })</span>
 <span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<!-- ## `renderUI` -->
 </div>
-<div id="références" class="section level2">
-<h2>Références</h2>
+<div id="renderui" class="section level2">
+<h2><code>renderUI</code></h2>
+<p>La fonction <code>renderUI</code> permet d’adapter les objets UI avec des valeurs calculés dans la partie serveur. L’appel dans la partie UI se fait par la fonction spécifique <code>uiOutput()</code>. Dans ce cas là, les objets UI sont définis dans la partie serveur du code source et peuvent être dépendant d’une variable réactive ou d’un input.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">uiOutput</span>(<span class="at">outputId =</span> <span class="st">&quot;uiInput&quot;</span>), </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">textOutput</span>(<span class="at">outputId =</span> <span class="st">&quot;text&quot;</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output){</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">reactive</span>(<span class="fu">norm</span>(<span class="dv">100</span>))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>uiInput <span class="ot">&lt;-</span> <span class="fu">renderUI</span>({</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">numericInput</span>(<span class="at">inputId =</span> <span class="st">&quot;num&quot;</span>, <span class="at">label =</span> <span class="st">&quot;choose a number&quot;</span>, </span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">value =</span> <span class="fu">mean</span>(<span class="fu">x</span>()))</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">renderText</span>({</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    input<span class="sc">$</span>num </span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="points-à-poursuivre" class="section level2">
+<h2>Points à poursuivre</h2>
+<ul>
+<li><code>req()</code> <a href="https://shiny.rstudio.com/articles/req.html" class="uri">https://shiny.rstudio.com/articles/req.html</a></li>
+<li>module shiny <a href="https://shiny.rstudio.com/articles/modules.html" class="uri">https://shiny.rstudio.com/articles/modules.html</a> et <a href="https://www.ardata.fr/post/2019/02/11/why-using-modules/" class="uri">https://www.ardata.fr/post/2019/02/11/why-using-modules/</a></li>
+<li>mise en calcul en arrière plan avec <strong>future</strong> et <strong>promises</strong> <a href="https://rstudio.github.io/promises/articles/shiny.html" class="uri">https://rstudio.github.io/promises/articles/shiny.html</a></li>
+</ul>
+</div>
+</div>
+<div id="références" class="section level1">
+<h1>Références</h1>
 <ul>
 <li>Une vidéo longue mais grandement informative : <a href="https://vimeo.com/rstudioinc/review/131218530/212d8a5a7a/" class="uri">https://vimeo.com/rstudioinc/review/131218530/212d8a5a7a/</a></li>
 <li>Les diapositives associées sur le fonctionnement de <code>shiny</code> : <a href="https://github.com/rstudio-education/shiny.rstudio.com-tutorial" class="uri">https://github.com/rstudio-education/shiny.rstudio.com-tutorial</a></li>
 </ul>
-</div>
 </div>
 
 
