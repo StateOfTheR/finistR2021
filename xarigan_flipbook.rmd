@@ -1,0 +1,195 @@
+---
+title: "Présentations with Xarigan et flipbook"
+author: "Par Sophie Donnet, Julie Aubert  et Isabelle Sanchez"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Nous avons travaillé à la fois sur Xarigan d'une part et d'autre part sur FlipbookR.
+
+
+[Xarigan](https://bookdown.org/yihui/rmarkdown/xaringan.html) est une extension de Rmarkdown qui permet de générer des présentations html d'un nouveau style. 
+
+[FlipbookR](https://evamaerey.github.io/flipbookr/) est un outil permettant d'afficher côte à côte un code R et son résultat un fois exécuté, ce de façon séquentielle (commande par commande). C'est un outil utile pour les cours et les tutoriels.  
+
+<br> 
+
+## 1. A propos de Xarigan 
+L'auteur revendique de l'avoir proposée car il ne supportait plus de voir beamer utilisé partout tout le temps. 
+IL est basé sur remark.js mais en est une version pour les nuls. 
+
+Il faut l'installer comme un package `install.packages(xarigan)`. 
+
+Ensuite, on écrit sa présentation dans un fichier  classique `.Rmd` donc il faut en entête classique. 
+
+````
+---
+title: "My trial"
+subtitle: "New way to do presentation"
+author: "Sophie Donnet"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: [default, metropolis, metropolis-fonts]
+    nature:
+      ratio: 16:9
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+```` 
+
+Le style est défini dans `css:`. J'ai pris ici le style metropolis, qui est LE STYLE à la mode en ce moment (minimaliste, etc...). On peut aussi définir ses propres classes css (repartir d'un fichier déjà existant est conseillé.)
+
+
+Chaque nouveau slide **commence avec 3 tirets (`---`) suivis directement d'un saut de ligne**. Si il y a des espaces avant ou après ça peut entraîner des erreurs. Ensuite le contenu des slides est très libres. 
+
+Vous pouvez avoir des titres ou pas de titre, on des titres de diférents niveaux (`#`, `##`, etc...)
+
+On peut définir au niveau des chaques slides des propriétés particulières. 
+
+````
+---
+
+class: center, inverse
+background-image: url("images/cool.png")
+
+# A new slide
+
+Content.
+````
+
+
+Les caractéristiques `inverse` sont définies dans le fichier `.css`. 
+
+
+Pour utiliser son propre fichier `.css` (et non un style déjà défini), on peut y faire appel avec `moon_reader`:
+
+````
+---
+output:
+  xaringan::moon_reader:
+    css: "my-style.css"
+---
+````
+Le fichier `my-style.css` contient des instructions du genre : 
+
+```` 
+.inverse {
+  background-color: #272822;
+  color: #d6d6d6;
+  text-shadow: 0 0 20px #333;
+}
+````
+
+<center>
+![Metropolis presentation with Xarigan](figs/examples_xarigan_metropolis.png){width=50%}
+</center>
+
+
+# 2. Xariganthemer
+
+Pour définir plus facilement son thème xarigan [`xariganthemer`](https://pkg.garrickadenbuie.com/xaringanthemer/) a été développé. 
+
+Pour cela, il faut installer le package, y faire appel dans les instructions yml d'entête
+
+````
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+    
+```` 
+Il faut maintenant ajouter un chunk pour définir les font etc... 
+
+
+````
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}`r ''`
+
+library(xaringanthemer)
+style_mono_accent(
+  base_color = "#1c5253",
+  header_font_google = google_font("Josefin Sans"),
+  text_font_google   = google_font("Montserrat", "300", "300i"),
+  code_font_google   = google_font("Fira Mono")
+)
+
+```
+````
+
+On peut alors utiliser les éléments de chartre graphique institutionnelle. Par exemple, pour [INRAE](https://www.inrae.fr/charte-graphique-inrae) :  
+
+````
+
+```{r xaringan-themer-INRAE, include=FALSE, warning=FALSE}`r ''`
+style_mono_accent(
+  base_color = "#00a3a6",
+  text_bold_color = "#008c8e",
+  header_font_google = google_font("Raleway"),
+  text_font_google   = google_font("Avenir Next Pro", "300", "300i"),
+  code_font_google   = google_font("Fira Mono")
+)
+```
+````
+<center>
+![Présentation cssINRAE](figs/presentation_inrae.png){width=50%}
+</center>
+
+## 3. Flipbookr
+
+Extension de xaringan pour incorporer du code R et afficher les outputs séquentiellement. Le package est très récent et évoluera probablement par la suite. Il repose sur la grammaire "tidyverse" avec une facilité pour les codes contenant des pipes ou pour les graphs ggplot2, les "+".
+
+La fonction `chunk_reveal()` définit le partitionnement du code R et l'affichage de la sortie.
+
+**flipbookr** peut être installé directement par le CRAN ou à partir du repository de l'auteur sur github.
+
+Rajouter un chunk spécifique css:
+
+````
+
+```{css, eval = TRUE, echo = FALSE}`r ''`
+.remark-code{line-height: 1.5; font-size: 80%}
+@media print {
+  .has-continuation {
+    display: block;
+  }
+}
+```
+
+````
+
+
+
+Pour le moment, les possibilités avec la fonction `chunk_reveal()` sont:
+
+* `break_type`: le créateur choisit la vitesse d'affichage en ajoutant les mots clés #BREAK, #BREAK2 # BREAK3
+* `lang`: le code est par défaut du R, mais python est disponible également même si en version expérimental pour le moment
+* `display_type`: les type de sortie, par défaut `c("code","output")`, mais "md" et "func" sont dispos aussi
+* `code_seq`: une suite d'options définissant la séquentialité du code
+* `widths`: définition des largeurs de fenêtres pour le code et l'output
+
+Le code R est inclus dans un chunk classique, devant porter un nom, dans le fichier Rmd d'une présentation xaringan. Puis la fonction `chunk_reveal` est utilisé en ligne dans le Rmd:
+
+```{bash,eval=FALSE}
+`r chunk_reveal(chunk_name = "my_cars2", break_type="user", title = "### graph")`
+```
+
+
+https://evamaerey.github.io/flipbookr/minimal_flipbook_double_crochet.html#1
+
+Un résumé des différentes étapes de mise en place d'un flipbook, extrait d'un tuto de l'auteur:
+
+https://evamaerey.github.io/flipbooks/flipbook_recipes#1
+
+Now your are cooking with {flipbookr} and {xaringan}. We went through these steps:
+
+- Step 0: Install {flipbookr} and {xaringan}
+- Step 1: Set up .Rmd (a. YAML, b. setup code chunk, c. css code chunk)
+- Step 2: Write a source code to be flipbooked
+- Step 3: Use {flipbookr}'s chunk_reveal to build flipbook (upon knit)
+
+

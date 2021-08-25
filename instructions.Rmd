@@ -12,18 +12,21 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Processus de mise en commun des ateliers
 
-* Créer une branche propre à l'atelier nommée explicitement
+* Créer une branche propre à l'atelier nommée explicitement `mon_nom_parlant` et basculer dessus
 
 ` git checkout -b mon_nom_parlant` 
 
-*  Créer un fichier Rmarkdown de restitution de votre atelier
+*  Créer un fichier Rmarkdown de restitution de votre atelier `fichier.Rmd` dans votre branche
 
 ` git add fichier.Rmd `
+
 ` git commit -m "restitution atelier" `
 
-* Pousser vos modifications sur le serveur
+* Pousser vos modifications sur le serveur distant
  
-` git  push --set-upstream origin mon_nom_parlant` ou ` git  push ` 
+` git  push --set-upstream origin mon_nom_parlant` ou 
+
+` git  push ` 
 
 * Faire une pull request (PR) sur github
 
@@ -39,6 +42,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ### Le docker 
+
+Lien vers la fiche pense-bête : [https://www.docker.com/sites/default/files/d8/2019-09/docker-cheat-sheet.pdf]
 
 ### Les actions
 

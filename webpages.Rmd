@@ -1,0 +1,187 @@
+---
+title: "Construire sa page web"
+author: "Sophie, Isabelle, Tam, Eric, José, Nicolas"
+date: "24/08/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Cet atelier consistait à comprendre comment créer sa page web personnelle en utilisant l'outil de déploiement de sites disponible sous github et dans gitlab par intégration continue (CI) et les options des `pages`. 
+
+* https://pages.github.com/
+* https://about.gitlab.com/blog/2016/04/07/gitlab-pages-setup/
+
+Nous avons trouvé 2 solutions : 
+
+* utiliser Rstudio et générer les pages avec Rmd. Cette méthode très simple a l'avantage de ne nécessiter aucun package. 
+* utiliser des générateurs de construction de site plus avancées comme Jekyll ou Hugo etc... 
+
+
+## 1. Méthode basique de construction de site. 
+
+
+### Etape 1 : sous github 
+
+L'idée est de définir une page web correspondant à son identifiant github. 
+Cette page web sera accessible à l'adresse `monidentifiant.github.io`. 
+
+Pour cela, la première chose à faire à de créer un repo sous github appelé 
+`monidentifiant.github.io`
+On clone ensuite ce repo sur sa propre machine et on éditera les fichiers sous R studio (Rmd, .yml etc...)
+
+
+### Etape 2: sous R studio
+
+Créer un 'Rproj' dans le répertoire. Ceci permettra de voir apparaître le bouton `Build` à l'ouvertude du repo dans R studio. 
+
+### Etape 3 : fichier essentiel 1 : `_site.yml`
+
+- les caractéristiques de la page doivent être définies dans le fichier `_site.yml`  (exactement ce nom de fichier)
+
+Ce fichier est construit comme suit: 
+
+````markdown
+name: "Sophie Donnet"
+output_dir: "."
+navbar:
+  logo: img/Logotype-INRAE.jpg
+  title: 'Sophie Donnet'
+  left:
+  - text: "Biography"
+    icon: fa-child
+    href: biography.html
+  - text: "Research "
+    icon: fa-chart-area
+    menu:
+      - text: "Research interests"
+        icon: fa-flask
+        href: research.html
+      - text: "Publications"
+        href: publications.html
+        icon: fa-file-text-o
+      - text: "Talks"
+        href: talks.html
+        icon: fa-comment-o 
+      - text: "Students"
+        href: students.html
+        icon: fa-graduation-cap 
+      
+        
+  - text: "Teaching"
+    icon: fa-laptop
+    menu:
+      - text: "Bayesian Statistics"
+        href: bayesian_stat.html
+      - text: "Master MathSV"
+        href: master_math_SV.html
+             
+  right:
+  - text: "Github"
+    icon: fab fa-github
+    href: https://github.com/Sophiedonnet
+
+output:
+  html_document:
+    theme: cosmo
+    highlight: haddock
+    
+````
+
+On définit ainsi la structure de la page. 
+
+  - Le style est choisi dans output. Ici `cosmo`, on peut aussi utiliser `lumen`. La liste des styles est disponible [ici](https://www.datadreaming.org/post/r-markdown-theme-gallery/) 
+  
+  - `navbar` définit la barre de navigation. On définit ce qu'on met à gauche et à droite. On peut insérer des icônes `fa-github` par exemple (voir liste [ici](https://fontawesome.com/v4.7/icons/))
+  
+  - `menu` permet de créer des menus déroulants: on spécifie le `text`, l'`icon` et le lien `href`. 
+  
+  - `href` permet de faire références aux pages dédiées à l'enseignement, la recherche etc... créées par ailleurs à partir de fichiers Rmd par exemple. 
+  
+Attention à l'écriture de ce fichier. Les *indentations sont importantes*.
+
+
+
+### Etape 4 : fichier essentiel 2 : `index.Rmd`
+
+Il faut définir le fichier Rmd `index.Rmd` qui va contenir les premières infos. 
+
+````markdown
+---
+title: "Sophie Donnet"
+output: 
+  html_document:
+   logo: img/Logotype-INRAE.jpg
+   number_sections: false
+   highlight: tango
+   css: style.css
+   includes:
+     before_body: extlogo.html
+---
+
+
+<img src="img/sophie_donnet_profile.jpg" alt="mpe" width = "280px" align="right"> </img>
+  
+  
+I am a researcher at  [INRAE](https://www.inrae.fr/) in the unity [MIA Paris](https://www6.inrae.fr/mia-paris). I am the head of the team [SOLsTIS](https://www6.inrae.fr/mia-paris/Equipes/SOLsTIS) (Statistical mOdelling and Learning for environnemenT and lIfe Sciences).  Our unity is located at [AgroParisTech](https://www.agroparistech.fr) in Paris for yet a few months. 
+
+
+I am specialized in the development of statistical earning methods for ecology and life sciences in general. I work with people from different background: statisticians, ecologists ...
+You will find more details on the Research section.
+  
+  
+ 
+  
+  
+## Contact information
+
+
+
+- <i class="fas fa-map-marker"></i> UMR MIA-Paris, AgroParisTech, INRAE, </br>
+  16 rue Claude Bernard, </br>
+  75005 Paris Cedex</br>
+  
+- <i class="fa fa-phone"></i> +33 (0)1 44 08 37 19
+
+- <i class="fa fa-at"></i> <a href="mailto:sophie.donnet@inrae.fr
+">sophie [dot] donnet  [at] inrae [dot] fr</a>
+
+````
+
+En utilisant la fonction `knit` on va créer un `index.html`. 
+
+La ligne `before_body: extlogo.html` permet d'ajouter le logo en haut à droite de la page. Ce fichier contient la ligne suivante : 
+
+````
+<div class="logos"><img src="img/Logotype-INRAE.jpg" width="180px" align="right"></div>
+```` 
+
+### Etape 5 : `build` and `git`
+
+On `knit` chaque Rmd.  On `build` le site (bouton sous Rtudio).  Ce bouton apparaît grâce au fichier `Rproj`. Si le bouton n'apparaît pas,  fermer le projet et le réouvrir. 
+
+On peut aussi utiliser directement la ligne de commande: `rmarkdown::render_site(encoding = 'UTF-8')`.
+
+Ensuite on envoie les fichiers sur **github** (`commit` + `push`)  et c'est en ligne! 
+
+## 2. Utilisation d'autres générateurs de site (ex : Jekyll)
+
+D'autres générateurs de sites reposant sur d'autres langages de programmation existent : Jekyll (Ruby), Pelican (Python), Hugo (Go). GitHub Pages utilise et recommande Jekyll. 
+
+L'utilisation de Jekyll nécessite d'installer Ruby et quelques packages supplémentaires, notamment Bundler, afin de gérer les projets en Ruby (cf. [site web de Jekyll](https://jekyllrb.com)).
+
+Il existe de très nombreux thèmes développés par la communauté Jekyll, qui peuvent servir de point de départ pour construire son propre site internet (rechercher "jekyll themes" sur Google). Pour commencer, on peut fork le dépôt GitHub du thème choisi. À titre d'exemple, on pourra s'intéresser au thème [al-folio](https://github.com/alshedivat/al-folio).
+
+Le rôle de certains fichiers est notable. Le fichier [_config.yml](https://jekyllrb.com/docs/configuration/) contient de nombreuses options sur la manière dont Jekyll génère le site. Le fichier [Gemfile](https://jekyllrb.com/docs/ruby-101/) spécifie les packages Ruby qui sont requis pour que Jekyll compile le site.
+
+Les différents dossiers commençant par "_" contiennent les fichiers "sources" utilisés par Jekyll pour générer le site. Par exemple, le dossier _pages contient des fichiers Markdown pour le texte de chaque page du site. Les dossiers _news, _projects et _posts permettent de pousser du contenu sous différentes formes de rubriques. Le thème est défini par l'HTML du dossier _layout et le CSS du dossier _sass. C'est dans ces derniers qu'il faut regarder pour personnaliser le thème.
+
+Il est à noter que Jekyll prend en charge (dans une certaine mesure) les fichiers BibTex pour les publications.
+
+Pour s'inspirer
+
+- Exemples de sites utilisant le même thème : [d'un chercheur](https://jchiquet.github.io/), [d'un labo](https://decisionlab.ucsf.edu/), [d'un cours d'université](https://sailinglab.github.io/pgm-spring-2019/).
+
+- Le rendu de quelques thèmes Jekyll : [al-folio](https://alshedivat.github.io/al-folio/), [academicpages](https://academicpages.github.io), [academic-portfolio](https://ys1998.github.io/academic-portfolio/), [beautifuljekyll](https://beautifuljekyll.com/), etc.
