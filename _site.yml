@@ -21,7 +21,7 @@ navbar:
     icon: fa-address-book-o
     href: webpages.html
   - text: "Présentations"
-    icon: fa-address-book-o
+    icon: fa-slideshare
     href: xarigan_flipbook.html
   
 
