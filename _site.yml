@@ -23,6 +23,9 @@ navbar:
   - text: "Présentations"
     icon: fa-slideshare
     href: xarigan_flipbook.html
+  - text: "Shiny"
+    icon: hand-sparkles
+    href: shiny.html
   
 
 
