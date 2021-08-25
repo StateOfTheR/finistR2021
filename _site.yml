@@ -25,6 +25,9 @@ navbar:
     href: xarigan_flipbook.html
   - text: "Shiny"
     href: shiny.html
+  - text: "Package et tests"
+    icon: fa-box-open
+    href: test-unitaires.html
   - text: "OpenMP"
     href: openmp.html
   
