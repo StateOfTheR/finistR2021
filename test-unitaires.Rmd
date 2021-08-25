@@ -11,6 +11,21 @@ output: html_document
 
 ## Pour réaliser des tests
 
-### tinytest, une alternative à autotest 
+### tinytest, une alternative à testthat 
 
 ### autotest, pour générer automatiquement des tests
+
+Le package [{autotest}](https://docs.ropensci.org/autotest/) est un package récent (version 0.0.2.135 au 25/08) permettant la génération automatique de tests relatifs à un package dans son entier ou à une fonction d'un package.
+
+Comment ça marche ?
+
+For each .Rd file in a package, autotest tests the code given in the example section according to the following general steps:
+
+1. Extract example lines from the .Rd file, as demonstrated above;
+2. Identify all function aliases described by that file;
+3. Identify all points at which those functions are called;
+4. Identify all objects passed to those values, including values, classes, attributes, and other properties.
+5. Identify any other parameters not explicitly passed in example code, but defined via default value;
+6. Mutate the values of all parameters according to the kinds of test described in autotest_types().
+
+
