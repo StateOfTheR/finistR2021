@@ -17,6 +17,9 @@ navbar:
   - text: "Enseignement"
     icon: fa-user-graduate
     href: deepnote.html
+  - text: "Package et tests"
+    icon: fa-box-open
+    href: test-unitaires.html
 
 
 output:
