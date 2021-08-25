@@ -12,20 +12,20 @@ library(magrittr)
 library(dplyr)
 ```
 
-# Ref générale bonne pratique
+# Ref générale bonnes pratiques
 
-# Quelques package utiles
+# Quelques packages utiles
 
 ## Pour réaliser des tests
 
 ### tinytest, une alternative à testthat 
 
-Le package [{tinytest}](https://github.com/markvanderloo/tinytest) est un package relativement récent (~2ans pour les premières versions) visant à proposer une alternative à `testthat`
+Le package [`tinytest`](https://github.com/markvanderloo/tinytest) est un package relativement récent (~2ans pour les premières versions) visant à proposer une alternative à `testthat`.
 
 
 ### autotest, pour générer automatiquement des tests
 
-Le package [{autotest}](https://docs.ropensci.org/autotest/) est un package récent (version 0.0.2.135 au 25/08) permettant la génération automatique de tests relatifs à un package dans son entier ou à une fonction d'un package.
+Le package [`autotest`](https://docs.ropensci.org/autotest/) est un package récent (version 0.0.2.135 au 25/08) permettant la génération automatique de tests relatifs à un package dans son entier ou à une fonction d'un package.
 
 Comment ça marche ?
 
@@ -38,25 +38,25 @@ For each .Rd file in a package, autotest tests the code given in the example sec
 5. Identify any other parameters not explicitly passed in example code, but defined via default value;
 6. Mutate the values of all parameters according to the kinds of test described in `autotest_types()`.
 
-Les types de tests générés par `autotest` peuvent être visualisés par la fonction `autotest_types` :
+Les types de tests générés par `autotest` peuvent être visualisés par la fonction `autotest_types()` :
 
 ```{r autotest types}
 x_list_types <- autotest::autotest_types() 
 head(x_list_types, n = 8)
 ```
 
-Certains tests peuvent être désactivé en utilisant le nom des tests de la colonnes `x_list_types$test_name` et la fonction `autotest_types`.
+Certains tests peuvent être désactivés en utilisant le nom des tests de la colonne `x_list_types$test_name` et la fonction `autotest_types`.
 
 ```{r change autotest types}
 autotest::autotest_types(notest = "vector_to_list_col") %>% 
   head(n = 8)
 ```
 
-Les test générés sont très exigeants sur la documentations des arguments, des objets retours et de l'adéquation des exemples avec leur description dans la documentation.
+Les tests générés sont très exigeants sur la documentation des arguments, des objets retournés et de l'adéquation des exemples avec leur description dans la documentation.
 
 Exemple avec le package `aricode` :
 
-D'abord on peut identifier l'ensemble des tests qui sont réalisés sans les faire tourner, sur deux fonctions (pour limiter le nombre de tests ici): `AMI` et `entropy`.
+D'abord on peut identifier l'ensemble des tests qui sont réalisés sans les faire tourner, sur deux fonctions (pour limiter le nombre de tests ici): `AMI()` et `entropy()`.
 
 ```{r list des tests aricode}
 library(aricode)
@@ -65,7 +65,7 @@ dplyr::select(x_ari, -yaml_hash) %>%
   head(n = 6)
 ```
 
-Ici, `r nrow(x_ari)` tests sont identifiés (seulement 6 sont montrés ci dessous). Si on fait tourner la même fonction en activant les tests, `autotest_package` renvoie uniquement les tests qui ont échoués avec une description plus ou moins précise de la raison.
+Ici, `r nrow(x_ari)` tests sont identifiés (seulement 6 sont montrés ci dessous). Si on fait tourner la même fonction en activant les tests, `autotest_package` renvoie uniquement les tests qui ont échoué avec une description plus ou moins précise de la raison.
 
 ```{r test aricode}
 library(aricode)
@@ -73,9 +73,13 @@ x_ari <- autotest::autotest_package("aricode",functions = c("AMI","entropy"), te
 dplyr::select(x_ari, -yaml_hash)
 ```
 
-Sur les deux fonctions testées , deux types de problèmes sont mis en avant. 1. Les fonctions n'excluent pas la possibilité que c2 soit une liste, mais elles ne le permettent pas pour autant. Rigoureusement, il faudrait probablement rajouter une vérification ou une transformation pour gérer les listes. 2. La documentation montre juste des *integer* dans les exemples, mais la fonction permet d'utiliser des *double* et ce avec des résultats différents.
+Sur les deux fonctions testées, deux types de problèmes sont mis en avant. 
+
+1. Les fonctions n'excluent pas la possibilité que c2 soit une liste, mais elles ne le permettent pas pour autant. Rigoureusement, il faudrait probablement rajouter une vérification ou une transformation pour gérer les listes. 
+
+2. La documentation montre juste des *integer* dans les exemples, mais la fonction permet d'utiliser des *double* et ce avec des résultats différents.
 
 `autotest` ne permet pas pour l'instant de générer automatiquement des fichiers de tests pour un package, mais peut être mobilisé comme ensemble de test à effectuer sur un package. Une série de fonction `expect_xxx` permet ainsi de gérer la sortie de la fonction `autotest_package` afin d'échouer selon la présence d'erreur, de warnings, ... L'inconvénient étant un traçage probablement limité de l'origine des erreurs. L'idée de générer automatiquement les tests individuels est cependant un objectif probable du package.
 
-En résumé, `autotest` permet de mettre en place automatiquement une quantité importante de test, basé sur la rigueur de la documentation et son adéquation avec le fonctionnement des différentes fonctions. Le niveau d'exigence est cependant très élevés et peut être parfois un peu trop fort. Le package ne s'utilise pas encore de manière très stable et fluide pour des packages plus complexes, avec des dépendances nombreuses ou des fonctions avec des classes de paramètres plus compliquées. La fonction `autotest_package` peut ainsi renvoyer des erreurs avant d'arriver au moment des tests sans être très explicite sur le problème rencontré.
+En résumé, `autotest` permet de mettre en place automatiquement une quantité importante de test, basé sur la rigueur de la documentation et son adéquation avec le fonctionnement des différentes fonctions. Le niveau d'exigence est cependant très élevé et peut être parfois un peu trop fort. Le package ne s'utilise pas encore de manière très stable et fluide pour des packages plus complexes, avec des dépendances nombreuses ou des fonctions avec des classes de paramètres plus compliquées. La fonction `autotest_package` peut ainsi renvoyer des erreurs avant d'arriver au moment des tests sans être très explicite sur le problème rencontré.
 
