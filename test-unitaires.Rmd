@@ -1,7 +1,7 @@
 ---
 title: "Tests unitaires et bonnes pratiques de développement de package"
-author: "State of the R"
-date: "23-27/08/2020"
+author: "Julie Aubert, Rémi Patin"
+date: "24 et 25/08/2020"
 output:
   html_document:
     df_print: kable
@@ -12,23 +12,34 @@ library(magrittr)
 library(dplyr)
 ```
 
-# Bonnes pratiques : quelques packages utiles
+## Bonnes pratiques : quelques packages utiles
 
-[{goodpractice}](https://github.com/MangoTheCat/goodpractice)
+[`goodpractice`](https://github.com/MangoTheCat/goodpractice) fournit des conseils sur les bonnes pratiques lorsqu'on construit un package R. Le package identifie les zones de codes qui pourraient être améliorées. Les conseils incluent les fonctions et syntaxes à éviter, la structure du package, la complexité du code, le formatage du code.
 
-[{covr}](https://github.com/r-lib/covr)
+[`formatR`](https://github.com/yihui/formatR) et [`styler`](https://github.com/r-lib/styler) pour reformater du code.
 
-[{usethis}](https://github.com/r-lib/usethis)
+[`covr`](https://github.com/r-lib/covr) permet d'estimer la couverture du package par des tests ainsi que l'identification des fonctions ou zone de code, peu ou pas couvertes par des tests. 
 
-`usethis::use_spell_check()`
+[`usethis`](https://github.com/r-lib/usethis) et en particulier `usethis::use_spell_check()` (basé sur [`spelling`](https://github.com/ropensci/spelling) ) qui permet d'identifier facilement les fautes de frappes et les noms incohérents dans le code.
 
-[{spelling}](https://github.com/ropensci/spelling)
+## Un package cosmétique
 
-## Quelques package utiles pour réaliser des tests
+[`cli`](https://github.com/r-lib/cli) permet de faciliter la communication avec l'utilisateur grâce à des symboles faciles à insérer et des barres de progression pratiques.
+
+## Quelques packages utiles pour réaliser des tests
+
+Lorsqu'on construit un package, il est fortement conseillé d'inclure des tests dans le répertoire *tests/* du package, qui ont pour but de vérifier que l'ensemble des fonctions du package ont un comportement approprié, notamment :
+
+- les objets de sorties sont au format attendu
+- quand la fonction tourne avec un exemple choisi, le résultat doit correspondre à l'attendu
+- les appels de fonctions avec de mauvais paramètres renvoient bien des erreurs
+- les appels de fonctions avec des paramètres obsolètes renvoient bien des warnings
+
+
 
 ### Rappel sur les tests unitaires et présentation de `tinytest`, une alternative à `testthat` 
 
-Le package [{tinytest}](https://github.com/markvanderloo/tinytest) est un package relativement récent (~2 ans pour les premières versions) visant à proposer une alternative à `testthat`. Pour rappel [{testthat}](https://testthat.r-lib.org/) et donc `tinytest` permettent de réaliser facilement un certains nombre de tests unitaires à l'aide de fonctions sous la forme `expect_xxx` pour vérifier si le résultat d'une fonction :
+Le package [`tinytest`](https://github.com/markvanderloo/tinytest) est un package relativement récent (~2 ans pour les premières versions) visant à proposer une alternative à `testthat`. Pour rappel [`testthat`](https://testthat.r-lib.org/) et donc `tinytest` permettent de réaliser facilement un certains nombre de tests unitaires à l'aide de fonctions sous la forme `expect_xxx` pour vérifier si le résultat d'une fonction :
 
 * est égal à l'attendu, ce qui prends en compte les attributs (`expect_equal`)
 * est équivalent à l'attendu, ce qui ignore les attributs (`expect_equivalent`)
@@ -75,6 +86,8 @@ Les tests SIDEFX révèlent des effets de bords qui peuvent être causés :
 * par un changement de variable environnementale (`env`)
 * un changement de répertoire de travail (`wdir`)
 * la création de fichiers non attendus dans les répertoires (`file`).
+
+`tinytest` est relativement récent, mais plusieurs packages le mobilisent déjà, comme [`ttdo`](https://github.com/eddelbuettel/ttdo/) et [`packager`](https://gitlab.com/fvafrcu/packager).
 
 ### autotest, pour générer automatiquement des tests
 
@@ -139,7 +152,7 @@ Sur les deux fonctions testées, il n'y a eu aucune erreurs ni warnings, mais de
 
 `autotest` ne permet pas pour l'instant de générer automatiquement des fichiers de tests pour un package, mais peut être mobilisé comme ensemble de test à effectuer sur un package. Une série de fonction `expect_xxx` permet ainsi de gérer la sortie de la fonction `autotest_package` afin d'échouer selon la présence d'erreur, de warnings dans la colonne `type`. Les `diagnostic` ne sont ici pas pris en compte. Pour vérifier leur absences il faudrait utiliser une estimation du nombre de ligne (voir plus bas). L'inconvénient étant un traçage probablement limité de l'origine des erreurs. L'idée de générer automatiquement les tests individuels est cependant un objectif probable du package.
 
-```{r}
+```{r expect equal autotest}
 tinytest::expect_equal(
   nrow(autotest::autotest_package("aricode",functions = c("AMI","entropy"), test = TRUE)),
   0
