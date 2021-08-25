@@ -28,13 +28,27 @@ Chaque dépôt a par défaut une branche une master et on peut choisir l'option 
 
 Cette branche feedback permet au professeur de faire des commentaires ou des modifications sur le code de l'étudiant. Après avoir poussé ses modifications, l'enseignant peut faire un "pull request" pour que l'étudiant voit les changements proposés par l'enseignant.
 
+### lancer des tests
+
+Des tests automatiques peuvent être lancés pour vérifier le code produit par les étudiants. Ceci peut etre obtenu de deux manières différentes.
+
+- dans la gestion du devoir, au sein de la section grading and feedback. 
+  -  ajouter un test et choisir par exemple le type Run Command
+  - spécifier les commandes d'installation dans l'onglet Setup command 
+  - spécifier la commande à lancer pour les tests par exemple `Rscript script_test.R`(script_test.R est un fichier R du dépot qui effectue les tests de notre choix).
+  Ce processus crée automatiquement une action dans le dépot de chaque groupe d'étudiants qui accepte ce devoir.
+
+
+- en utilisant un dépot template qui contient déjà des github action. 
+Il est possible lors de la création du dépot template qui vaservir de base au dépot de chaque groupe d'étudiants, de créer les actions qui nous permettent de tester ou autre chose par exemple déployer les gh-pages.  Cette méthode permet entre autre de spécifier le container docker à utiliser, ce qui est souvent plus rapide que de réinstaller une machine.
+
+La seconde méthode est sans doute plus souple et moins contrainte mais demande de mettre le nez dans les actions. 
+
 
 ### Autres fonctionnalités
 
 Il est possible de lier github classroom à un environnement type moodle pour récupérer une liste d'étudiants.
 
-Des tests automatiques peuvent être lancés et ainsi permettre une notation automatique.
-Un test peut consister à lancer un script R et vérifier qu'il compile. Afin que cette option soit pertinente il faut sans doute avoir recours à un docker....
 
 
 
