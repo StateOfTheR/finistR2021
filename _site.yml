@@ -28,6 +28,9 @@ navbar:
   - text: "Package et tests"
     icon: fa-box-open
     href: test-unitaires.html
+  - text: "OpenMP"
+    href: openmp.html
+  
 
 
 output:
