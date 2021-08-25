@@ -51,6 +51,7 @@ Chaque nouveau slide **commence avec 3 tirets (`---`) suivis directement d'un sa
 Vous pouvez avoir des titres ou pas de titre, on des titres de diférents niveaux (`#`, `##`, etc...)
 
 On peut définir au niveau des chaques slides des propriétés particulières. 
+
 ````
 ---
 
@@ -68,11 +69,13 @@ Les caractéristiques `inverse` sont définies dans le fichier `.css`.
 
 Pour utiliser son propre fichier `.css` (et non un style déjà défini), on peut y faire appel avec `moon_reader`:
 
+````
 ---
 output:
   xaringan::moon_reader:
     css: "my-style.css"
 ---
+````
 Le fichier `my-style.css` contient des instructions du genre : 
 
 ```` 
