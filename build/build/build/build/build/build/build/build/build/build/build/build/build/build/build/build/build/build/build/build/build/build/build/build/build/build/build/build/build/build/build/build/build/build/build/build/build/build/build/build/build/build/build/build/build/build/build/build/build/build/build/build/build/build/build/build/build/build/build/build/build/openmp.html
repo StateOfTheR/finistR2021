@@ -344,7 +344,7 @@ $(document).ready(function () {
 </li>
 <li>
   <a href="datavizu.html">
-    <span class="fa fa-gear"></span>
+    <span class="fa fa-desktop"></span>
      
     Nouvelles Fonctions Graphiques
   </a>
@@ -432,7 +432,7 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">welcome</span>(<span class="dv">4</span>)</span></code></pre></div>
 <pre><code>## Degemer mat! 
 ## Degemer mat! 
-## NA
+## Degemer mat! 
 ## Degemer mat!</code></pre>
 <pre><code>## [1] 0</code></pre>
 </div>
@@ -513,7 +513,7 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">print</span>(<span class="fu">omp_add</span>(a, b, <span class="dv">1</span>, <span class="dv">2</span>)))[<span class="dv">3</span>]</span></code></pre></div>
 <pre><code>## [1] 72</code></pre>
 <pre><code>## elapsed 
-##   4.003</code></pre>
+##   4.001</code></pre>
 <ul>
 <li>Test avec 8 threads:</li>
 </ul>
@@ -587,8 +587,8 @@ $(document).ready(function () {
 <span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>rho_parallel_1 <span class="ot">=</span> <span class="fu">parallel_histogram_1</span>(sample)</span></code></pre></div>
-<pre><code>## Hello from thread  3 of 4 
-## Hello from thread  1 of 4 
+<pre><code>## Hello from thread  1 of 4 
+## Hello from thread  3 of 4 
 ## Hello from thread  0 of 4 
 ## Hello from thread  2 of 4</code></pre>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">seq</span>(<span class="sc">-</span><span class="dv">7</span>,<span class="dv">7</span>,<span class="at">length.out=</span><span class="dv">64</span>), rho_serial, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span>
