@@ -32,9 +32,9 @@ Cette branche feedback permet au professeur de faire des commentaires ou des mod
 
 Des tests automatiques peuvent être lancés pour vérifier le code produit par les étudiants. Ceci peut etre obtenu de deux manières différentes.
 
-- dans la gestion du devoir, au sein de la section grading and feedback. 
+- dans la gestion du devoir, au sein de la section *grading and feedback*. 
   -  ajouter un test et choisir par exemple le type Run Command
-  - spécifier les commandes d'installation dans l'onglet Setup command 
+  - spécifier les commandes d'installation dans l'onglet Setup command (par exemple `sudo apt-get update; sudo apt-get remove -y r-base r-base-core; sudo apt-get install -y r-base r-base-core r-cran-digest; sudo R -e "install.packages('igraph')"`)
   - spécifier la commande à lancer pour les tests par exemple `Rscript script_test.R`(script_test.R est un fichier R du dépot qui effectue les tests de notre choix).
   Ce processus crée automatiquement une action dans le dépot de chaque groupe d'étudiants qui accepte ce devoir.
 
