@@ -25,6 +25,8 @@ navbar:
     href: xarigan_flipbook.html
   - text: "Shiny"
     href: shiny.html
+  - text: "OpenMP"
+    href: openmp.html
   
 
 
