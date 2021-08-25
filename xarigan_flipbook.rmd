@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-Nous avons travaillé à la fois sur Xarigan d'une part et d'autre part sur FlipbookR. 
+Nous avons travaillé à la fois sur Xarigan d'une part et d'autre part sur FlipbookR.
 
 
 [Xarigan](https://bookdown.org/yihui/rmarkdown/xaringan.html) est une extension de Rmarkdown qui permet de générer des présentations html d'un nouveau style. 
@@ -22,3 +22,29 @@ Nous avons travaillé à la fois sur Xarigan d'une part et d'autre part sur Flip
 L'auteur revendique de l'avoir proposée car il ne supportait plus de voir beamer utilisé partout tout le temps. 
 
 IL est basé sur 
+
+## 2. Flipbookr
+
+Extension de xaringan pour incorporer du code R et afficher les outputs séquentiellement. Le package est très récent et évoluera probablement par la suite. Il repose sur la grammaire "tidyverse" avec une facilité pour les codes contenant des pipes ou pour les graphs ggplot2, les "+".
+
+La fonction `chunk_reveal()` définit le partitionnement du code R et l'affichage de la sortie.
+
+**flipbookr** peut être installé directement par le CRAN ou à partir du repository de l'auteur sur github.
+
+Pour le moment, les possibilités sont:
+
+* `break_type`: le créateur choisit la vitesse d'affichage en ajoutant les mots clés #BREAK, #BREAK2 # BREAK3
+* `lang`: le code est par défaut du R, mais python est disponible également même si en version expérimental pour le moment
+* `display_type`: les type de sortie, par défaut `c("code","output")`, mais "md" et "func" sont dispos aussi
+* `code_seq`: une suite d'options définissant la séquentialité du code
+* `widths`: définition des largeurs de fenêtres pour le code et l'output
+
+Le code R est inclus dans un chunk classique devant porter un nom dans le fichier Rmd d'une présentation xaringan. Puis la fonction `chunk_reveal` est utilisé en ligne dans le Rmd:
+
+```{bash,eval=FALSE}
+`r chunk_reveal(chunk_name = "my_cars2", break_type="user", title = "### graph")`
+```
+
+
+https://evamaerey.github.io/flipbookr/minimal_flipbook_double_crochet.html#1
+
