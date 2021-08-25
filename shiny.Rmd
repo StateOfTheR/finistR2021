@@ -267,9 +267,36 @@ server = function(input, output) {
 }
 ```
 
-<!-- ## `renderUI` -->
+## `renderUI`
 
-## Références
+La fonction `renderUI` permet d'adapter les objets UI avec des valeurs calculés dans la partie serveur. L'appel dans la partie UI se fait par la fonction spécifique `uiOutput()`. 
+Dans ce cas là, les objets UI sont définis dans la partie serveur du code source et peuvent être dépendant d'une variable réactive ou d'un input. 
+
+```{r}
+ui <- fluidPage(
+  uiOutput(outputId = "uiInput"), 
+  textOutput(outputId = "text")
+)
+
+server <- function(input, output){
+  x <- reactive(norm(100))
+  output$uiInput <- renderUI({
+    numericInput(inputId = "num", label = "choose a number", 
+                 value = mean(x()))
+  })
+  output$text <- renderText({
+    input$num 
+  })
+}
+```
+
+## Points à poursuivre 
+
+- `req()` <https://shiny.rstudio.com/articles/req.html>
+- module shiny <https://shiny.rstudio.com/articles/modules.html> et <https://www.ardata.fr/post/2019/02/11/why-using-modules/>
+- mise en calcul en arrière plan avec **future** et **promises** <https://rstudio.github.io/promises/articles/shiny.html> 
+
+# Références
 
 - Une vidéo longue mais grandement informative : <https://vimeo.com/rstudioinc/review/131218530/212d8a5a7a/>
 - Les diapositives associées sur le fonctionnement de `shiny` : <https://github.com/rstudio-education/shiny.rstudio.com-tutorial>
