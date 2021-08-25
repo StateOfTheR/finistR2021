@@ -4,3 +4,13 @@ author: "State of the R"
 date: "23-27/08/2020"
 output: html_document
 ---
+
+# Ref générale bonne pratique
+
+# Quelques package utiles
+
+## Pour réaliser des tests
+
+### tinytest, une alternative à autotest 
+
+### autotest, pour générer automatiquement des tests
