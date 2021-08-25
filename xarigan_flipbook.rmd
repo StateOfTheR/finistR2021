@@ -1,6 +1,6 @@
 ---
 title: "Présentations with Xarigan et flipbook"
-author: "Par Sophie, Saint-Clair, Isabelle"
+author: "Par Sophie, Saint-Clair et Isabelle"
 output: html_document
 ---
 
