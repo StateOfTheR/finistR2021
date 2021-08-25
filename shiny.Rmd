@@ -38,7 +38,7 @@ La partie *UI* récupère les inputs de l'utilisateur et affiche les outputs cal
 Les inputs permettent de récupérer des instructions de l'utilisateur et sont généralement déclarés par des fonctions de la forme `****Input(inputId = "id", ...)` ou des clique-boutons comme `actionButton(inputId = "id", ...)`.
 De façon non exhaustive :
 
-![](inputs.png){ align=center, width=80% }
+![](figs/inputs.png){ align=center, width=80% }
 
 ### Les outputs
 
