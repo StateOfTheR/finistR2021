@@ -17,6 +17,35 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Premier exemple
 
+```{Rcpp welcome}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::plugins(openmp)]]
+// [[Rcpp::export(welcome)]]
+int welcome(ncores)
+{
+  
+#pragma omp parallel num_threads(int ncores)
+{
+printf("Degemer mat!")
+}
+
+return 0;
+
+}
+```
+
+```{R test_welcome_seq}
+welcome(1)
+```
+
+```{R test_welcoem_par}
+welcome41)
+```
+
+## Addition de deux vecteurs
+
 ```{Rcpp slow_add}
 #include <unistd.h>
 #include <Rcpp.h>
@@ -243,11 +272,21 @@ points(seq(-7,7,length.out=64), rho_parallel_2, col="green")
 
 ## Avantages et inconvénients
 
+- OpenMP est beaucoup utilisé en calcul scientifique. C'est une bibliothèque activement développée et
+est c'est un standard pour la parallélisation en mémoire partagée.
+- Dans les dernières versions il y a des instructions spéciales permettant d'utiliser des accélérateurs (GPU).
+- L'ouverture d'une zone parallèle ralenti légèrement le code pour allouer de la mémoire supplémentaire. Si l'on l'utilise dan s une fonction Rcpp, elle ne doit pas être appelée un trop grand nombre de fois. Il faut que les calculs situés dans la zone parallèle soit suffisamment importants.
+- Il n'y a pas d'incompatibilité avec une parallélisation effectuée au niveau du code R (mcapply).
+- 
+
+
+
 ## Références
 
-- [Parallel Execution with OpenMP](https://scholar.princeton.edu/sites/default/files/q-aps/files/slides_day4_pm.pdf)
-- [Using OpenMP in Rcpp](https://mfasiolo.github.io/sc2-2019/rcpp_advanced_iii/1_openmp/)
+- [Introduction à OpenMP](https://calcul.math.cnrs.fr/attachments/spip/Documents/Ecoles/LEM2I/Mod3/openMP.pdf)
 - [OpenMP par Cédric Bastoul](http://icps.u-strasbg.fr/people/bastoul/public_html/teaching/openmp/bastoul_cours_openmp.pdf)
+- [Using OpenMP in Rcpp](https://mfasiolo.github.io/sc2-2019/rcpp_advanced_iii/1_openmp/)
+- [Parallel Execution with OpenMP](https://scholar.princeton.edu/sites/default/files/q-aps/files/slides_day4_pm.pdf)
 - [Programming with OpenMP](https://cw.fel.cvut.cz/old/_media/courses/b4m35pag/lab5_slides-openmp.pdf)
 - [OpenMP reference card](https://www.openmp.org/wp-content/uploads/OpenMP-4.0-C.pdf)
 
