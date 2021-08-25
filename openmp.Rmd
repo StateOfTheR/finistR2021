@@ -270,6 +270,14 @@ lines(seq(-7,7,length.out=64), rho_parallel_1, col="red")
 points(seq(-7,7,length.out=64), rho_parallel_2, col="green")
 ```
 
+## Conseils
+
+- Minimiser le nombre de régions parallèles.
+- Choisir le nombre de threads de telle sorte que le rapport entre le nombre d’instructions et le nombre de directives soit suffisamment grand pour compenser le coût des directives.
+- Pour les boucles imbriquées, préférer paralléliser la boucle la plus externe.
+- Eviter de paralléliser une boucle trop petite en utilisant la clause if.
+- Ajouter des clauses nowait lorsque c’est possible pour éviter des synchronisations inutiles.
+
 ## Avantages et inconvénients
 
 - OpenMP est beaucoup utilisé en calcul scientifique. C'est une bibliothèque activement développée et
@@ -277,7 +285,6 @@ est c'est un standard pour la parallélisation en mémoire partagée.
 - Dans les dernières versions il y a des instructions spéciales permettant d'utiliser des accélérateurs (GPU).
 - L'ouverture d'une zone parallèle ralenti légèrement le code pour allouer de la mémoire supplémentaire. Si l'on l'utilise dan s une fonction Rcpp, elle ne doit pas être appelée un trop grand nombre de fois. Il faut que les calculs situés dans la zone parallèle soit suffisamment importants.
 - Il n'y a pas d'incompatibilité avec une parallélisation effectuée au niveau du code R (mcapply).
-- 
 
 
 
