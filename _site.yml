@@ -17,6 +17,15 @@ navbar:
   - text: "Enseignement"
     icon: fa-user-graduate
     href: deepnote.html
+  - text: "Site Web"
+    icon: fa-address-book-o
+    href: webpages.html
+  - text: "Présentations"
+    icon: fa-slideshare
+    href: xarigan_flipbook.html
+  - text: "Shiny"
+    href: shiny.html
+  
 
 
 output:
