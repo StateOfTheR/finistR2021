@@ -1,0 +1,24 @@
+---
+title: "Présentations with Xarigan et flipbook"
+author: "Par Sophie, Saint-Clair, Isabelle"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Nous avons travaillé à la fois sur Xarigan d'une part et d'autre part sur FlipbookR. 
+
+
+[Xarigan](https://bookdown.org/yihui/rmarkdown/xaringan.html) est une extension de Rmarkdown qui permet de générer des présentations html d'un nouveau style. 
+
+[FlipbookR](https://evamaerey.github.io/flipbookr/) est un outil permettant d'afficher côte à côte un code R et son résultat un fois exécuté, ce de façon séquentielle (commande par commande). C'est un outil utile pour les cours et les tutoriels.  
+
+<br> 
+
+## 1. A propos de Xarigan 
+L'auteur revendique de l'avoir proposée car il ne supportait plus de voir beamer utilisé partout tout le temps. 
+
+IL est basé sur 

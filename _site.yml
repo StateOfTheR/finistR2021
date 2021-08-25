@@ -20,6 +20,10 @@ navbar:
   - text: "Site Web"
     icon: fa-address-book-o
     href: webpages.html
+  - text: "Présentations"
+    icon: fa-address-book-o
+    href: xarigan_flipbook.html
+  
 
 
 output:
