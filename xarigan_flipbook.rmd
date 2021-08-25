@@ -118,9 +118,20 @@ style_mono_accent(
 ```
 ````
 
-On peut alors utiliser des font ou des couleurs institutionalles.  
+On peut alors utiliser les éléments de chartre graphique institutionnelle. Par exemple, pour [INRAE](https://www.inrae.fr/charte-graphique-inrae) :  
 
+````
 
+```{r xaringan-themer-INRAE, include=FALSE, warning=FALSE}`r ''`
+style_mono_accent(
+  base_color = "#00a3a6",
+  text_bold_color = "#008c8e",
+  header_font_google = google_font("Raleway"),
+  text_font_google   = google_font("Avenir Next Pro", "300", "300i"),
+  code_font_google   = google_font("Fira Mono")
+)
+```
+````
 
 ## 3. Flipbookr
 
