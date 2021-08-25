@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache = FALSE)
 ```
 
 ## OpenMP
@@ -14,6 +15,10 @@ knitr::opts_chunk$set(echo = TRUE)
 - OpenMP (Open Multi-Processing) est une bibliothèque permettant de paralléliser des programmes écrits en C++, C, ou Fortran pour Linux, MacOS, et Windows.
 - Le code est parallélisé à l'aide d'instructions qui seront interprétées comme des commentaires si la bibliothèque OpenMP n'est pas installée ou si l'option n'est pas présente lors de la compilation.
 - OpenMP est utilisable avec R lorsque l'on utilise des fonctions Rcpp. Cette parallélisation peut se révéler particulièrement efficace sur les machines parallèles à mémoire partagée avec des processeurs contenant un grand nombre de coeurs.
+
+![](https://docs.nersc.gov/img/OpenMPforkjoin.png)
+
+
 
 ## Premier exemple
 
@@ -23,12 +28,12 @@ using namespace Rcpp;
 
 // [[Rcpp::plugins(openmp)]]
 // [[Rcpp::export(welcome)]]
-int welcome(ncores)
+int welcome(int ncores)
 {
   
-#pragma omp parallel num_threads(int ncores)
+#pragma omp parallel num_threads(ncores)
 {
-printf("Degemer mat!")
+Rprintf("Degemer mat! \n");
 }
 
 return 0;
@@ -36,12 +41,12 @@ return 0;
 }
 ```
 
-```{R test_welcome_seq}
+```{r test_welcome_seq}
 welcome(1)
 ```
 
-```{R test_welcoem_par}
-welcome41)
+```{r test_welcome_par}
+welcome(4)
 ```
 
 ## Addition de deux vecteurs
@@ -52,7 +57,7 @@ welcome41)
 using namespace Rcpp;
 
 // [[Rcpp::export(slow_add)]]
-int slow_add(NumericVector a, NumericVector b,  int sec)
+int slow_add(NumericVector a, NumericVector b, double sec)
 {
 
 int n = a.size();
@@ -76,9 +81,9 @@ return sum(c);
 
 Exécution :
 
-```{R test_slow_add}
-a = 1:8
-b = 1:8
+```{r test_slow_add}
+a <- 1:8
+b <- 1:8
 system.time(print(slow_add(a, b, 1)))[3]
 ```
 
@@ -92,7 +97,7 @@ using namespace Rcpp;
 
 // [[Rcpp::plugins(openmp)]]
 // [[Rcpp::export(omp_add)]]
-int omp_add(NumericVector a, NumericVector b, int sec, int ncores)
+int omp_add(NumericVector a, NumericVector b, double sec, int ncores)
 {
   
 int n = a.size();
@@ -118,24 +123,25 @@ for(size_t i = 0; i < n; i++)
 
   return sum(c);
   
-
 }
 ```
 
-- Test avec 1 thread:
-```{R test_omp_function_1}
-system.time(print(omp_add(a, b, 1, 1)))[3]
+- Test avec 2 threads:
+```{r test_omp_function_1}
+system.time(print(omp_add(a, b, 1, 2)))[3]
 ```
 
-- Test avec 4 threads:
-```{R test_omp_function_2}
+- Test avec 8 threads:
+```{r test_omp_function_2}
 system.time(print(omp_add(a, b, 1, 8)))[3]
 ```
 
 ## Calcul d'un histogramme
 
+A partir d'un ensemble d'échantillons répartis sur un intervalle (xmin, xmax), nous allons
+réperer la position de l'échantillon et augmenter l'indice le plus proche de la valeur 1 divisé par le nombre total d'échantillons.
 
-```{Rcpp serial_historgram}
+```{Rcpp serial_histogram}
 #include <Rcpp.h>
 using namespace Rcpp;
 using namespace std;
@@ -162,9 +168,9 @@ NumericVector serial_histogram(NumericVector xp) {
 }
 ```
 
-```{R tests_histogram_1}
-sample = rnorm(10^6)
-rho_serial = serial_histogram(sample)
+```{r tests_histogram_1}
+sample <- rnorm(10^5)
+rho_serial <- serial_histogram(sample)
 plot(seq(-7,7,length.out=64), rho_serial, type = "l", col="blue")
 ```
 
@@ -184,12 +190,12 @@ NumericVector parallel_histogram_1( NumericVector xp) {
 
     NumericVector rho(nx);
     
-    #pragma omp parallel 
+    #pragma omp parallel num_threads(4)
     {
       int tid = omp_get_thread_num();
       int ntid = omp_get_num_threads();
       
-      printf("Hello from thread  %d of %d \n", tid, ntid);
+      Rprintf("Hello from thread  %d of %d \n", tid, ntid);
         
       #pragma omp for
       for(int i=0; i < np; ++i){
@@ -204,14 +210,14 @@ NumericVector parallel_histogram_1( NumericVector xp) {
 }
 ```
 
-```{R tests_histogram_2}
-sample = rnorm(10^6)
-rho_serial = serial_histogram(sample)
+```{r tests_histogram_2}
 rho_parallel_1 = parallel_histogram_1(sample)
 plot(seq(-7,7,length.out=64), rho_serial, type = "l", col="blue")
 lines(seq(-7,7,length.out=64), rho_parallel_1, col="red")
 ```
 
+Le résultat n'est pas celui attendu car chaque thread partage le tableau rho et peuvent accéder
+en même temps aux mêmes indices. Les itérations de la boucle ne sont pas indépendantes.
 
 ```{Rcpp parallel_histogram_2}
 #include <Rcpp.h>
@@ -228,23 +234,21 @@ NumericVector parallel_histogram_2( NumericVector xp) {
   int ip;
   
   NumericVector rho(nx);
-  
-#pragma omp parallel 
-{
-  int tid = omp_get_thread_num();
-  int ntid = omp_get_num_threads();
-  
+  int ntid = 4;
   NumericMatrix rho_local(ntid,nx);
   
-  printf("Hello from thread  %d of %d \n", tid, ntid);
-  
+#pragma omp parallel num_threads(ntid)
+{
+  int tid = omp_get_thread_num();
+
   #pragma omp for
   for(int i=0; i < np; ++i){
     double x_norm = (xp[i]-xmin) / (xmax - xmin);
     int ip = floor(x_norm * nx);
     rho_local(tid,ip) +=  1.0 / np;
   }
-
+  
+  #pragma omp master
   for (int i = 0; i < nx; ++i) {
     double rowSum = 0.0;
     for (int j = 0; j < ntid; ++j) {
@@ -260,14 +264,89 @@ return rho;
 ```
 
 ```{R tests_histogram_3}
-sample = rnorm(10^6)
-rho_serial = serial_histogram(sample)
-rho_parallel_1 = parallel_histogram_1(sample)
-rho_parallel_2 = parallel_histogram_2(sample)
+rho_parallel_2 <- parallel_histogram_2(sample)
 
 plot(seq(-7,7,length.out=64), rho_serial, type = "l", col="blue")
 lines(seq(-7,7,length.out=64), rho_parallel_1, col="red")
 points(seq(-7,7,length.out=64), rho_parallel_2, col="green")
+```
+
+## Exercice: estimation du nombre $pi$
+
+
+```{Rcpp compute_pi}
+#include <Rcpp.h>
+using namespace Rcpp;
+// [[Rcpp::export]]
+double compute_pi() {
+  
+int n = 300000;
+
+double h = 1.0 / n;
+
+double s = 0.0;
+
+for(int i = 0; i < n; ++i)
+{
+    double x = (i - 0.5) * h;
+    s += 4. / (1 + (x*x));
+}
+return h * s;
+}
+```
+
+```{r test_compute_pi}
+compute_pi()
+```
+
+<pre>
+#include <Rcpp.h>
+using namespace Rcpp;
+<b>// [[Rcpp::plugins(openmp)]]</b>
+// [[Rcpp::export]]
+double compute_pi_omp() {
+  
+int n = 3000000;
+
+double h = 1.0 / n;
+
+double s = 0.0;
+
+<b>#pragma omp parallel for reduction(+:s)</b>
+for(int i = 0; i < n; ++i)
+{
+    double x = (i - 0.5) * h;
+    s += 4. / (1 + (x*x));
+}
+
+return h * s;
+}
+</pre>
+
+````{Rcpp, echo=FALSE}
+#include <Rcpp.h>
+using namespace Rcpp;
+// [[Rcpp::plugins(openmp)]]
+// [[Rcpp::export]]
+double compute_pi_omp() {
+  
+int n = 300000;
+double h = 1.0 / n;
+double s = 0.0;
+
+#pragma omp parallel for reduction(+:s)
+for(int i = 0; i < n; ++i)
+{
+    double x = (i - 0.5) * h;
+    s += 4. / (1 + (x*x));
+}
+
+return h * s;
+}
+```
+
+```{r}
+compute_pi_omp()
 ```
 
 ## Conseils
@@ -285,6 +364,8 @@ est c'est un standard pour la parallélisation en mémoire partagée.
 - Dans les dernières versions il y a des instructions spéciales permettant d'utiliser des accélérateurs (GPU).
 - L'ouverture d'une zone parallèle ralenti légèrement le code pour allouer de la mémoire supplémentaire. Si l'on l'utilise dan s une fonction Rcpp, elle ne doit pas être appelée un trop grand nombre de fois. Il faut que les calculs situés dans la zone parallèle soit suffisamment importants.
 - Il n'y a pas d'incompatibilité avec une parallélisation effectuée au niveau du code R (mcapply).
+- Le compilateur par défaut sur les mac ne supporte pas les instructions openmp. Il faut donc les encadrer avec 
+des `#ifdef _OPENMP ... #endif`. On peut cependant modifier la variable `CXX` dans le fichier `Makevars` pour utiliser `g++` à la place de `clang++`.
 
 
 
@@ -293,6 +374,7 @@ est c'est un standard pour la parallélisation en mémoire partagée.
 - [Introduction à OpenMP](https://calcul.math.cnrs.fr/attachments/spip/Documents/Ecoles/LEM2I/Mod3/openMP.pdf)
 - [OpenMP par Cédric Bastoul](http://icps.u-strasbg.fr/people/bastoul/public_html/teaching/openmp/bastoul_cours_openmp.pdf)
 - [Using OpenMP in Rcpp](https://mfasiolo.github.io/sc2-2019/rcpp_advanced_iii/1_openmp/)
+- [Exemples de codes Rcpp avec openmp](https://gallery.rcpp.org/tags/openmp/)
 - [Parallel Execution with OpenMP](https://scholar.princeton.edu/sites/default/files/q-aps/files/slides_day4_pm.pdf)
 - [Programming with OpenMP](https://cw.fel.cvut.cz/old/_media/courses/b4m35pag/lab5_slides-openmp.pdf)
 - [OpenMP reference card](https://www.openmp.org/wp-content/uploads/OpenMP-4.0-C.pdf)
