@@ -15,7 +15,7 @@ Nous présentons des méthodes simples pour accélérer des gros calculs sous R 
 
 ## Les BLAS
 
-Un BLAS contient les routines de bas niveau permettant de réaliser les opérations basiques sur les vecteurs et les matrices (addition, produits scalaire et matriciel, etc.). Le BLAS de R natif est single-thread et des alternatives plus performantes existent telles que [OpenBLAS](https://www.openblas.net) qui est multi-thread, [ATLAS](http://math-atlas.sourceforge.net) qui s'adapte automatiquement à l'architecture locale e manière optimisée ou Intel MKL pour les processeurs Intel (aussi multi-thread).
+Un BLAS contient les routines de bas niveau permettant de réaliser les opérations basiques sur les vecteurs et les matrices (addition, produits scalaire et matriciel, etc.). Le BLAS de R natif est single-thread et des alternatives plus performantes existent telles que [OpenBLAS](https://www.openblas.net) qui est multi-thread, [ATLAS](http://math-atlas.sourceforge.net) qui s'adapte automatiquement à l'architecture locale de manière optimisée ou Intel MKL pour les processeurs Intel (aussi multi-thread).
 
 Voici un tutoriel pour installer de nouvelles librairies BLAS/LAPACK optimisées sur les principaux système d'exploitations:
 ![https://csantill.github.io/RPerformanceWBLAS/]
