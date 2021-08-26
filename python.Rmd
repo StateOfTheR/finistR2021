@@ -1,0 +1,40 @@
+---
+title: "Python pour le modèle linéaire"
+author: "Julie Aubert, Julien Chiquet, Marie-Pierre etienne"
+date: "8/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Installation 
+
+
+- Installer Anaconda 
+
+Sous linux
+
+```{r anaconda, eval = FALSE}
+sudo apt-get install libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6
+```
+
+- Dans Rstudio installer reticulate
+
+```{r reticulate, eval = FALSE}
+install.packages('reticulate')
+```
+
+
+```{r load_reticulate, message = FALSE}
+library(reticulate)
+py_install("scikit-learn")
+```
+
+
+```{python import}
+import numpy as np
+from sklearn.linear_model import LinearRegression
+```
+
