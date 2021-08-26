@@ -26,9 +26,16 @@ sudo apt-get install libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 
 install.packages('reticulate')
 ```
 
+charger Reticulate
 
-```{r load_reticulate, message = FALSE}
+```{r load_reticulate}
 library(reticulate)
+
+```
+
+On peut installer les packages utiles en utilisant `py_install` 
+
+```{r load_reticulate, message = FALSE, eval = FALSE}
 py_install("scikit-learn")
 py_install('pandas')
 py_install('seaborn') # nice plots
@@ -42,7 +49,7 @@ import numpy as np
 import pandas as pd ## data analysis and manipulation
 import seaborn as sns ## seaborn: statistical data visualization
 import matplotlib.pyplot as plt
-import statsmodels.api as sm
+import statsmodels as sm
 from sklearn import datasets, linear_model
 from sklearn.metrics import mean_squared_error, r2_score
 ```
@@ -101,8 +108,8 @@ où
 ci-dessous).
 
 ```{python  py_modele_reg_simple}
-X = bats_df[["BRW"]]
-Y = bats_df["BOW"]
+Y = bats_df[["BRW"]]
+X = bats_df["BOW"]
 
 # Create linear regression object
 regr = linear_model.LinearRegression()
@@ -116,17 +123,64 @@ Remarque : Le double crochet permet de préserver la structure en matrice, le si
 
 regr.fit ne produit pas les sorties dont on a l'habitude dans R. on peut essayer statsmodels
 
+
+
 ```{python py_modele_reg_simple_sm}
-mod = sm.api.ols(X, Y)
 
-print(mod.summary())
+model = sm.api.OLS( Y, X)
+bats_model_fit = model.fit()
+bats_model_fit.params
 ```
 
-```{python  py_graphique_residus}
-par(mfrow=c(2,2)) # Découpage de la fenêtre graphique en 2
-plot(modele_reg_simple) # Graphique des résidus
+
+On voit que seul le coefficiecient associée à la variable BOW a été estimée, pas de constante dans le modèle. Il faut ajouter la constante dans la matrice X
+
+```{python py_add_constant}
+X_complet = sm.tools.add_constant(X)
+model = sm.api.OLS( Y, X_complet)
+bats_model_fit = model.fit()
+bats_model_fit.params
 ```
 
+
+On peut obtenir des résultats plus détaillés avec
+
+
+```{python py_print_results}
+print(bats_model_fit.summary())
+```
+
+
+## Diagnostics
+
+```{python  py_residus}
+bats_fitted_y = bats_model_fit.fittedvalues
+bats_residuals = bats_model_fit.resid
+## residus studentizes
+bats_norm_residuals = bats_model_fit.get_influence().resid_studentized_internal
+```
+
+```{python py_diag}
+# absolute squared normalized residuals
+bats_norm_residuals_abs_sqrt = np.sqrt(np.abs(bats_norm_residuals))
+# absolute residuals
+bats_abs_resid = np.abs(bats_residuals)
+# leverage, from statsmodels internals
+bats_leverage = bats_model_fit.get_influence().hat_matrix_diag
+# cook's distance, from statsmodels internals
+bats_cooks = bats_model_fit.get_influence().cooks_distance[0]
+
+
+plot_lm_1 = plt.figure()
+plot_lm_1.axes[0] = sns.residplot(bats_fitted_y, dataframe.columns[-1], data=dataframe, 
+                          lowess=True,
+                          scatter_kws={'alpha': 0.5},
+                          line_kws={'color': 'red', 'lw': 1, 'alpha': 0.8})
+
+plot_lm_1.axes[0].set_title('Residuals vs Fitted')
+plot_lm_1.axes[0].set_xlabel('Fitted values')
+plot_lm_1.axes[0].set_ylabel('Residuals');
+```
 
 ```{block2 correc_q4, type = "Correction"}
 Ici, il semblerait que les observations 6 et 7 aient un fort levier et influencent fortement le modèle.
