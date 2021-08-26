@@ -30,11 +30,16 @@ install.packages('reticulate')
 ```{r load_reticulate, message = FALSE}
 library(reticulate)
 py_install("scikit-learn")
+py_install('pandas')
+py_install('matplotlib')
 ```
 
 
 ```{python import}
 import numpy as np
+import pandas as pd ## data analysis and manipulation
+import seaborn as sns ## seaborn: statistical data visualization
+import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 ```
 
