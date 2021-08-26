@@ -20,7 +20,7 @@ Nous avons trouvé 2 solutions :
 * utiliser des générateurs de construction de site plus avancées comme Jekyll ou Hugo etc... 
 
 
-## 1. Méthode basique de construction de site. 
+## 1. M éthode basique de construction de site. 
 
 
 ### Etape 1 : sous github 
