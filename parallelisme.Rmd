@@ -9,3 +9,203 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+
+Voici un tutoriel pour installer de nouvelles librairies BLAS/LAPACK optimisées sur les principaux système d'exploitations:
+![https://csantill.github.io/RPerformanceWBLAS/]
+
+Benchmark sur Intel® Core™ i5-8250U CPU @ 1.60GHz × 8 avec 8GO de RAM sur Intel® Core™ i5-8250U CPU @ 1.60GHz × 8.
+
+BLAS/LAPLACK
+```
+Creation, transp., deformation of a 2500x2500 matrix (sec):  0.735666666666667 
+2400x2400 normal distributed random matrix ^1000____ (sec):  0.54 
+Sorting of 7,000,000 random values__________________ (sec):  0.772333333333333 
+2800x2800 cross-product matrix (b = a' * a)_________ (sec):  16.5476666666667 
+Linear regr. over a 3000x3000 matrix (c = a \ b')___ (sec):  8.70833333333333 
+```
+
+ATLAS 
+
+```
+Creation, transp., deformation of a 2500x2500 matrix (sec):  0.687 
+2400x2400 normal distributed random matrix ^1000____ (sec):  0.530333333333333 
+Sorting of 7,000,000 random values__________________ (sec):  0.762 
+2800x2800 cross-product matrix (b = a' * a)_________ (sec):  1.93433333333333 
+Linear regr. over a 3000x3000 matrix (c = a \ b')___ (sec):  0.966666666666666 
+```
+
+Openblas (avec parallélisation)
+
+```
+Creation, transp., deformation of a 2500x2500 matrix (sec):  0.709333333333333 
+2400x2400 normal distributed random matrix ^1000____ (sec):  0.544666666666667 
+Sorting of 7,000,000 random values__________________ (sec):  0.780666666666667 
+2800x2800 cross-product matrix (b = a' * a)_________ (sec):  0.835333333333333 
+Linear regr. over a 3000x3000 matrix (c = a \ b')___ (sec):  0.274000000000001 
+```
+
+
+
+
+Mais suivant la manière dont les différents package sont codés, les gains ne sont pas forcément évident. Voici un benchmark avec différents package d'analyse de réseaux: `sbm`, `missSBM`, `GREMLINS`:
+
+
+BLAS/LAPLACK
+```
+Data frenchblog2007 
+==================== missSBM 1 core:  ==================
+Time difference of 28.6378 secs
+====================   sbm 1 core:  ==================
+Time difference of 22.2913 secs
+==================== missSBM 4 cores:  ==================
+Time difference of 21.01817 secs
+==================== sbm 4 cores:  ==================
+Time difference of 17.59729 secs
+Data MPEcoNetwork 
+==================== Multipartite 1 core:  ==================
+Time difference of 1.683621 mins
+==================== Multipartite 4 cores:  ==================
+Time difference of 1.008362 mins
+```
+
+Atlas
+```
+Data frenchblog2007 
+==================== missSBM 1 core:  ==================
+Time difference of 28.85101 secs
+====================   sbm 1 core:  ==================
+Time difference of 16.92881 secs
+==================== missSBM 4 cores:  ==================
+Time difference of 21.15375 secs
+==================== sbm 4 cores:  ==================
+Time difference of 13.93179 secs
+Data MPEcoNetwork 
+==================== Multipartite 1 core:  ==================
+Time difference of 1.722041 mins
+==================== Multipartite 4 cores:  ==================
+Time difference of 56.11809 secs
+```
+openBLAS
+
+```
+Data frenchblog2007 
+==================== missSBM 1 core:  ==================
+Time difference of 1.282785 mins
+====================   sbm 1 core:  ==================
+Time difference of 17.01022 secs
+==================== missSBM 4 cores:  ==================
+Time difference of 1.094572 mins
+==================== sbm 4 cores:  ==================
+Time difference of 15.65691 secs
+Data MPEcoNetwork 
+==================== Multipartite 1 core:  ==================
+Time difference of 1.66076 mins
+==================== Multipartite 4 cores:  ==================
+Time difference of 55.89039 secs
+```
+## Tenter de comprendre les adresses mémoires pour le calcul parallèle multicoeur
+
+Les systèmes d'exploitation Linux et macOS ont un système de "shared memory" via POSIX qui évite de recopier certains objets. Toutefois il est difficile de complètement comprendre le comportement.
+
+
+
+Just the tip what might have been going on R-devel Digest, Vol 149, Issue 22
+
+Radford Neal's answer from Jul 26, 2015:
+
+"When mclapply forks to start a new process, the memory is initially shared with the parent process. However, a memory page has to be copied whenever either process writes to it. Unfortunately, R's garbage collector writes to each object to mark and unmark it whenever a full garbage collection is done, so it's quite possible that every R object will be duplicated in each process, even though many of them are not actually changed (from the point of view of the R programs)."
+
+Voici un example:
+
+```{r parallel-memory-1}
+library(lobstr)
+library(parallel)
+library(bettermc)
+```
+
+Ici, on voit bien que la première case de la liste `B` pointe vers la case mémoire de la matrice `A`.
+
+```{r}
+A <- rnorm(1e6)
+B <- list(A)
+
+print(lobstr::obj_addr(A))
+print(lobstr::obj_addrs(B))
+print(lobstr::obj_sizes(A, B))
+```
+
+On a le même comportement avec un lapply:
+
+```{r}
+list_A <- lapply(
+  seq(10),
+  function(x) {
+    B[[1]]
+  }
+)
+print(lobstr::obj_addrs(list_A))
+print(lobstr::obj_sizes(A, list_A, B))
+```
+
+Par contre dès que l'on parallélise, on perd se comportement:
+
+```{r}
+list_A <- parallel::mclapply(
+  seq(10),
+  function(x) {
+    return(B[[1]])
+  }, mc.cores = 2L
+)
+print(lobstr::obj_addrs(list_A))
+print(lobstr::obj_sizes(A, list_A, B))
+```
+
+L'objet semble être recopier lors du return:
+
+```{r}
+list_A <- bettermc::mclapply(
+  seq(10),
+  function (x) {
+    C <- B[[1]] + x
+    lobstr::obj_addr(C)
+  }, mc.cores = 2L
+)
+unique(unlist(list_A))
+```
+
+
+Et le comportement semble différent suivant que l'on preschedule ou non :
+
+```{r}
+list_A <- bettermc::mclapply(
+  seq(10),
+  function (x) {
+    C <- B[[1]] + x
+    lobstr::obj_addr(C)
+  }, mc.cores = 2L, mc.preschedule = FALSE
+)
+unique(unlist(list_A))
+```
+
+
+## bettermc
+
+Le package bettermc ![https://github.com/gfkse/bettermc] donne plus de controle sur le comportement, en donnant des options pour controler les retours des processus enfants en utilisant la "shared memory" POSIX.
+
+```{r}
+f <- function(i) A
+microbenchmark::microbenchmark(
+  bettermc1 = bettermc::mclapply(1:2, f, mc.share.copy = FALSE),
+  bettermc2 = bettermc::mclapply(1:2, f),
+  bettermc3 = bettermc::mclapply(1:2, f, mc.share.vectors = FALSE),
+  bettermc4 = bettermc::mclapply(1:2, f, mc.share.vectors = FALSE, mc.shm.ipc = FALSE),
+  parallel = parallel::mclapply(1:2, f),
+  times = 10, setup = gc()
+)
+```
+
+Le package permet également de faire des parallélisation reproductible et donne beaucoup plus de controle sur la gestion des erreurs en permettant entre autre de relancer les processus qui ont renvoyé des erreurs.
+
+L'extention bettermcExt
+![https://github.com/gfkse/bettermcExt] non autorisé sur le `CRAN` permet d'overloader la fonction `mclapply` de `parallel` d'un package donné, permettant ainsi un gain de temps et de rendre les calculs reproductibles.
