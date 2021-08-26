@@ -1,0 +1,349 @@
+---
+title: "modèle linéaire en langage python dans R"
+author: "I.Sanchez"
+date: "26/08/2021"
+output:
+  html_document:
+    toc: yes
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r }
+library(reticulate)
+py_install("pandas")
+py_install("seaborn")
+py_install("matplotlib")
+py_install("scikit-learn")
+py_install("numpy")
+py_install("statsmodels")
+py_install("scipy")
+py_install("yellowbrick")
+```
+
+
+Inspiration du post suivant comparant python et caret:
+
+https://datascience-enthusiast.com/R/ML_python_R_part1.html
+
+https://www.statsmodels.org/stable/index.html
+
+http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx/notebooks/td2a_eco_regressions_lineaires.html
+
+Attention de ne pas mettre d'accents etc... dans le scommentaires des chunk python!!! écrire en UTF-8
+
+https://robert-alvarez.github.io/2018-06-04-diagnostic_plots/
+
+https://www.scikit-yb.org/en/latest/api/regressor/peplot.html
+# modules python
+
+* pandas: gestion de data.frame
+* seaborn: extension de matplotlib avec graph au rendu ggplot2
+* sklearn et statmodels: ml
+* yellowbrick: Machine Learning Visualization
+
+
+```{python}
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import sklearn as sk
+import numpy as np
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+
+from yellowbrick.datasets import load_concrete
+from yellowbrick.regressor import ResidualsPlot
+from yellowbrick.regressor import CooksDistance
+
+from sklearn.linear_model import LinearRegression
+from sklearn import datasets
+
+plt.style.use('ggplot') # if you are an R user and want to feel at home
+
+from statsmodels.graphics.gofplots import ProbPlot
+
+```
+
+# Importation des données et un peu de description
+
+bats est un data.frame de type *pandas*.
+
+```{python}
+bats = pd.read_csv("bats.csv",delimiter=";",skiprows=3)
+
+print(bats)
+
+bats.head()
+
+```
+
+```{python}
+# str de bats
+bats.shape
+
+bats.dtypes
+```
+
+```{python}
+bats.info()
+```
+
+
+```{python}
+plt.figure()
+
+bats.plot(x ='BOW', y = 'BRW', kind ="scatter", 
+                 figsize = [8,6],
+                 color ="b", alpha = 0.3, 
+                fontsize = 14)
+plt.title("BRW vs. BOW", 
+          fontsize = 24, color="darkred")
+
+plt.xlabel("Body weight", fontsize = 18) 
+
+plt.ylabel("Brain weight", fontsize = 18)
+
+plt.show()
+```
+
+Description d'une colonne facteur du data.frame:
+
+
+```{python}
+bats["Diet"]
+
+bats["Diet"].describe()
+```
+
+
+```{python}
+diet = pd.Series(bats["Diet"], dtype="category")
+
+diet.describe()
+
+diet.unique()
+
+bats["Diet"].value_counts()
+
+```
+# Version sklearn
+
+```{python}
+# meme chose directement
+#x=bats[["BOW"]]
+# ou avec numpy
+x=np.array(bats.BOW).reshape(-1,1)
+y=bats["BRW"]
+
+type(x)
+
+mylm = LinearRegression().fit(x, y)
+
+```
+
+```{python}
+# Intercept
+print('Intercept:',mylm.intercept_)
+
+# slope
+print('Slope:',mylm.coef_)
+
+y_pred = mylm.predict(x)
+y_pred
+```
+
+```{python}
+from sklearn import metrics
+
+print('R-squared:', metrics.r2_score(y, y_pred))
+print('Adjusted R-squared:', 1 - (1-mylm.score(x, y))*(len(y)-1)/(len(y)-x.shape[1]-1))
+
+```
+
+## graphs diagnostics
+
+1. residplot() de seaborn
+2. probplot de scipy
+
+```{python}
+
+
+fitted = mylm.predict(x)
+
+sns.residplot(fitted.reshape(-1),'BRW', data=bats,lowess=True,
+              line_kws={'color': 'red', 'lw': 1, 'alpha': 1})
+plt.xlabel("Fitted values")
+plt.ylabel("Residual")
+plt.title('Residual plot')
+plt.show()
+
+```
+
+```{python}
+residuals = y - fitted.reshape(-1)
+residuals
+
+plt.figure(figsize=(8,5))
+stats.probplot(residuals, dist="norm", plot=plt)
+plt.title("Normal Q-Q Plot")
+```
+
+
+```{python,eval=FALSE}
+visualizer = CooksDistance()
+visualizer.fit(x, y)
+visualizer.show()
+```
+
+```{python,eval=FALSE}
+# Instantiate and fit the visualizer
+#x, y = load_concrete()
+model = LinearRegression()
+visualizer_residuals = ResidualsPlot(model,hist=False)
+visualizer_residuals.fit(x, y)
+visualizer_residuals.show()
+```
+
+
+# Version statmodels
+
+sous-module statsmodels.formula.api pour écrire le modèle comme dans lm().
+
+```{python}
+model = smf.ols('BRW ~ BOW', data = bats)
+mylm2 = model.fit()
+
+print(mylm2.summary())
+```
+
+## graphs diagnostics
+
+```{python}
+#fit simple linear regression model
+res = smf.ols('BRW ~ BOW', data=bats).fit()
+
+res.summary()
+
+# model values
+model_fitted_y = res.fittedvalues
+# model residuals
+model_residuals = res.resid
+
+res
+
+fig = plt.figure(figsize=(15,8))
+sm.graphics.plot_regress_exog(res, 'BOW', fig=fig)
+plt.show()
+```
+
+
+```{python}
+plt.figure(figsize=(6,5))
+res = mylm2.resid
+fig = sm.qqplot(res, stats.t, distargs=(4,), fit=True, line="45")
+plt.show()
+
+```
+
+
+# Quelques graphiques
+
+## seaborn - corr
+
+```{python}
+# correlation heatmap 
+bats3=bats[["BRW","BOW","AUD","MOB","HIP"]]
+corr = bats3.corr()
+plt.figure(figsize = (6,6))
+sns.heatmap(corr, cmap="RdBu",
+            xticklabels=corr.columns.values,
+            yticklabels=corr.columns.values)
+plt.show()
+```
+
+
+## seaborn - boxplot
+
+Attention, la variable groupe doit être en caractère impérativement.
+
+```{python}
+sns.boxplot(x="BOW", y="Clade", data=bats,
+            width=.6, palette="vlag")
+
+# Add in points to show each observation
+sns.stripplot(x="BOW", y="Clade", data=bats,
+              size=4, color=".3", linewidth=0)
+
+plt.show()
+
+```
+
+## seaborn - pairplot
+
+```{python}
+sns.set(style="ticks", color_codes=True)
+sns.pairplot(bats3)
+#plt.show()
+
+```
+
+```{python}
+sns.pairplot(bats,hue="Clade")
+#plt.show()
+
+```
+
+
+
+## seaborn - reg plot
+
+```{python}
+plt.figure(figsize = (5,5))
+sns.regplot(x="BOW", y="BRW", data=bats,ci=None);
+plt.show()
+```
+
+
+```{python, eval=FALSE}
+# create dataframe from X, y for easier plot handling
+
+x=bats.BOW
+y=bats.BRW
+bats2 = pd.concat([x,y], axis=1)
+bats2 = bats2.rename(columns={'BOW': 'x','BRW': 'y'})
+
+
+# qqs calculs a partir de mylm2
+# model values
+model_fitted_y = mylm2.fittedvalues
+# model residuals
+model_residuals = mylm2.resid
+# normalized residuals
+model_norm_residuals = mylm2.get_influence().resid_studentized_internal
+# absolute squared normalized residuals
+model_norm_residuals_abs_sqrt = np.sqrt(np.abs(model_norm_residuals))
+# absolute residuals
+model_abs_resid = np.abs(model_residuals)
+# leverage from statsmodels internals
+model_leverage = mylm2.get_influence().hat_matrix_diag
+# cook distance from statsmodels internals
+model_cooks = mylm2.get_influence().cooks_distance[0]
+
+bats2 = pd.concat([bats,model_fitted_y,model_residuals], axis=1)
+bats2 = bats2.rename(columns={0: 'y_fitted',1: 'residuals'})
+bats2
+
+```
+
+```{python}
+# le ; est indispensable pour que le graph s'affiche!
+sns.lmplot(x="BOW", y="BRW", hue="Diet", data=bats);
+plt.show()
+```
+
