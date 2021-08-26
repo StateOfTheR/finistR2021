@@ -9,12 +9,18 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Un benchmark
 
+Nous présentons des méthodes simples pour accélérer des gros calculs sous R en utilisant de la parallélisation. Afin d'évaluer différentes librairies de calcul, nous utilisons le script [R-benchmark-25](https://mac.r-project.org/benchmarks/).
+
+## Les BLAS
+
+Un BLAS contient les routines de bas niveau permettant de réaliser les opérations basiques sur les vecteurs et les matrices (addition, produits scalaire et matriciel, etc.). Le BLAS de R natif est single-thread et des alternatives plus performantes existent telles que [OpenBLAS](https://www.openblas.net) qui est multi-thread, [ATLAS](http://math-atlas.sourceforge.net) qui s'adapte automatiquement à l'architecture locale e manière optimisée ou Intel MKL pour les processeurs Intel (aussi multi-thread).
 
 Voici un tutoriel pour installer de nouvelles librairies BLAS/LAPACK optimisées sur les principaux système d'exploitations:
 ![https://csantill.github.io/RPerformanceWBLAS/]
 
-Benchmark sur Intel® Core™ i5-8250U CPU @ 1.60GHz × 8 avec 8GO de RAM sur Intel® Core™ i5-8250U CPU @ 1.60GHz × 8.
+Benchmark sur Intel® Core™ i5-8250U CPU @ 1.60GHz × 8 avec 8GO de RAM sous Ubuntu.
 
 BLAS/LAPLACK
 ```
@@ -35,7 +41,7 @@ Sorting of 7,000,000 random values__________________ (sec):  0.762
 Linear regr. over a 3000x3000 matrix (c = a \ b')___ (sec):  0.966666666666666 
 ```
 
-Openblas (avec parallélisation)
+OpenBLAS (avec parallélisation)
 
 ```
 Creation, transp., deformation of a 2500x2500 matrix (sec):  0.709333333333333 
@@ -45,11 +51,7 @@ Sorting of 7,000,000 random values__________________ (sec):  0.780666666666667
 Linear regr. over a 3000x3000 matrix (c = a \ b')___ (sec):  0.274000000000001 
 ```
 
-
-
-
 Mais suivant la manière dont les différents package sont codés, les gains ne sont pas forcément évident. Voici un benchmark avec différents package d'analyse de réseaux: `sbm`, `missSBM`, `GREMLINS`:
-
 
 BLAS/LAPLACK
 ```
@@ -104,11 +106,39 @@ Time difference of 1.66076 mins
 ==================== Multipartite 4 cores:  ==================
 Time difference of 55.89039 secs
 ```
+
+
+## Microsoft R Open
+
+[Microsoft R Open](https://mran.microsoft.com/download) est une distribution améliorée de R conçue par Microsoft. Elle permet aussi d'utiliser facilement le BLAS d'Intel MKL avec R, ce qui accélère considérablement les calculs, notamment sous Windows (mais aussi sous Mac et Linux).
+
+Voici les résultats du benchmark sur Intel(R) Core(TM) i3-7100U CPU @ 2.40GHz x 2 sous Windows 10 :
+
+Sous R 4.1.1 et le BLAS natif :
+```
+Creation, transp., deformation of a 2500x2500 matrix (sec):  0.913333333333333 
+2400x2400 normal distributed random matrix ^1000____ (sec):  1.22333333333333 
+Sorting of 7,000,000 random values__________________ (sec):  1.05 
+2800x2800 cross-product matrix (b = a' * a)_________ (sec):  20.0033333333333 
+Linear regr. over a 3000x3000 matrix (c = a \ b')___ (sec):  9.58333333333333 
+```
+
+Sous Microsoft R Open 4.0.2 et Intel MKL :
+```
+Creation, transp., deformation of a 2500x2500 matrix (sec):  0.923333333333333 
+2400x2400 normal distributed random matrix ^1000____ (sec):  1.16666666666667 
+Sorting of 7,000,000 random values__________________ (sec):  1.04 
+2800x2800 cross-product matrix (b = a' * a)_________ (sec):  0.513333333333332 
+Linear regr. over a 3000x3000 matrix (c = a \ b')___ (sec):  0.213333333333334 
+```
+
+Un autre avantage de Microsoft R Open est la reproductibilité. En effet, chaque version de MROpen est associée à un snapshot du CRAN. Par exemple, la dernière version de MROpen est la 4.0.2 est fixée au 16/07/2020. Par conséquent, les packages qu'on essaie installer sous MROpen 4.0.2 sont récupérés dans leur état au 16/07/2020.
+
 ## Tenter de comprendre les adresses mémoires pour le calcul parallèle multicoeur
 
+Sous Linux et MacOS, il est possible de paralléliser un code en faisant du multiprocess (en plus du multi-thread). Cela n'est pas possible sous Windows. Quelques librairies R pour le calcul parallèle : parallel, foreach, doParallel. Ici, on discute d'une curiosité rencontrée avec la fonction mclapply de la librairie parallel.
+
 Les systèmes d'exploitation Linux et macOS ont un système de "shared memory" via POSIX qui évite de recopier certains objets. Toutefois il est difficile de complètement comprendre le comportement.
-
-
 
 Just the tip what might have been going on R-devel Digest, Vol 149, Issue 22
 
