@@ -1,0 +1,196 @@
+---
+title: "Modélisation de la taille du cerveau des chauves-souris"
+author: 'TP 2 de Sciences des données : apprentissage statistique'
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+bibliography: bib_HKG_2002.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Dans cette séance de TP, nous reprenons les données sur les espèces de chauves-souris de l'article [@HKG_2002].
+Nous modéliserons la masse du cerveau et le volume de ses différentes parties en fonction de différentes variables telles que la masse du corps de la chauve-souris, leur régime alimentaire et leur clade. Les modèles que nous poserons correspondront aux analyses descriptives effectuées lors du premier TP.
+
+Nous commençons par charger les packages utiles et les données :
+
+```{r data preparation, message=FALSE}
+library(car)
+library(emmeans)
+library(ggplot2)
+library(plyr)
+
+bats = read.table("bats.csv",skip=3,header=TRUE,sep=";")
+bats$Diet = as.factor(bats$Diet)
+str(bats)
+```
+
+## 1. Étude du lien entre le poids du cerveau et la masse corporelle
+
+Dans un premier temps, nous cherchons à modéliser le lien entre le poids du cerveau et le poids du corps (variables `BRW` et `BOW`).
+Nous nous concentrerons sur les chauves-souris ayant un régime alimentaire phytophage (variable `Diet` égale à la modalité `1`).
+
+  1. Extraire une table nommée `batsphyto` contenant les chauves-souris phytophages. 
+  2. Reprendre le graphique permettant de décrire ce lien sur cette partie des données.
+  3. Écrire le modèle linéaire correspondant en spécifiant les gammes de variation des indices et les hypothèses du modèle.
+  4. Définir le modèle sous `R` et vérifier les hypothèses grâce aux graphes de diagnostic (voir le code ci-dessous).
+  5. Les hypothèses sont-elles satisfaites ? Si ce n'est pas le cas, proposer une solution permettant d'avoir un modèle satisfaisant.
+  6. Analyser les résultats à l'aide de la commande `summary`.
+
+```{r dataprephide,eval=TRUE,echo=FALSE}
+batsphyto = bats[bats$Diet=="1",]
+batsphyto2 = batsphyto[-c(6,7),]
+```
+
+```{r grapheBRWBOW,fig.align='center',out.width="60%"}
+ggplot(batsphyto,aes(x=BOW,y=BRW)) + geom_point()
+```
+
+```{r modlin,fig.align='center',out.width="60%"}
+reg = lm(BRW~BOW,data=bats[bats$Diet=="1",])
+par(mfrow=c(2,2))
+plot(reg)
+summary(reg)
+```
+
+```{r modlincor,fig.align='center',eval=FALSE,echo=FALSE}
+reg2 = lm(BRW~BOW,data=batsphyto2)
+par(mfrow=c(2,2))
+plot(reg2)
+summary(reg2)
+```
+
+## 2. Étude de la contribution des différentes parties du cerveau à sa masse totale
+
+Dans cette partie, on cherche à comprendre la contribution de chaque partie du cerveau
+au poids total. La variable à expliquer est donc le poids total du cerveau (variable `BRW`) et les variables potentiellement explicatives sont le volume de la partie auditive du cerveau (variable `AUD`), le volume de la zone olfactive (`MOB`) et le volume de l'hippocampe (`HIP`). On travaille toujours uniquement avec les espèces phytophages.
+
+  1. Reprendre l'étude des corrélations entre ces 4 variables.
+  2. Écrire le modèle linéaire correspondant à cette analyse (gammes de variation des indices et hypothèses du modèle) puis l'écrire sous `R` et discuter de la validité des hypothèses.
+  3. Faire le test du modèle et conclure. 
+  4. Que peut-on dire sur le lien entre la masse totale du cerveau et ces trois
+variables ? Quel est le coefficient associé à chaque variable ? Discuter le signe du
+coefficient associé à la variable `MOB`. 
+  5. Mettre en place une procédure de sélection de variables à l'aide de la fonction `step`. Essayer différents parcours des modèles possibles.
+
+```{r correlations,eval=FALSE,echo=FALSE}
+cor(batsphyto2[,c("BRW","AUD","MOB","HIP")])
+```
+
+```{r regmult,eval=FALSE}
+regM = lm(BRW~AUD+MOB+HIP,data=batsphyto2)
+summary(regM)
+reg0 = lm(BRW~1,data=batsphyto2)
+anova(reg0,regM)
+step(regM) # voir les options de la fonction step
+```
+
+## 3. Étude du lien entre le volume de la partie auditive et le régime alimentaire
+
+Notre hypothèse est que le sens le plus important pour une chauve-souris insectivore est l'écholocalisation qui est une capacité auditive. Au contraire, une chauve-souris se nourrissant de nectar doit plutôt privilégier des capacités liées à la mémoire spatiale, capacités régies par l'hippocampe. On se propose donc maintenant d'étudier si le régime alimentaire et les capacités sensorielles sont
+liées. Pour cela on se demande si le volume du lobe auditif (variable `AUD`) et le régime alimentaire (variable `Diet`) sont liés.
+
+  1. Reprendre un graphique représentant ce lien.
+  2. Écrire le modèle mathématique correspondant à cette analyse (gammes de variation des indices et hypothèses du modèle).
+  3. L'impléter sous `R` et analyser les résidus.
+  4. Conclure.
+  5. On pourra également proposer un modèle liant la partie auditive à la variable `Clade`.
+
+```{r AUDDietgraphe,eval=FALSE,echo=FALSE}
+ggplot(bats,aes(x=Diet,y=AUD)) + geom_boxplot()
+```
+
+```{r AUDDiet,eval=FALSE}
+mod = lm(AUD~Diet,data=bats)
+par(mfrow=c(2,2))
+plot(mod)
+summary(mod)
+```
+
+```{r AUDClade,eval=FALSE,echo=FALSE}
+mod2 = lm(AUD~Clade,data=bats)
+par(mfrow=c(2,2))
+plot(mod2)
+summary(mod2)
+```
+
+## 4. Étude du lien entre le volume de la partie auditive, le régime alimentaire et le clade
+
+On intègre au modèle précédent la variable `Clade` afin de tenir compte également des proximités génétiques entre les différentes espèces de chauves-souris.
+
+  1. Étudier les croisements entre les clades et les régimes alimentaires. Le plan d'expérience est-il équilibré, orthogonal, complet ? Quelles seront les conséquences ?
+  2. Puisqu'il n'y a qu'un individu dans le clade III, on propose de changer la classification phylogénétique et de mettre ensemble les clades II et III, ce qui est cohérent avec l'arbre phylogénétique présenté dans [@HKG_2002]. D'autre part, il n'y a que deux espèces de chauves-souris vampires. On décide donc de supprimer ces deux individus et de se concentrer sur les espèces non vampires.
+     
+     Créer une nouvelle variable `clade2` qui regroupe les clades II et III puis une nouvelle table `batsSV` sans les chauves-souris vampires.
+  3. Réaliser un graphe d'interactions (voir les commandes ci-dessous) et commenter.
+  4. Écrire le modèle correspondant sous forme mathématique et l'ajuster sous `R`.
+  5. Conclure après avoir vérifié les hypothèses du modèle via les graphes de diagnostic. 
+ 
+```{r AUDDietClade,echo=TRUE}
+bats$Clade2 = bats$Clade
+bats$Clade2[bats$Clade=="III"] = "II"
+bats$Clade2 = droplevels(bats$Clade2)
+batsSV = bats[-which(bats$Diet=="4"),]
+batsSV$Diet = droplevels(batsSV$Diet)
+```
+
+```{r tableAUDDietClade2}
+table(batsSV$Clade2,batsSV$Diet)
+```
+
+```{r AUDDietCladegraphe,fig.align='center',out.width="60%"}
+ggplot(batsSV,aes(x=Diet,y=AUD,col=Clade2)) + geom_boxplot()
+interaction.plot(batsSV$Diet,batsSV$Clade2,batsSV$AUD)
+meansAUD = ddply(batsSV, .(Diet,Clade2), summarize, AUDmoyen = mean(AUD))
+ggplot(meansAUD,aes(x=Diet,y=AUDmoyen,col=Clade2,group=Clade2)) + geom_point(size=3) + geom_line()
+```
+
+```{r AUDDietClademod,fig.align='center',eval=FALSE}
+modA2 = lm(AUD ~ Diet + Clade2,data=batsSV)
+par(mfrow=c(2,2))
+plot(modA2)
+summary(modA2)
+mod0 = lm(AUD ~ 1,data=batsSV)
+anova(mod0,modA2)
+anova(modA2)
+Anova(modA2) # nécessite le package car
+```
+
+## 5. Volume de la partie auditive, régime alimentaire et masse du cerveau
+
+On a vu précèdemment que le volume de la partie auditive du cerveau et le poids total du cerveau était lié. Il est donc possible que la variabilité des masses de cerveaux masquent l'effet du régime alimentaire. On travaillera sur les mêmes données que dans la partie précédente (sans les chauves-souris vampires).
+
+  1. Proposer un graphe permettant d'étudier l'effet de la masse du cerveau et du régime alimentaire sur le volume de la partie auditive.
+  2. Écrire le modèle mathématique correspondant.
+  3. L'ajuster sur `R` et vérifier les hypothèses du modèle.
+  4. Conclure.
+  5. Calculer les moyennes de volume de partie auditive en fonction du régime alimentaire et les comparer aux moyennes ajustées (voir le code ci-dessous) d'après le modèle posé. 
+
+```{r graphe,fig.align='center',eval=TRUE,echo=FALSE,eval=TRUE}
+ggplot(batsSV,aes(x=BRW,y=AUD,col=Diet,pch=Diet)) + geom_point()
+```
+
+```{r anocva,fig.align='center',eval=FALSE,echo=TRUE}
+modAnc = lm(AUD ~ BRW * Diet , data=batsSV)
+par(mfrow=c(2,2))
+plot(modAnc)
+summary(modAnc)
+modAnc0 = lm(AUD ~ 1 , data=batsSV)
+anova(modAnc0,modAnc)
+anova(modAnc)
+Anova(modAnc)
+ggplot(batsSV,aes(x=BRW,y=AUD,col=Diet,pch=Diet,group=Diet)) +
+  geom_point() + geom_smooth(method="lm",se=F)
+```
+
+```{r ancovamoy, eval=FALSE}
+# Moyennes classiques
+meansAUD = ddply(batsSV, .(Diet), summarize, AUDmoyen = mean(AUD))
+# Moyennes ajustées
+emmeans(modAnc,pairwise~Diet,adust="bonferroni") # nécessite le package emmeans
+```
+
+# Références
