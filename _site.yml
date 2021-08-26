@@ -30,7 +30,10 @@ navbar:
     href: test-unitaires.html
   - text: "OpenMP"
     href: openmp.html
-  
+  - text: "CalculMemoParal"
+    icon: fa-box-open
+    href: parallelisme.html
+    
 
 
 output:
