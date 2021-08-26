@@ -1,5 +1,5 @@
 ---
-title: "Parallélisation et mémoire"
+title: "Optimisation de calcul scientifique via la parallélisation et la gestion de mémoire"
 author: "Saint-Clair, Tâm, José"
 date: "26/08/2021"
 output: html_document
