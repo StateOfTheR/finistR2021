@@ -21,6 +21,9 @@ navbar:
       href: deepnote.html
     - text: "Github classroom"
       href: githubclassroom.html       
+    - text: "Stat avec python"
+      icon: fa-python
+      href: githubclassroom.html  
   - text: "Communication"
     icon: fa-address-book-o
     menu:
