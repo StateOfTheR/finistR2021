@@ -366,7 +366,7 @@ $(document).ready(function () {
     </li>
     <li>
       <a href="githubclassroom.html">
-        <span class="fa fa-python"></span>
+        <span class="fab fa-python"></span>
          
         Stat avec python
       </a>
@@ -482,15 +482,10 @@ RUN R -e &quot;install.packages(c(&#39;aricode&#39;,&#39;tinytest&#39;,&#39;test
 RUN R -e &quot;remotes::install_github(&#39;ropensci-review-tools/autotest&#39;)&quot;
 RUN R -e &quot;install.packages(c(&#39;lobstr&#39;, &#39;parallel&#39;, &#39;microbenchmark&#39;, &#39;bettermc&#39;))&quot;
 RUN R -e &quot;install.packages(&#39;reticulate&#39;)&quot;</code></pre>
-<p>puis demander la construction et le dépot sur dockerhub de l’image à l’aide de la commande</p>
+<p>puis demander la construction de l’image à l’aide de la commande</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a> docker build <span class="sc">-</span>t nom_depot_dockerhub<span class="sc">/</span>nom_du_repo<span class="sc">:</span>version  . <span class="do">## avec un nom</span></span></code></pre></div>
-<ul>
-<li>On peut aussi construire l’image en local</li>
-</ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a> docker build <span class="sc">-</span>t nom_du_repo_local<span class="sc">:</span>version  . <span class="do">## avec un nom</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> docker tag nom_du_repo_local<span class="sc">:</span>version nom_depot_dockerhub<span class="sc">/</span>nom_du_repo<span class="sc">:</span>version</span></code></pre></div>
-<p>puis le pousser avec</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a> docker push nom_depot_dockerhub<span class="sc">/</span>nom_du_repo<span class="sc">:</span>version</span></code></pre></div>
+<p>et enfin pousser sur Dockerhub</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a> docker push nom_depot_dockerhub<span class="sc">/</span>nom_du_repo<span class="sc">:</span>version</span></code></pre></div>
 </div>
 <div id="les-actions" class="section level3">
 <h3>Les actions</h3>

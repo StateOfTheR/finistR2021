@@ -366,7 +366,7 @@ $(document).ready(function () {
     </li>
     <li>
       <a href="githubclassroom.html">
-        <span class="fa fa-python"></span>
+        <span class="fab fa-python"></span>
          
         Stat avec python
       </a>
@@ -554,9 +554,9 @@ Linear regr. over a 3000x3000 matrix (c = a \ b&#39;)___ (sec):  0.2133333333333
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">list</span>(A)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lobstr<span class="sc">::</span><span class="fu">obj_addr</span>(A))</span></code></pre></div>
-<pre><code>## [1] &quot;0x55be69745650&quot;</code></pre>
+<pre><code>## [1] &quot;0x55c79a6214f0&quot;</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lobstr<span class="sc">::</span><span class="fu">obj_addrs</span>(B))</span></code></pre></div>
-<pre><code>## [1] &quot;0x55be69745650&quot;</code></pre>
+<pre><code>## [1] &quot;0x55c79a6214f0&quot;</code></pre>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lobstr<span class="sc">::</span><span class="fu">obj_sizes</span>(A, B))</span></code></pre></div>
 <pre><code>## * 8,000,048 B
 ## *        56 B</code></pre>
@@ -568,9 +568,9 @@ Linear regr. over a 3000x3000 matrix (c = a \ b&#39;)___ (sec):  0.2133333333333
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lobstr<span class="sc">::</span><span class="fu">obj_addrs</span>(list_A))</span></code></pre></div>
-<pre><code>##  [1] &quot;0x55be69745650&quot; &quot;0x55be69745650&quot; &quot;0x55be69745650&quot; &quot;0x55be69745650&quot;
-##  [5] &quot;0x55be69745650&quot; &quot;0x55be69745650&quot; &quot;0x55be69745650&quot; &quot;0x55be69745650&quot;
-##  [9] &quot;0x55be69745650&quot; &quot;0x55be69745650&quot;</code></pre>
+<pre><code>##  [1] &quot;0x55c79a6214f0&quot; &quot;0x55c79a6214f0&quot; &quot;0x55c79a6214f0&quot; &quot;0x55c79a6214f0&quot;
+##  [5] &quot;0x55c79a6214f0&quot; &quot;0x55c79a6214f0&quot; &quot;0x55c79a6214f0&quot; &quot;0x55c79a6214f0&quot;
+##  [9] &quot;0x55c79a6214f0&quot; &quot;0x55c79a6214f0&quot;</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lobstr<span class="sc">::</span><span class="fu">obj_sizes</span>(A, list_A, B))</span></code></pre></div>
 <pre><code>## * 8,000,048 B
 ## *       176 B
@@ -583,9 +583,9 @@ Linear regr. over a 3000x3000 matrix (c = a \ b&#39;)___ (sec):  0.2133333333333
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">mc.cores =</span> 2L</span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lobstr<span class="sc">::</span><span class="fu">obj_addrs</span>(list_A))</span></code></pre></div>
-<pre><code>##  [1] &quot;0x55be65f37710&quot; &quot;0x55be6bb64680&quot; &quot;0x55be666d8950&quot; &quot;0x55be6c3058c0&quot;
-##  [5] &quot;0x55be6a480fc0&quot; &quot;0x55be6caa6b00&quot; &quot;0x55be6ac22200&quot; &quot;0x55be6d247d40&quot;
-##  [9] &quot;0x55be6b3c3440&quot; &quot;0x55be6d9e8f80&quot;</code></pre>
+<pre><code>##  [1] &quot;0x55c79d9837a0&quot; &quot;0x55c79ffa92e0&quot; &quot;0x55c79e1249e0&quot; &quot;0x55c7a074a520&quot;
+##  [5] &quot;0x55c79e8c5c20&quot; &quot;0x55c7a0eeb760&quot; &quot;0x55c79f066e60&quot; &quot;0x55c7a168c9a0&quot;
+##  [9] &quot;0x55c79f8080a0&quot; &quot;0x55c7a1e2dbe0&quot;</code></pre>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lobstr<span class="sc">::</span><span class="fu">obj_sizes</span>(A, list_A, B))</span></code></pre></div>
 <pre><code>## *  8,000,048 B
 ## * 80,000,656 B
@@ -599,8 +599,8 @@ Linear regr. over a 3000x3000 matrix (c = a \ b&#39;)___ (sec):  0.2133333333333
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">mc.cores =</span> 2L</span>
 <span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(<span class="fu">unlist</span>(list_A))</span></code></pre></div>
-<pre><code>## [1] &quot;0x55be6e18a1c0&quot; &quot;0x55be6e92b400&quot; &quot;0x55be6f0cc640&quot; &quot;0x55be6f86d880&quot;
-## [5] &quot;0x55be7000eac0&quot;</code></pre>
+<pre><code>## [1] &quot;0x55c7a25cee20&quot; &quot;0x55c7a2d70060&quot; &quot;0x55c7a35112a0&quot; &quot;0x55c7a3cb24e0&quot;
+## [5] &quot;0x55c7a4453720&quot;</code></pre>
 <p>Et le comportement semble différent suivant que l’on preschedule ou non :</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>list_A <span class="ot">&lt;-</span> bettermc<span class="sc">::</span><span class="fu">mclapply</span>(</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">seq</span>(<span class="dv">10</span>),</span>
@@ -610,7 +610,7 @@ Linear regr. over a 3000x3000 matrix (c = a \ b&#39;)___ (sec):  0.2133333333333
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">mc.cores =</span> 2L, <span class="at">mc.preschedule =</span> <span class="cn">FALSE</span></span>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(<span class="fu">unlist</span>(list_A))</span></code></pre></div>
-<pre><code>## [1] &quot;0x55be6e18a1c0&quot;</code></pre>
+<pre><code>## [1] &quot;0x55c7a25cee20&quot;</code></pre>
 </div>
 <div id="bettermc" class="section level2">
 <h2>bettermc</h2>
@@ -626,11 +626,11 @@ Linear regr. over a 3000x3000 matrix (c = a \ b&#39;)___ (sec):  0.2133333333333
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## Unit: milliseconds
 ##       expr     min      lq     mean   median      uq     max neval
-##  bettermc1 28.9797 29.2289 30.28597 29.39990 31.3528 32.8732    10
-##  bettermc2 41.6383 42.2112 42.63570 42.45000 43.1702 43.6528    10
-##  bettermc3 63.8032 66.6190 68.19534 68.13695 69.5981 74.7276    10
-##  bettermc4 62.3074 63.1666 66.30477 64.37145 70.7690 72.6024    10
-##   parallel 52.2117 58.6376 62.34035 61.33450 67.1440 70.9062    10</code></pre>
+##  bettermc1 32.6017 33.2204 36.38175 35.58785 36.9753 44.2125    10
+##  bettermc2 45.8846 48.8425 52.26883 51.87690 54.2323 65.0316    10
+##  bettermc3 79.2609 82.0797 85.36747 85.33435 88.7977 91.3216    10
+##  bettermc4 75.2494 76.5985 82.36825 79.03065 84.7346 95.9377    10
+##   parallel 52.4409 71.9337 75.21405 75.03890 80.4779 90.7271    10</code></pre>
 <p>Le package permet également de faire des parallélisation reproductible et donne beaucoup plus de controle sur la gestion des erreurs en permettant entre autre de relancer les processus qui ont renvoyé des erreurs.</p>
 <p>L’extention bettermcExt [<a href="https://github.com/gfkse/bettermcExt" class="uri">https://github.com/gfkse/bettermcExt</a>] non autorisé sur le <code>CRAN</code> permet d’overloader la fonction <code>mclapply</code> de <code>parallel</code> d’un package donné, permettant ainsi un gain de temps et de rendre les calculs reproductibles.</p>
 </div>
