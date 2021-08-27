@@ -464,10 +464,8 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">welcome</span>(<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## Degemer mat!</code></pre>
 <pre><code>## [1] 0</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">welcome</span>(<span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">welcome</span>(<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## Degemer mat! 
-## Degemer mat! 
-## Degemer mat! 
 ## Degemer mat!</code></pre>
 <pre><code>## [1] 0</code></pre>
 </div>
@@ -550,12 +548,12 @@ $(document).ready(function () {
 <pre><code>## elapsed 
 ##   4.001</code></pre>
 <ul>
-<li>Test avec 8 threads:</li>
+<li>Test avec 4 threads:</li>
 </ul>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">print</span>(<span class="fu">omp_add</span>(a, b, <span class="dv">1</span>, <span class="dv">8</span>)))[<span class="dv">3</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">print</span>(<span class="fu">omp_add</span>(a, b, <span class="dv">1</span>, <span class="dv">4</span>)))[<span class="dv">3</span>]</span></code></pre></div>
 <pre><code>## [1] 72</code></pre>
 <pre><code>## elapsed 
-##   1.004</code></pre>
+##   2.002</code></pre>
 </div>
 <div id="calcul-dun-histogramme" class="section level2">
 <h2>Calcul d’un histogramme</h2>
@@ -584,7 +582,7 @@ $(document).ready(function () {
 <span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rho;</span>
 <span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>        </span>
 <span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10</span><span class="sc">^</span><span class="dv">5</span>)</span>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10</span><span class="sc">^</span><span class="dv">3</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>rho_serial <span class="ot">&lt;-</span> <span class="fu">serial_histogram</span>(sample)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">seq</span>(<span class="sc">-</span><span class="dv">7</span>,<span class="dv">7</span>,<span class="at">length.out=</span><span class="dv">64</span>), rho_serial, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
 <p><img src="openmp_files/figure-html/tests_histogram_1-1.png" width="672" /></p>
@@ -603,7 +601,7 @@ $(document).ready(function () {
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    NumericVector rho(nx);</span>
 <span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    <span class="pp">#pragma omp parallel num_threads(4)</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    <span class="pp">#pragma omp parallel num_threads(2)</span></span>
 <span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    {</span>
 <span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">int</span> tid = omp_get_thread_num();</span>
 <span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">int</span> ntid = omp_get_num_threads();</span>
@@ -622,10 +620,8 @@ $(document).ready(function () {
 <span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>rho_parallel_1 <span class="ot">=</span> <span class="fu">parallel_histogram_1</span>(sample)</span></code></pre></div>
-<pre><code>## Hello from thread  3 of 4 
-## Hello from thread  1 of 4 
-## Hello from thread  2 of 4 
-## Hello from thread  0 of 4</code></pre>
+<pre><code>## Hello from thread  0 of 2 
+## Hello from thread  1 of 2</code></pre>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">seq</span>(<span class="sc">-</span><span class="dv">7</span>,<span class="dv">7</span>,<span class="at">length.out=</span><span class="dv">64</span>), rho_serial, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">seq</span>(<span class="sc">-</span><span class="dv">7</span>,<span class="dv">7</span>,<span class="at">length.out=</span><span class="dv">64</span>), rho_parallel_1, <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span></code></pre></div>
 <p><img src="openmp_files/figure-html/tests_histogram_2-1.png" width="672" /></p>
@@ -644,7 +640,7 @@ $(document).ready(function () {
 <span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> ip;</span>
 <span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  NumericVector rho(nx);</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> ntid = <span class="dv">4</span>;</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> ntid = <span class="dv">2</span>;</span>
 <span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  NumericMatrix rho_local(ntid,nx);</span>
 <span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma omp parallel num_threads(ntid)</span></span>
@@ -676,7 +672,6 @@ $(document).ready(function () {
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">seq</span>(<span class="sc">-</span><span class="dv">7</span>,<span class="dv">7</span>,<span class="at">length.out=</span><span class="dv">64</span>), rho_serial, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">seq</span>(<span class="sc">-</span><span class="dv">7</span>,<span class="dv">7</span>,<span class="at">length.out=</span><span class="dv">64</span>), rho_parallel_1, <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="fu">seq</span>(<span class="sc">-</span><span class="dv">7</span>,<span class="dv">7</span>,<span class="at">length.out=</span><span class="dv">64</span>), rho_parallel_2, <span class="at">col=</span><span class="st">&quot;green&quot;</span>)</span></code></pre></div>
-<p><img src="openmp_files/figure-html/tests_histogram_3-1.png" width="672" /></p>
 </div>
 <div id="exercice-estimation-du-nombre-pi" class="section level2">
 <h2>Exercice: estimation du nombre <span class="math inline">\(pi\)</span></h2>
