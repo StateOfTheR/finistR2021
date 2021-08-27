@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
-```{r }
+```{r eval = FALSE}
 library(reticulate)
 py_install("pandas")
 py_install("seaborn")
@@ -34,7 +34,7 @@ https://www.statsmodels.org/stable/index.html
 
 http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx/notebooks/td2a_eco_regressions_lineaires.html
 
-Attention de ne pas mettre d'accents etc... dans le scommentaires des chunk python!!! écrire en UTF-8
+Attention de ne pas mettre d'accents etc... dans le commentaires des chunk python!!! écrire en UTF-8
 
 https://robert-alvarez.github.io/2018-06-04-diagnostic_plots/
 
@@ -67,7 +67,6 @@ from sklearn import datasets
 plt.style.use('ggplot') # if you are an R user and want to feel at home
 
 from statsmodels.graphics.gofplots import ProbPlot
-
 ```
 
 # Importation des données et un peu de description
