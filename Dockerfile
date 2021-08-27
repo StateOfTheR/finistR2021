@@ -5,5 +5,4 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
 RUN R -e "install.packages(c('aricode','tinytest','testthat', 'remotes'))"
 RUN R -e "remotes::install_github('ropensci-review-tools/autotest')"
 RUN R -e "install.packages(c('lobstr', 'parallel', 'microbenchmark', 'bettermc'))"
-RUN R -e "remotes::install_github('rstudio/reticulate')"
-RUN R -e "reticulate::install_miniconda()"
+RUN R -e "install.packages('reticulate')"

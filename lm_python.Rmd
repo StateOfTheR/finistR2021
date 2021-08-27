@@ -24,6 +24,7 @@ On peut appeler python depuis `Rstudio` grâce au package `reticulate`.
 
 ```{r lm_python_library_reticulate}
 library(reticulate)
+install_miniconda()
 ```
 
 Après avoir chargé ce package, toute instruction en python sera reconnue comme tel dans la console!
