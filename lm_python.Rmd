@@ -1,0 +1,341 @@
+---
+title: "lm en python"
+author: "FinistR"
+date: "26/08/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE)
+```
+
+# Objectif
+
+Le but de ce tutoriel est de faire un TP de modèle linéaire en python, en retrouvant tout les sorties de la fonction `lm` usuelle
+
+# Python depuis `rstudio`
+
+## Package `reticulate`
+
+On peut appeler python depuis `Rstudio` grâce au package `reticulate`.
+
+
+```{r lm_python_library_reticulate}
+library(reticulate)
+```
+
+Après avoir chargé ce package, toute instruction en python sera reconnue comme tel dans la console!
+
+## Installation des librairies python depuis `R`
+
+Pour installer les librairies, on utilisera les instructions `R` suivantes:
+
+```{r py_install_pandas, eval = TRUE}
+# Run only once
+install_miniconda() ## pour installer miniconda
+py_install("pandas") # Pour la manipulation de données
+py_install("numpy") # Librairie scientifique
+py_install("scipy") # Librairie scientifique
+py_install("scikit-learn") # Librairie de machine learning
+py_install("seaborn") # Librairie graphique
+py_install("statsmodels") # Librairie de modèles statistiques
+py_install("yellowbrick") # Librairie graphique
+```
+
+## Importation des modules python
+
+Ceci étant fait, on peut ne plus faire que du python!
+
+```{python import_librairies_python}
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import sklearn as sk
+import numpy as np
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import scipy.stats as stats
+
+from yellowbrick.datasets import load_concrete
+from yellowbrick.regressor import ResidualsPlot
+from yellowbrick.regressor import CooksDistance
+
+from sklearn.linear_model import LinearRegression
+from sklearn import datasets
+
+plt.style.use('ggplot') # if you are an R user and want to feel at home
+
+from statsmodels.graphics.gofplots import ProbPlot
+```
+
+# Importation, manipulation et description des données
+
+On utilisera la library de python `pandas` pour manipuler les données
+
+## Import
+
+Ensuite, on importe la librairie, et on charge les données, à la manière de `read.table`.
+
+```{python import_bats_pandas}
+import pandas
+bats = pandas.read_csv("bats.csv", # Nom du fichier 
+                          sep = ";", # Separateur de champs
+                          skiprows = 3, # On ignore les 3 premieres lignes 
+                          header = 0) # La premiere ligne correspond au nom de colonnes
+print(bats)        
+```
+
+## Description
+
+```{python, summary_bats}
+# En-tete des donnees
+bats.head()
+# Dimension
+bats.shape
+# Type des colonnes
+bats.dtypes
+bats.info()
+```
+
+## Changement de type d'une colonne
+
+Description d'une colonne facteur du data.frame:
+
+```{python}
+bats["Diet"] = bats["Diet"].apply(str) # Transformation de float a string
+bats.Diet.describe() # Quelques statistiques
+bats["Diet"].value_counts() # Comptage des occurences
+```
+
+## Première figure
+
+```{python, python_premiere_figure}
+plt.figure() # On specifie l'ouverture d'une figure
+# Toutes les instructions suivantes se superposeront
+bats.plot(x ='BOW', y = 'BRW', kind ="scatter", 
+                 figsize = [8,6],
+                 color ="b", alpha = 0.3, 
+                fontsize = 14)
+plt.title("BRW vs. BOW", 
+          fontsize = 24, color="darkred")
+plt.xlabel("Body weight", fontsize = 18) 
+
+plt.ylabel("Brain weight", fontsize = 18)
+plt.show() # On montre la figure
+```
+
+
+## Selection logique
+
+Pour extraire une sous partie des données, on peut utiliser la sélection par un vecteur logique.
+
+```{python}
+# bats.Diet recupere la colonne Diet dans bats
+condition_phyto = bats.Diet == '1' # Une colonne de condition
+condition_BOW = bats.BOW < 400 # Outlier
+batsphyto = bats[condition_phyto & condition_BOW]
+batsphyto
+```
+
+# Régression linéaire
+
+
+## Avec `scikit-learn`
+
+Pour ajuster une regression linéaire, on peut utiliser la librairie `scikit-learn`, librairie de machine learning:
+
+```{python}
+import numpy as np
+import sklearn.linear_model as sklm
+
+# Les features ("X") doivent être données sous forme de matrice
+X = np.asarray(batsphyto.BOW).reshape(-1, 1)
+regression_simple = sklm.LinearRegression()
+regression_simple.fit(X = X, y = batsphyto.BRW)
+
+# Coefficients de la régression
+beta0, beta1 = [regression_simple.intercept_, regression_simple.coef_]
+beta0, beta1
+```
+
+Cette librairie ne donnera quasiment aucun diagnostic statistique usuel (test sur les paramètres, intervalles de confiance, etc..)
+
+## Avec `statsmodels`
+
+Pour une approche plus statistique, et proche de celle de `R`, on utilisera `statsmodels`, dont la [documentation](https://www.statsmodels.org/stable/index.html) est très détaillée
+
+```{python import_statsmodels, message = FALSE, results = "hide", cache = FALSE}
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+from statsmodels.sandbox.regression.predstd import wls_prediction_std
+import matplotlib.pyplot as plt
+```
+
+La syntaxe est très proche de `R`!
+
+```{python chunk_regression_plot}
+regression = smf.ols("BRW ~ BOW", data = batsphyto).fit()
+print(regression.summary())
+```
+
+
+On peut representer graphiquement la droite de regression ainsi que les intervalles de confiance associés
+
+```{python wls_prediction_std(regression)}
+# Calcul 
+fig = sm.graphics.plot_fit(regression, "BOW")
+plt.show()
+```
+
+## Tests sur les paramètres
+
+On peut tester si une combinaison linéaire des paramètres est égale à 0:
+
+```{python}
+combinaisons_lineaires = "Intercept = 0, BOW = 0, BOW - Intercept = 0, 3 * Intercept = 2 * BOW"
+print(regression.t_test(combinaisons_lineaires))
+```
+
+## Tests des effets
+
+On peut tester les effets
+
+```{python}
+from statsmodels.stats.anova import anova_lm
+regression_multiple = smf.ols('BRW ~ BOW + AUD', data = batsphyto).fit()
+anovaResults = anova_lm(regression_multiple, typ = "II") # On peut choisir le type
+print(anovaResults)
+```
+
+## Tests de modèles emboités
+
+```{python}
+anovaResults = anova_lm(regression, regression_multiple) # On peut choisir le type
+print(anovaResults)
+```
+
+## ANCOVA
+
+Il semblerait que l'inclusion des variables qualitatives se déroule de la même manière que dans `R`.
+Exemple sur l'ANCOVA:
+
+```{python}
+ancova = smf.ols('BRW ~ Clade * BOW', data = batsphyto).fit()
+print(ancova.summary())
+```
+
+## Moyennes ajustées
+
+Il semblerait que, pour le moment, le calcul des moyennes ajustées doivent se faire à la main!
+
+## Graphes de diagnostics
+
+On accède aux prédictions ou aux résidus avec les différents attributs de l'objet `regression`.
+
+```{python sm_fitted_values_residuals}
+# model predictions
+model_fitted_y = regression.fittedvalues
+# model residuals
+model_residuals = regression.resid
+```
+
+Il existe différents graphes de diagnostics qui diffèrent un peu de ceux de `R`
+
+```{python graphe_diagnostics_residus}
+fig = plt.figure(figsize=(15,8))
+sm.graphics.plot_regress_exog(regression, 'BOW', fig = fig)
+plt.show()
+```
+
+
+## Graphique de l'influence
+
+On peut obtenir le vecteur des distances de Cook grâce à la méthode `get_influence`
+
+```{python statsmodel_cooks_distance}
+distances_cook = regression.get_influence().cooks_distance[0]
+```
+
+On peut tracer résidus standardisés en fonction du levier grâce à une fonction dédiée, graphique sans légende...
+
+```{python plot_levier}
+fig = sm.graphics.influence_plot(regression, criterion="cooks", alpha = 0.005)
+plt.show()
+```
+
+```{python plot_qqplot_python}
+plt.figure(figsize=(6,5))
+fig = sm.qqplot(regression.resid, stats.t, distargs=(4,), fit=True, line="45")
+plt.show()
+```
+
+# Quelques graphiques avec `seaborn`
+
+## Corrélations
+
+```{python corrplot_python}
+# correlation heatmap 
+bats3=bats[["BRW","BOW","AUD","MOB","HIP"]]
+corr = bats3.corr()
+plt.figure(figsize = (6,6))
+sns.heatmap(corr, cmap="RdBu",
+            xticklabels=corr.columns.values,
+            yticklabels=corr.columns.values)
+plt.show()
+```
+
+
+## Boites à moustache
+
+Attention, la variable groupe doit être en caractère impérativement.
+
+```{python boxplot_python}
+sns.boxplot(x="BOW", y="Clade", data=bats,
+            width=.6, palette="vlag")
+
+# Add in points to show each observation
+sns.stripplot(x="BOW", y="Clade", data=bats,
+              size=4, color=".3", linewidth=0)
+
+plt.show()
+```
+
+## Pair plot
+
+```{python pairplot_python}
+sns.set(style="ticks", color_codes=True)
+sns.pairplot(bats3)
+```
+
+```{python pairplot_complet_python}
+sns.pairplot(bats, hue="Clade")
+```
+
+## Regression plot
+
+**Attention** les intervalles de confiance sont faits par bootstrap!
+
+```{python plot_regression_python}
+plt.figure(figsize = (5,5))
+sns.regplot(x="BOW", y="BRW", data=bats);
+plt.show()
+```
+
+```{python lm_plot_sns}
+# le ; est indispensable pour que le graph s'affiche!
+sns.lmplot(x="BOW", y="BRW", hue="Diet", data=bats);
+plt.show()
+```
+
+
+
+
+
+
+
+
+
+
+
