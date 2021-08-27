@@ -53,20 +53,13 @@ Pour créer des images Docker en local sur sa machine, voici une liste de comman
 cat Dockerfile
 ```
 
-puis demander la construction et le dépot sur dockerhub  de  l'image à l'aide de la commande
+puis demander la construction  de  l'image à l'aide de la commande
 
 ```{r docker_build, comment='', echo = TRUE, eval = FALSE}
  docker build -t nom_depot_dockerhub/nom_du_repo:version  . ## avec un nom
 ```
 
-- On peut aussi construire l'image en local
-
-```{r docker_build_loc, comment='', echo = TRUE, eval = FALSE}
- docker build -t nom_du_repo_local:version  . ## avec un nom
- docker tag nom_du_repo_local:version nom_depot_dockerhub/nom_du_repo:version
-```
-
-puis le pousser avec 
+et enfin pousser sur  Dockerhub
 
 ```{r docker_push, echo = TRUE, eval = FALSE}
 
