@@ -23,7 +23,7 @@ navbar:
       href: githubclassroom.html       
     - text: "Stat avec python"
       icon: fab fa-python
-      href: githubclassroom.html  
+      href: lm_python.html  
   - text: "Communication"
     icon: fa-address-book-o
     menu:
