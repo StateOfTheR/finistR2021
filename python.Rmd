@@ -1,0 +1,417 @@
+---
+title: "Python pour le modèle linéaire"
+author: "Julie Aubert, Julien Chiquet, Marie-Pierre etienne"
+date: "8/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Installation 
+
+
+- Installer Anaconda 
+
+Sous linux
+
+```{r anaconda, eval = FALSE}
+sudo apt-get install libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6
+```
+
+- Dans Rstudio installer reticulate
+
+```{r reticulate, eval = FALSE}
+install.packages('reticulate')
+```
+
+charger Reticulate
+
+```{r load_reticulate}
+library(reticulate)
+
+```
+
+On peut installer les packages utiles en utilisant `py_install` 
+
+```{r load_reticulate, message = FALSE, eval = FALSE}
+py_install("scikit-learn")
+py_install('pandas')
+py_install('seaborn') # nice plots
+py_install('matplotlib')
+py_install('statsmodels')
+```
+
+
+```{python import}
+import numpy as np
+import pandas as pd ## data analysis and manipulation
+import seaborn as sns ## seaborn: statistical data visualization
+import matplotlib.pyplot as plt
+import statsmodels as sm
+from sklearn import datasets, linear_model
+from sklearn.metrics import mean_squared_error, r2_score
+```
+
+# Etude du lien entre poids du cerveau et masse corporelle
+
+Dans un premier temps, nous cherchons à modéliser le lien entre le poids du cerveau et le poids du corps
+(variables BRW et BOW). 
+Nous nous concentrerons sur les chauves-souris ayant un régime alimentaire phytophage
+(variable Diet égale à la modalité 1).
+
+1. Extraire une table nommée `batsphyto` contenant les chauves-souris phytophages.
+
+
+
+```{python import_data}
+bats_df = pd.read_csv("bats.csv", skiprows = 3, delimiter=";")
+print(bats_df)
+```
+
+1. Extraire une table nommée `batsphyto` contenant les chauves-souris phytophages.
+
+```{python  py_batsphyto}
+bats_df[bats_df.eval("Diet ==1")]
+```
+
+
+
+2. Reprendre le graphique permettant de décrire ce lien sur cette partie des données.
+
+```{python  graphe_BRW_BOW_batsphyto}
+sns.set_theme(style="ticks")
+plt.figure()
+sns.lmplot(x="BOW", y="BRW", hue = "Diet", data=bats_df)
+plt.show()
+```
+
+3. Écrire le modèle linéaire correspondant en spécifiant les gammes de variation des indices et les hypothèses
+du modèle.
+
+**Notations**: On dispose de mesures effectuées sur $n = 29$ chauve-souris. 
+Pour $1 \leq k \leq n$, on note:
+
+- $y_k$ la masse mesurée du cerveau de la $k$-ème chauve souris;
+- $x_k$ la masse mesurée du corps de la $k$-ème cahuve souris.
+
+**Modèle** On suppose que pour tout $1 \leq k \leq n$, $y_k$ est la réalisation d'une variable aléatoire $Y_k$ telle que:
+$$Y_k = \beta_0 + \beta_1 x_k + E_k$$
+où 
+
+- $\beta_0$ et $\beta_1$ sont des paramètres inconnus;
+- Pour tout $1\leq k \leq n$, $E_k$ est une variable aléatoire de loi $\mathcal{N}(0, \sigma^2)$ (où $\sigma^2$ est inconnu). De plus on suppose que tous les $E_k$ sont indépendants.
+
+
+4. Définir le modèle sous R et vérifier les hypothèses grâce aux graphes de diagnostic (voir le code
+ci-dessous).
+
+```{python  py_modele_reg_simple}
+Y = bats_df[["BRW"]]
+X = bats_df["BOW"]
+
+# Create linear regression object
+regr = linear_model.LinearRegression()
+lm_fit = regr.fit(X=X, y=Y)
+
+```
+
+Remarque : Le double crochet permet de préserver la structure en matrice, le simple crochet renvoie un objet de type series, qui ne peut pas etre donné en entrée de regr.fit qui attend une matrice pour X.
+
+
+
+regr.fit ne produit pas les sorties dont on a l'habitude dans R. on peut essayer statsmodels
+
+
+
+```{python py_modele_reg_simple_sm}
+
+model = sm.api.OLS( Y, X)
+bats_model_fit = model.fit()
+bats_model_fit.params
+```
+
+
+On voit que seul le coefficiecient associée à la variable BOW a été estimée, pas de constante dans le modèle. Il faut ajouter la constante dans la matrice X
+
+```{python py_add_constant}
+X_complet = sm.tools.add_constant(X)
+model = sm.api.OLS( Y, X_complet)
+bats_model_fit = model.fit()
+bats_model_fit.params
+```
+
+
+On peut obtenir des résultats plus détaillés avec
+
+
+```{python py_print_results}
+print(bats_model_fit.summary())
+```
+
+
+## Diagnostics
+
+```{python  py_residus}
+bats_fitted_y = bats_model_fit.fittedvalues
+bats_residuals = bats_model_fit.resid
+## residus studentizes
+bats_norm_residuals = bats_model_fit.get_influence().resid_studentized_internal
+```
+
+```{python py_diag}
+# absolute squared normalized residuals
+bats_norm_residuals_abs_sqrt = np.sqrt(np.abs(bats_norm_residuals))
+# absolute residuals
+bats_abs_resid = np.abs(bats_residuals)
+# leverage, from statsmodels internals
+bats_leverage = bats_model_fit.get_influence().hat_matrix_diag
+# cook's distance, from statsmodels internals
+bats_cooks = bats_model_fit.get_influence().cooks_distance[0]
+
+
+plot_lm_1 = plt.figure()
+plot_lm_1.axes[0] = sns.residplot(bats_fitted_y, dataframe.columns[-1], data=dataframe, 
+                          lowess=True,
+                          scatter_kws={'alpha': 0.5},
+                          line_kws={'color': 'red', 'lw': 1, 'alpha': 0.8})
+
+plot_lm_1.axes[0].set_title('Residuals vs Fitted')
+plot_lm_1.axes[0].set_xlabel('Fitted values')
+plot_lm_1.axes[0].set_ylabel('Residuals');
+```
+
+```{block2 correc_q4, type = "Correction"}
+Ici, il semblerait que les observations 6 et 7 aient un fort levier et influencent fortement le modèle.
+On peut voir qu'il s'agit des observations ayant les plus grandes masses du cerveau observées (au delà de 3750). 
+On va donc pour la suite considérer le jeu de données sans cette valeur extrême. 
+```
+
+```{r nouveau_batsphyto}
+batsphyto <- filter(bats, # On filtre sur les conditions 
+                    Diet == 1, # Diet == 1
+                    BRW < 3750) # Et la taille de cerveau n'est pas trop grande
+
+# On réajuste
+
+modele_reg_simple <- lm(formula = BRW ~ BOW, # Formule du modèle
+                        data = batsphyto) # Données d'ajustement
+```
+
+```{r resume_modele}
+summary(modele_reg_simple)
+```
+
+# Étude de la contribution des différentes parties du cerveau à sa masse totale
+
+Dans cette partie, on cherche à comprendre la contribution de chaque partie du cerveau au poids total.
+La variable à expliquer est donc le poids total du cerveau (variable `BRW`) et les variables potentiellement
+explicatives sont le volume de la partie auditive du cerveau (variable `AUD`), le volume de la zone olfactive
+(`MOB`) et le volume de l’hippocampe (`HIP`). 
+On travaille toujours uniquement avec les espèces phytophages.
+
+1. Reprendre l’étude des corrélations entre ces 4 variables.
+
+```{r variables_explicatives}
+batsphyto %>% # Dans le jeu de données (nettoyé des deux points)
+  select(BRW, AUD, MOB, HIP) %>% # On sélectionne ces 4 colonnes
+  cor() %>% # On calcule la corrélation
+  corrplot() # On représente graphiquement la corrélation
+# equivalent à corrplot(cor(batsphyto[,c ("BRW", "AUD", "MOD", "HIP")]))
+```
+
+2. Écrire le modèle linéaire correspondant à cette analyse (gammes de variation des indices et hypothèses
+du modèle) puis l’écrire sous `R` et discuter de la validité des hypothèses.
+
+```{block2 reg_multiple_notations, type = "Correction"}
+**Notations**: On dispose de mesures effectuées sur $n = 27$ chauve-souris. 
+On dispose de $p = 3$ variables explicatives.
+Pour $1 \leq k \leq n$ et $1\leq i\leq p$, on note:
+
+- $y_k$ la masse mesurée du cerveau de la $k$-ème chauve souris;
+- $x_{i, k}$ la mesure de la $i$-ème variable explicative du corps de la $k$-ème chauve souris, avec le codage suivant:
+```  
+
+```{r codage_variables, echo = F}
+library(knitr)
+library(kableExtra)
+data.frame(i = 1:3, Variable = c("AUD", "MOB", "HIP")) %>% 
+  kable() %>% 
+  kable_styling(position = "center")
+```
+
+```{block2 reg_multiple_modele, type = "Correction"}  
+**Modèle** On suppose que pour tout $1 \leq k \leq n$, $y_k$ est la réalisation d'une variable aléatoire $Y_k$ telle que:
+$$Y_k = \beta_0 + \beta_1 x_{1, k} +  \beta_2 x_{2, k} +  \beta_3 x_{3, k} +  E_k$$
+où 
+
+- $\beta_0, \beta_1, \beta_2, \beta_3$ sont des paramètres inconnus;
+- Pour tout $1\leq k \leq n$, $E_k$ est une variable aléatoire de loi $\mathcal{N}(0, \sigma^2)$ (où $\sigma^2$ est inconnu). De plus on suppose que tous les $E_k$ sont indépendants.
+
+```
+
+```{r regression_multiple_R}
+modele_reg_multiple <- lm("BRW ~ AUD + MOB + HIP", # Formule du modèle
+                          data = batsphyto) # Données pour l'ajustement
+```
+
+3. Faire le test du modèle et conclure.
+
+```{r test_global}
+# On ajuste le modèle nul, et on compare avec la fonction anova
+modele_0 <- lm("BRW ~ 1", # Formule du modèle, 1 signifie constant
+               data = batsphyto)
+anova(modele_0, modele_reg_multiple) # Test global du modèle
+```
+
+4. Que peut-on dire sur le lien entre la masse totale du cerveau et ces trois variables ? Quel est le coefficient
+associé à chaque variable ? Discuter le signe du coefficient associé à la variable MOB.
+
+```{r summary_reg_multiple}
+summary(modele_reg_multiple)
+```
+
+5. Mettre en place une procédure de sélection de variables à l’aide de la fonction step. Essayer différents parcours des modèles possibles.
+
+```{r selection_variables}
+modele_final <- step(modele_reg_multiple, # Modèle de départ
+                     scope = formula(modele_0), # Modèle minimal possible
+                     trace = 0)
+# ATTENTION, ceci peut être différent de:
+modele_final <- step(modele_0, # Modèle de départ
+                     scope = formula(modele_reg_multiple), # Modèle maximal possible
+                     trace = 0)
+AIC(modele_0) # AIC du modele 0
+AIC(modele_reg_multiple) # AIC du modele complet
+AIC(modele_final) # AIC du model final
+summary(modele_final) # Pour l'interprétation du modèle final
+```
+
+## 3. Étude du lien entre le volume de la partie auditive et le régime alimentaire
+
+Notre hypothèse est que le sens le plus important pour une chauve-souris insectivore est l'écholocalisation qui est une capacité auditive. Au contraire, une chauve-souris se nourrissant de nectar doit plutôt privilégier des capacités liées à la mémoire spatiale, capacités régies par l'hippocampe. On se propose donc maintenant d'étudier si le régime alimentaire et les capacités sensorielles sont
+liées. Pour cela on se demande si le volume du lobe auditif (variable `AUD`) et le régime alimentaire (variable `Diet`) sont liés.
+
+  1. Reprendre un graphique représentant ce lien.
+```{r AUDDietgraphe,eval=FALSE,echo=FALSE}
+bats %>% # On va représenter bats
+  mutate(Diet = factor(Diet, # On renomme les niveaux de Diet pour le graphique
+                       labels = c("Phyto.", "Glaneur", "Insec.", "Vampire"))) %>% 
+  ggplot() +
+  aes(x = Diet,y = AUD) + 
+  geom_boxplot() + 
+  labs(y = "Volume du lobe auditif",
+       x = "Régime")
+table(bats$Diet) # Effectifs de chaque régime
+```
+  2. Écrire le modèle mathématique correspondant à cette analyse (gammes de variation des indices et hypothèses du modèle).
+  3. L'impléter sous `R` et analyser les résidus.
+```{r AUDDiet,eval=FALSE}
+modele_anova_1F <- lm(AUD ~ Diet, # Formule du modèle 
+                      data = bats) # Données d'ajustement
+par(mfrow=c(2,2))
+plot(modele_anova_1F)
+summary(modele_anova_1F)
+```
+  
+  4. Conclure.
+  5. On pourra également proposer un modèle liant la partie auditive à la variable `Clade`.
+
+```{r AUDClade,eval=FALSE,echo=FALSE}
+mod2 = lm(AUD~Clade,data=bats)
+par(mfrow=c(2,2))
+plot(mod2)
+summary(mod2)
+```
+
+## 4. Étude du lien entre le volume de la partie auditive, le régime alimentaire et le clade
+
+On intègre au modèle précédent la variable `Clade` afin de tenir compte également des proximités génétiques entre les différentes espèces de chauves-souris.
+
+  1. Étudier les croisements entre les clades et les régimes alimentaires. Le plan d'expérience est-il équilibré, orthogonal, complet ? Quelles seront les conséquences ?
+  
+```{r table_effectifs}
+table(bats$Clade, bats$Diet) # Effectifs par croisement de niveaux de facteurs
+```
+  
+  2. Puisqu'il n'y a qu'un individu dans le clade III, on propose de rechanger la classification phylogénétique et de mettre ensemble les clades II et III, ce qui est cohérent avec l'arbre phylogénétique présenté dans l'article. 
+  D'autre part, il n'y a que deux espèces de chauves-souris vampires. On décide donc de supprimer ces deux individus et de se concentrer sur les espèces non vampires.
+     
+     Créer une nouvelle variable `clade2` qui regroupe les clades II et III puis une nouvelle table `batsSV` sans les chauves-souris vampires.
+     
+```{r creation_batsSV}
+batsSV <- bats %>% # On part du jeu de données initial
+  filter(Diet != 4) %>% # On retire les vampires
+  mutate(Diet = factor(Diet, levels = c(1, 2, 3)), # Il n'y a plus que 3 niveaux
+         Clade = factor(Clade, 
+                         labels = c("I", "II", "II", "IV") # On relabelise (dans l'ordre!)
+         ))
+summary(batsSV)
+table(batsSV$Clade, batsSV$Diet)
+```
+
+3. Réaliser un graphe d'interactions (voir les commandes ci-dessous) et commenter.
+
+```{r graphe_interaction}
+batsSV %>% # On prend le jeu de données
+  group_by(Clade, Diet) %>% # On groupe par Clade et Diet
+  summarise(AUD_MOY = mean(AUD)) %>% # On calcule la moyenne par croisement
+  ggplot() + # Puis on représente
+  aes(x = Clade, y = AUD_MOY, color = Diet) + # Avec les bonnes esthétiques
+  geom_point() + # Les points
+  geom_line(aes(group = Diet)) + # reliés
+  labs(y = "Volume moyen du lobe auditif", # les axes nommés
+       x = "Régime")
+```
+
+  
+  4. Écrire le modèle correspondant sous forme mathématique et l'ajuster sous `R`.
+
+```{r modele_anova_2}
+modele_anova_2f <- lm(AUD ~  Diet * Clade, # Le * signifie qu'on inclut l'interaction
+                      data = batsSV) # Sur les données sans Vampire 
+plot(modele_anova_2f)
+anova(modele_anova_2f) # Test en type I
+car::Anova(modele_anova_2f) # Test en type II
+```
+
+
+  5. Conclure après avoir vérifié les hypothèses du modèle via les graphes de diagnostic. 
+
+
+## 5. Volume de la partie auditive, régime alimentaire et masse du cerveau
+
+On a vu précèdemment que le volume de la partie auditive du cerveau et le poids total du cerveau était lié. Il est donc possible que la variabilité des masses de cerveaux masquent l'effet du régime alimentaire. On travaillera sur les mêmes données que dans la partie précédente (sans les chauves-souris vampires).
+
+  1. Proposer un graphe permettant d'étudier l'effet de la masse du cerveau et du régime alimentaire sur le volume de la partie auditive.
+  
+```{r graphe,fig.align='center',eval=TRUE,echo=FALSE,eval=TRUE}
+ggplot(batsSV) + # Données à représenter
+  aes(x = BRW, y = AUD, col = Diet, shape = Diet) + # Esthetiques
+  geom_point() # On représente en points
+```
+  2. Écrire le modèle mathématique correspondant.
+  3. L'ajuster sur `R` et vérifier les hypothèses du modèle.
+
+```{r modele_ancova}
+modele_ancova <- lm(AUD ~ BRW * Diet , data = batsSV)
+```
+
+  4. Conclure.
+
+5. Calculer les moyennes de volume de partie auditive en fonction du régime alimentaire et les comparer aux moyennes ajustées (voir le code ci-dessous) d'après le modèle posé. 
+
+```{r moyennes_ajustees}
+moyennes_par_regime <- batsSV %>% 
+  group_by(Diet) %>% 
+  summarise(moyenne = mean(AUD))
+moyennes_par_regime
+library(emmeans) # Pour les moyennes ajustées
+moyennes_ajustees <- emmeans(modele_ancova, # Modele pour ajuster les moyennes
+                             pairwise ~ Diet, # Facteur d'intérêt 
+                             adjust = "bonferroni") # Ajustement pour tests multiples
+moyennes_ajustees
+```
+
+
