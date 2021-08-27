@@ -472,7 +472,9 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
  &amp;&amp; apt-get install -y pandoc \
     pandoc-citeproc
 RUN R -e &quot;install.packages(c(&#39;aricode&#39;,&#39;tinytest&#39;,&#39;testthat&#39;, &#39;remotes&#39;))&quot;
-RUN R -e &quot;remotes::install_github(&#39;ropensci-review-tools/autotest&#39;)&quot;</code></pre>
+RUN R -e &quot;remotes::install_github(&#39;ropensci-review-tools/autotest&#39;)&quot;
+RUN R -e &quot;remotes::install_github(&#39;rstudio/reticulate&#39;)&quot;
+RUN R -e &quot;reticulate::install_miniconda()&quot;</code></pre>
 <p>puis demander la construction et le dépot sur dockerhub de l’image à l’aide de la commande</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a> docker build <span class="sc">-</span>t nom_depot_dockerhub<span class="sc">/</span>nom_du_repo<span class="sc">:</span>version  . <span class="do">## avec un nom</span></span></code></pre></div>
 <ul>
