@@ -24,7 +24,6 @@ On peut appeler python depuis `Rstudio` grâce au package `reticulate`.
 
 ```{r lm_python_library_reticulate}
 library(reticulate)
-install_miniconda()
 ```
 
 Après avoir chargé ce package, toute instruction en python sera reconnue comme tel dans la console!
@@ -35,6 +34,7 @@ Pour installer les librairies, on utilisera les instructions `R` suivantes:
 
 ```{r py_install_pandas, eval = TRUE}
 # Run only once
+install_miniconda() ## pour installer miniconda
 py_install("pandas") # Pour la manipulation de données
 py_install("numpy") # Librairie scientifique
 py_install("scipy") # Librairie scientifique
