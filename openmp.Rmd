@@ -46,7 +46,7 @@ welcome(1)
 ```
 
 ```{r test_welcome_par}
-welcome(4)
+welcome(2)
 ```
 
 ## Addition de deux vecteurs
@@ -131,9 +131,9 @@ for(size_t i = 0; i < n; i++)
 system.time(print(omp_add(a, b, 1, 2)))[3]
 ```
 
-- Test avec 8 threads:
+- Test avec 4 threads:
 ```{r test_omp_function_2}
-system.time(print(omp_add(a, b, 1, 8)))[3]
+system.time(print(omp_add(a, b, 1, 4)))[3]
 ```
 
 ## Calcul d'un histogramme
@@ -169,7 +169,7 @@ NumericVector serial_histogram(NumericVector xp) {
 ```
 
 ```{r tests_histogram_1}
-sample <- rnorm(10^5)
+sample <- rnorm(10^3)
 rho_serial <- serial_histogram(sample)
 plot(seq(-7,7,length.out=64), rho_serial, type = "l", col="blue")
 ```
@@ -190,7 +190,7 @@ NumericVector parallel_histogram_1( NumericVector xp) {
 
     NumericVector rho(nx);
     
-    #pragma omp parallel num_threads(4)
+    #pragma omp parallel num_threads(2)
     {
       int tid = omp_get_thread_num();
       int ntid = omp_get_num_threads();
@@ -234,7 +234,7 @@ NumericVector parallel_histogram_2( NumericVector xp) {
   int ip;
   
   NumericVector rho(nx);
-  int ntid = 4;
+  int ntid = 2;
   NumericMatrix rho_local(ntid,nx);
   
 #pragma omp parallel num_threads(ntid)
