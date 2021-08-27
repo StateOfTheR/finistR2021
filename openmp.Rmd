@@ -263,7 +263,7 @@ return rho;
 }
 ```
 
-```{R tests_histogram_3}
+```{R tests_histogram_3, eval = FALSE}
 rho_parallel_2 <- parallel_histogram_2(sample)
 
 plot(seq(-7,7,length.out=64), rho_serial, type = "l", col="blue")
