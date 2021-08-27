@@ -16,21 +16,33 @@ navbar:
     href: datavizu.html
   - text: "Enseignement"
     icon: fa-user-graduate
-    href: deepnote.html
-  - text: "Site Web"
+    menu:
+    - text: "R en ligne"
+      href: deepnote.html
+    - text: "Github classroom"
+      href: githubclassroom.html       
+  - text: "Communication"
     icon: fa-address-book-o
-    href: webpages.html
-  - text: "Présentations"
-    icon: fa-slideshare
-    href: xarigan_flipbook.html
+    menu:
+    - text: "Site web"
+      href: webpages.html
+    - text: "Présentations"
+      icon: fa-slideshare
+      href: xarigan_flipbook.html
   - text: "Shiny"
     href: shiny.html
-  - text: "Package et tests"
-    icon: fa-box-open
-    href: test-unitaires.html
-  - text: "OpenMP"
-    href: openmp.html
-  
+  - text: "Code performant"
+    icon: fa-address-book-o
+    menu:
+    - text: "Package et tests"
+      icon: fa-box-open
+      href: test-unitaires.html
+    - text: "OpenMP"
+      href: openmp.html
+    - text: "CalculMemoParal"
+      icon: fa-box-open
+      href: parallelisme.html
+    
 
 
 output:

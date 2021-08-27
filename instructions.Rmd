@@ -45,6 +45,43 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Lien vers la fiche pense-bête : [https://www.docker.com/sites/default/files/d8/2019-09/docker-cheat-sheet.pdf]
 
+Pour créer des images Docker en local sur sa machine, voici une liste de commandes utiles
+
+- Pour construire une image docker, il faut créer un fichier Dockerfile qui contient la recette du Docker. Pour ce site le ficher Dockerfile a la forme suivante
+
+```{r engine='bash', comment='', echo = FALSE}
+cat Dockerfile
+```
+
+puis demander la construction et le dépot sur dockerhub  de  l'image à l'aide de la commande
+
+```{r docker_build, comment='', echo = TRUE, eval = FALSE}
+ docker build -t nom_depot_dockerhub/nom_du_repo:version  . ## avec un nom
+```
+
+- On peut aussi construire l'image en local
+
+```{r docker_build_loc, comment='', echo = TRUE, eval = FALSE}
+ docker build -t nom_du_repo_local:version  . ## avec un nom
+ docker tag nom_du_repo_local:version nom_depot_dockerhub/nom_du_repo:version
+```
+
+puis le pousser avec 
+
+```{r docker_push, echo = TRUE, eval = FALSE}
+
+ docker push nom_depot_dockerhub/nom_du_repo:version
+```
+
+
 ### Les actions
+
+Dans les action de Github, on peut spécifier un container docker à utiliser, c'est ce que fait la ligne container du fichier d'action suivant, utiliser pour créer ce site web
+
+
+```{r engine='bash', comment='', echo = FALSE}
+cat .github/workflows/website.yml 
+```
+
 
 
