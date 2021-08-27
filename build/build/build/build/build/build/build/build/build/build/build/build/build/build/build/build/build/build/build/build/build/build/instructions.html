@@ -364,6 +364,13 @@ $(document).ready(function () {
     <li>
       <a href="githubclassroom.html">Github classroom</a>
     </li>
+    <li>
+      <a href="githubclassroom.html">
+        <span class="fa fa-python"></span>
+         
+        Stat avec python
+      </a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -473,8 +480,8 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
     pandoc-citeproc
 RUN R -e &quot;install.packages(c(&#39;aricode&#39;,&#39;tinytest&#39;,&#39;testthat&#39;, &#39;remotes&#39;))&quot;
 RUN R -e &quot;remotes::install_github(&#39;ropensci-review-tools/autotest&#39;)&quot;
-RUN R -e &quot;remotes::install_github(&#39;rstudio/reticulate&#39;)&quot;
-RUN R -e &quot;reticulate::install_miniconda()&quot;</code></pre>
+RUN R -e &quot;install.packages(c(&#39;lobstr&#39;, &#39;parallel&#39;, &#39;microbenchmark&#39;, &#39;bettermc&#39;))&quot;
+RUN R -e &quot;install.packages(&#39;reticulate&#39;)&quot;</code></pre>
 <p>puis demander la construction et le dépot sur dockerhub de l’image à l’aide de la commande</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a> docker build <span class="sc">-</span>t nom_depot_dockerhub<span class="sc">/</span>nom_du_repo<span class="sc">:</span>version  . <span class="do">## avec un nom</span></span></code></pre></div>
 <ul>
@@ -498,7 +505,7 @@ jobs:
   build:
     name: Build website with rmarkdown
     runs-on: ubuntu-latest
-    container: stateofther/r-finistr2021:0.2
+    container: stateofther/r-finistr2021:0.7
 
     steps:
       - name: Checkout repository
