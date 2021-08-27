@@ -32,7 +32,7 @@ Après avoir chargé ce package, toute instruction en python sera reconnue comme
 
 Pour installer les librairies, on utilisera les instructions `R` suivantes:
 
-```{r py_install_pandas, eval = FALSE}
+```{r py_install_pandas, eval = TRUE}
 # Run only once
 py_install("pandas") # Pour la manipulation de données
 py_install("numpy") # Librairie scientifique
