@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Felix Cheysson, Nicolas Enjalbert-Courrech, Pierre Gloaguen, Gabriel Lang, Gaspar Massiot" />
+
+
+<title>Shiny</title>
+
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Finist'R 2021</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://github.com/StateOfTheR/finistR2021">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="instructions.html">
+    <span class="fa fa-gear"></span>
+     
+    Workflow
+  </a>
+</li>
+<li>
+  <a href="datavizu.html">
+    <span class="fa fa-desktop"></span>
+     
+    Nouvelles Fonctions Graphiques
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-user-graduate"></span>
+     
+    Enseignement
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="deepnote.html">R en ligne</a>
+    </li>
+    <li>
+      <a href="githubclassroom.html">Github classroom</a>
+    </li>
+    <li>
+      <a href="lm_python.html">
+        <span class="fab fa-python"></span>
+         
+        Stat avec python
+      </a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-address-book-o"></span>
+     
+    Communication
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="webpages.html">Site web</a>
+    </li>
+    <li>
+      <a href="xarigan_flipbook.html">
+        <span class="fa fa-slideshare"></span>
+         
+        Présentations
+      </a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="shiny.html">Shiny</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-address-book-o"></span>
+     
+    Code performant
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="test-unitaires.html">
+        <span class="fa fa-box-open"></span>
+         
+        Package et tests
+      </a>
+    </li>
+    <li>
+      <a href="openmp.html">OpenMP</a>
+    </li>
+    <li>
+      <a href="parallelisme.html">
+        <span class="fa fa-box-open"></span>
+         
+        CalculMemoParal
+      </a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Shiny</h1>
+<h4 class="author">Felix Cheysson, Nicolas Enjalbert-Courrech, Pierre Gloaguen, Gabriel Lang, Gaspar Massiot</h4>
+<h4 class="date">25/08/2021</h4>
+
+</div>
+
+
+<div id="architecture-basique-de-shiny" class="section level1">
+<h1>Architecture basique de <code>shiny</code></h1>
+<p><code>shiny</code> permet de faire des applications interactives avec R. Pour fonctionner, ces applications nécessitent une machine, le <strong>serveur</strong>, qui doit faire tourner R tout au long de leur utilisation.</p>
+<p>Une application <code>shiny</code> s’écrit généralement sous la forme suivante :</p>
+<ul>
+<li>une partie <em>UI</em> (User Interface), appelée une unique fois par session, pour gérer l’affichage et l’interaction avec l’utilisateur,</li>
+<li>une partie <em>serveur</em>, appelée une fois par utilisateur, pour gérer les calculs R.</li>
+<li>une instruction <code>shinyApp()</code> pour lancer l’application.</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {}</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span></code></pre></div>
+<div id="partie-ui" class="section level2">
+<h2>Partie <em>UI</em></h2>
+<p>La partie <em>UI</em> récupère les inputs de l’utilisateur et affiche les outputs calculés par le serveur.</p>
+<div id="les-inputs" class="section level3">
+<h3>Les inputs</h3>
+<p>Les inputs permettent de récupérer des instructions de l’utilisateur et sont généralement déclarés par des fonctions de la forme <code>****Input(inputId = "id", ...)</code> ou des clique-boutons comme <code>actionButton(inputId = "id", ...)</code>. De façon non exhaustive :</p>
+<p><img src="figs/inputs.png" align="center," style="width:80.0%" /></p>
+</div>
+<div id="les-outputs" class="section level3">
+<h3>Les outputs</h3>
+<p>Les outputs déterminent des éléments de l’application dédiées à l’affichage d’éléments graphiques ou textuels et sont déclarés par des fonctions de la forme <code>****Output(outputId = "id", ...)</code>. Les plus utiles :</p>
+<ul>
+<li><code>plotOutput(outputId = "id", ...)</code></li>
+<li><code>textOutput(outputId = "id", ...)</code></li>
+<li><code>dataTableOutput(outputId = "id", ...)</code></li>
+</ul>
+</div>
+</div>
+<div id="partie-serveur" class="section level2">
+<h2>Partie <em>serveur</em></h2>
+<p>Pour modifier les outputs et donc influer sur les éléments affichés dans l’application, il faut :</p>
+<ul>
+<li>créer les outputs via des assignations de type <code>output$id = ...</code></li>
+<li>déclarer les méthodes de présentation qui seront employées au moment de la construction de l’application avec des functions de type <code>render****({ ... })</code> (<code>renderPlot</code>, <code>renderText</code>, <code>renderDataTable</code>, …)</li>
+<li>accéder aux inputs avec <code>input$id</code></li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>( </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sliderInput</span>(<span class="at">inputId =</span> <span class="st">&quot;num&quot;</span>,  </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">&quot;Choose a number&quot;</span>,  </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="dv">25</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="dv">100</span>), </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOutput</span>(<span class="st">&quot;hist&quot;</span>) </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>hist <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hist</span>(<span class="fu">rnorm</span>(input<span class="sc">$</span>num))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>De cette façon, l’histogramme affiché par <code>ouput$hist</code> est automatiquement mis à jour lorsque l’utilisateur modifie le slider représenté par <code>input$num</code>. C’est ce qui est appelé la réactivité (plus généralement la notion d’observateur en programmation orientée objet, qui permet de construire des objets qui s’actualisent automatiquement lorsque d’autres objets changent).</p>
+</div>
+<div id="structure-fichier" class="section level2">
+<h2>Structure fichier</h2>
+<p>Le code R doit être sauvegardé soit : dans un fichier nommé <code>app.R</code> ; soit dans deux fichiers, <code>ui.R</code> et <code>server.R</code>.</p>
+</div>
+<div id="partager-lapplication" class="section level2">
+<h2>Partager l’application</h2>
+<p>Une application <code>shiny</code> peut être déposée sur <a href="https://www.shinyapps.io/" class="uri">https://www.shinyapps.io/</a> pour pouvoir être accessible en ligne par tous. La version gratuite du service permet de partager jusqu’à 5 applications, utilisables jusqu’à 25 heures par mois. Un tutoriel pour publier les applications sur le site est disponible à l’adresse <a href="https://shiny.rstudio.com/articles/shinyapps.html" class="uri">https://shiny.rstudio.com/articles/shinyapps.html</a>.</p>
+</div>
+</div>
+<div id="notions-plus-avancées-de-réactivité" class="section level1">
+<h1>Notions plus avancées de réactivité</h1>
+<p>La fonction <code>server</code> n’est appelée qu’une unique fois au lancement de l’application. Pour qu’une variable soit modifiée par l’utilisateur, elle doit donc être déclarée comme <strong>réactive</strong>. Par exemple, comme vu précédemment, les variables d’output (spécifiées par <code>output$id</code>) doivent ensuite être encapsulées dans des méthodes du type <code>render****()</code>. Cela a pour effet de rendre la variable <code>output$id</code> réactive : dès lors qu’une des variables d’input (spécifiées par <code>input$id</code>) qui intervient change, la variable d’output est mise à jour en conséquence. Notons que, en l’absence d’une méthode <code>render****()</code>, le code suivant rendrait une erreur au moment du lancement de l’application :</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) { </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>hist <span class="ot">&lt;-</span> <span class="fu">hist</span>(<span class="fu">rnorm</span>(input<span class="sc">$</span>num)) </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Il est également possible de définir des variables intermédiaires (ni output, ni input) réactives.</p>
+<div id="reactive-..." class="section level2">
+<h2><code>reactive({ ... })</code></h2>
+<p>Cette fonction permet de rendre une expression réactive, i.e. qui sera mise à jour dès lors que des variables, de type input ou elles-mêmes réactives, et intervenant dans l’expression, seront modifiées. A noter toutefois le fait qu’une variable définie ainsi se comporte comme une fonction : elle doit être appelée sans oublier les parenthèses.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) { </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)  <span class="co"># Lancé une unique fois lorsque l&#39;application est démarrée</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  mydata <span class="ot">=</span> <span class="fu">reactive</span>({ x[<span class="dv">1</span><span class="sc">:</span>input<span class="sc">$</span>num] })</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>hist <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({ </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hist</span>( <span class="fu">mydata</span>() ) </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="isolate-..." class="section level2">
+<h2><code>isolate({ ... })</code></h2>
+<p>Cette fonction, qui s’utilise dans la définition d’une expression réactive, permet de casser la dépendance réactive d’une variable réactive. Ainsi, dans le code suivant :</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) { </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)  <span class="co"># Lancé une unique fois lorsque l&#39;application est démarrée</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  mydata <span class="ot">=</span> <span class="fu">reactive</span>({ x[<span class="dv">1</span><span class="sc">:</span>input<span class="sc">$</span>num] })</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>hist <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({ </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hist</span>( <span class="fu">mydata</span>() , <span class="at">title =</span> <span class="fu">isolate</span>({ input<span class="sc">$</span>title })) </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>le titre du graphique n’est pas mis à jour lorsque la variable <code>input$title</code> change. Par contre, lorsque la variable <code>input$num</code> change, la variable réactive <code>mydata()</code> est mise à jour, ce qui entraine également la mise à jour d’<code>output$hist</code>. Dans ce cas, la dernière valeur de <code>input$title</code> sera utilisée.</p>
+</div>
+<div id="observeeventreactiveexpression-..." class="section level2">
+<h2><code>observeEvent(reactiveExpression, { ... })</code></h2>
+<p>Cette commande permet d’exécuter du code dès lors que la variable <code>reactiveExpression</code>, et seulement celle-ci, est mise à jour.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">observeEvent</span>(input<span class="sc">$</span>num, {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;New input detected!!&quot;</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(input<span class="sc">$</span>title)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<p>La fonction <code>observe({ ... })</code> est similaire, mais à la différence de <code>observeEvent</code>, est exécutée dès lors que n’importe quelle expression réactive à l’intérieur de <code>{ ... }</code> est mise à jour.</p>
+</div>
+<div id="eventreactivereactiveexpression-..." class="section level2">
+<h2><code>eventReactive(reactiveExpression, { ... })</code></h2>
+<p>Cette fonction est similaire à <code>observeEvent</code> mais retourne une expression réactive, mise à jour uniquement lorsque <code>reactiveExpression</code> change. Cela permet donc de définir une variable réactive dépendante d’un déclencheur.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) { </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)  <span class="co"># Lancé une unique fois lorsque l&#39;application est démarrée</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  mydata <span class="ot">=</span> <span class="fu">reactiveEvent</span>(input<span class="sc">$</span>num, { x[<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(input<span class="sc">$</span>title)] })</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>hist <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({ </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hist</span>( <span class="fu">mydata</span>() , <span class="at">title =</span> <span class="fu">isolate</span>({ input<span class="sc">$</span>title })) </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="reactivevalues-..." class="section level2">
+<h2><code>reactiveValues( ... )</code></h2>
+<p>Cette fonction retourne une liste de valeurs réactives, qui peuvent ensuite être manipulées de façon dynamique.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) { </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  mydata <span class="ot">=</span> <span class="fu">reactiveValues</span>(<span class="at">x =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>), <span class="at">y =</span> <span class="cn">NA</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observe</span>({</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    mydata<span class="sc">$</span>y <span class="ot">=</span> mydata<span class="sc">$</span>x <span class="sc">*</span> input<span class="sc">$</span>num</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>hist <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({ </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hist</span>( <span class="fu">mydata</span>() , <span class="at">title =</span> <span class="fu">isolate</span>({ input<span class="sc">$</span>title })) </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><code>reactiveVal(.)</code> se comporte similairement, mais ne contient qu’une seule valeur, et une variable <code>var = reactiveVal(0)</code> définie par cette méthode, se comporte alors comme une fonction get/set : elle doit être appelée avec les parenthèses <code>var()</code>, et est mise à jour avec la nouvelle valeur en argument <code>var(1)</code>.</p>
+</div>
+</div>
+<div id="notions-avancées" class="section level1">
+<h1>Notions avancées</h1>
+<div id="récupérer-la-position-dun-click-sur-un-graphique" class="section level2">
+<h2>Récupérer la position d’un click sur un graphique</h2>
+<p>Il existe un moyen de récupérer la position d’un click de l’utilisateur sur un graphique, qui pourra ensuite être utilisé comme input dans le reste de l’application. La fonction <code>ui</code> doit être modifiée pour rendre possible le suivi de la souris sur le graphique :</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">=</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOutput</span>(<span class="at">outputId =</span> <span class="st">&quot;plot&quot;</span>, <span class="at">click =</span> <span class="st">&quot;click&quot;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>Désormais, la variable <code>input$click</code> contient les informations du click. Par exemple, on peut accéder à la position du click via <code>input$click$x</code> et <code>input$click$y</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">=</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    myclicks <span class="ot">=</span> <span class="fu">reactiveValues</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">observeEvent</span>(input<span class="sc">$</span>click, {</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        myclicks<span class="sc">$</span>x <span class="ot">=</span> <span class="fu">c</span>(myclicks<span class="sc">$</span>x, input<span class="sc">$</span>click<span class="sc">$</span>x)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        myclicks<span class="sc">$</span>y <span class="ot">=</span> <span class="fu">c</span>(myclicks<span class="sc">$</span>y, input<span class="sc">$</span>click<span class="sc">$</span>y)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>plot <span class="ot">=</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> myclicks<span class="sc">$</span>x, <span class="at">y =</span> myclicks<span class="sc">$</span>y)) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y) <span class="sc">+</span> </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>            <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="conditionalpanelcondition-..." class="section level2">
+<h2><code>conditionalPanel(condition, ...)</code></h2>
+<p>Ce sont des éléments de la fonction <code>ui</code>, qui n’apparaissent que lorsque la <code>condition</code> est vérifiée. A noter que cette condition doit être codée en javascript (en particulier, les éléments d’une liste sont appelés avec le <code>.</code> plutôt que le <code>$</code>, par exemple <code>input.num</code>).</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">=</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">actionButton</span>(<span class="at">inputId =</span> <span class="st">&quot;btn&quot;</span>, <span class="st">&quot;Clique-moi&quot;</span>),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conditionalPanel</span>(<span class="st">&quot;input.btn&quot;</span>, <span class="fu">actionButton</span>(<span class="at">inputId =</span> <span class="st">&quot;btn1&quot;</span>, <span class="st">&quot;Clique-moi aussi&quot;</span>)),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conditionalPanel</span>(<span class="st">&quot;input.btn1&quot;</span>, <span class="fu">actionButton</span>(<span class="at">inputId =</span> <span class="st">&quot;btn2&quot;</span>, <span class="st">&quot;Félicitations&quot;</span>))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>Par défaut, les variables accessibles dans la fonction <code>ui</code>, et donc sur lesquelles il est possible de conditionner le <code>conditionalPanel</code>, sont celles contenues dans les listes <code>input$...</code> et <code>output$...</code> déjà existantes. Si l’on veut conditionner sur d’autres variables, potentiellement après des manipulations dans la fonction <code>server</code>, il est nécessaire de définir d’autres éléments de la liste <code>output</code>, puis de les rendre visibles à l’UI. Par exemple, pour rendre visible un élément après un click :</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">=</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Clique sur (0,0)&quot;</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOutput</span>(<span class="at">outputId =</span> <span class="st">&quot;plot&quot;</span>, <span class="at">click =</span> <span class="st">&quot;click&quot;</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conditionalPanel</span>(<span class="st">&quot;output.showpanel&quot;</span>, <span class="fu">textOutput</span>(<span class="at">outputId =</span> <span class="st">&quot;text&quot;</span>))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>server <span class="ot">=</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>plot <span class="ot">=</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y) <span class="sc">+</span> </span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>            <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Définit une variable réactive qui va prendre la valeur 1 dès lors que </span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># l&#39;utilisateur aura cliqué sur l&#39;origine du graphique</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  hasclicked <span class="ot">=</span> <span class="fu">reactiveVal</span>(<span class="dv">0</span>)</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>click, {</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">sqrt</span>(input<span class="sc">$</span>click<span class="sc">$</span>x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> input<span class="sc">$</span>click<span class="sc">$</span>y<span class="sc">^</span><span class="dv">2</span>) <span class="sc">&lt;</span> .<span class="dv">1</span>) {</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">hasclicked</span>(<span class="dv">1</span>)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Définit un élément de l&#39;output, qui sera à terme visible dans l&#39;ui</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>showpanel <span class="ot">=</span> <span class="fu">reactive</span>({</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">hasclicked</span>())</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">outputOptions</span>(output, <span class="st">&quot;showpanel&quot;</span>, <span class="at">suspendWhenHidden =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># l&#39;argument &#39;suspendWhenHidden = FALSE&#39; permet de rendre visible cette</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># variable dans l&#39;ui</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Affiche un message de félicitations si l&#39;utilisateur a cliqué sur l&#39;origine</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>text <span class="ot">=</span> <span class="fu">renderText</span>({</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Bravo, tu as cliqué sur l&#39;origine.&quot;</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="renderui" class="section level2">
+<h2><code>renderUI</code></h2>
+<p>La fonction <code>renderUI</code> permet d’adapter les objets UI avec des valeurs calculés dans la partie serveur. L’appel dans la partie UI se fait par la fonction spécifique <code>uiOutput()</code>. Dans ce cas là, les objets UI sont définis dans la partie serveur du code source et peuvent être dépendant d’une variable réactive ou d’un input.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">uiOutput</span>(<span class="at">outputId =</span> <span class="st">&quot;uiInput&quot;</span>), </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">textOutput</span>(<span class="at">outputId =</span> <span class="st">&quot;text&quot;</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output){</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">reactive</span>(<span class="fu">norm</span>(<span class="dv">100</span>))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>uiInput <span class="ot">&lt;-</span> <span class="fu">renderUI</span>({</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">numericInput</span>(<span class="at">inputId =</span> <span class="st">&quot;num&quot;</span>, <span class="at">label =</span> <span class="st">&quot;choose a number&quot;</span>, </span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">value =</span> <span class="fu">mean</span>(<span class="fu">x</span>()))</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">renderText</span>({</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    input<span class="sc">$</span>num </span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="points-à-poursuivre" class="section level2">
+<h2>Points à poursuivre</h2>
+<ul>
+<li><code>req()</code> <a href="https://shiny.rstudio.com/articles/req.html" class="uri">https://shiny.rstudio.com/articles/req.html</a></li>
+<li>module shiny <a href="https://shiny.rstudio.com/articles/modules.html" class="uri">https://shiny.rstudio.com/articles/modules.html</a> et <a href="https://www.ardata.fr/post/2019/02/11/why-using-modules/" class="uri">https://www.ardata.fr/post/2019/02/11/why-using-modules/</a></li>
+<li>mise en calcul en arrière plan avec <strong>future</strong> et <strong>promises</strong> <a href="https://rstudio.github.io/promises/articles/shiny.html" class="uri">https://rstudio.github.io/promises/articles/shiny.html</a></li>
+</ul>
+</div>
+</div>
+<div id="références" class="section level1">
+<h1>Références</h1>
+<ul>
+<li>Une vidéo longue mais grandement informative : <a href="https://vimeo.com/rstudioinc/review/131218530/212d8a5a7a/" class="uri">https://vimeo.com/rstudioinc/review/131218530/212d8a5a7a/</a></li>
+<li>Les diapositives associées sur le fonctionnement de <code>shiny</code> : <a href="https://github.com/rstudio-education/shiny.rstudio.com-tutorial" class="uri">https://github.com/rstudio-education/shiny.rstudio.com-tutorial</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
