@@ -329,8 +329,18 @@ sns.lmplot(x="BOW", y="BRW", hue="Diet", data=bats);
 plt.show()
 ```
 
+# Complément sur les packages Python pour faire vos graphiques
 
-
+- [bqplot](https://github.com/bloomberg/bqplot/blob/master/README.md) : pour les graphes interactifs intégrés dans des notebooks.
+- [seaborn](https://seaborn.pydata.org) : destinés aux statistiques et construit sur matplotlib.
+- [toyplot](http://toyplot.readthedocs.io/en/stable/) : excellent pour tracer les graphes avec un très beau rendu pour le web.
+- [bokeh](http://bokeh.pydata.org/en/latest/) : interactif qui fonctionne en mode serveur, c'est le Rshiny de Python.
+- [pygal](http://pygal.org/en/stable/) : si vous aimez les histogrammes et les camemberts.
+- [Altair](https://github.com/altair-viz/altair) : pour tracer à partir d'une dataframe, construit sur la bibliothèque javascript vega. Magnifique rendu en html.
+- [plot.ly](https://plot.ly/) : interactif et orienté sciences des données, fonctionne aussi avec R et Julia.
+- [YT](http://yt-project.org): orienté plus pour la physique mais excellent pour tracer des contours, des volumes, des surfaces et des particules.
+- [Yellowbrick](https://www.scikit-yb.org/en/latest/) : compagnon graphique de scikit-learn.
+- [scikit-plot](https://scikit-plot.readthedocs.io/en/stable/) : utile pour tracer les métriques issues de scikit-learn. Le développement semble à l'arrêt cependant.
 
 
 
